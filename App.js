@@ -1,20 +1,104 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState,useContext } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Signup from "./Custom Components/SignupPage";
+import Login from "./Custom Components/loginpage";
+import Home from "./Custom Components/Homepage";
+import Detailview from "./Custom Components/Detailview";
+import Payment from "./Custom Components/payment";
+import Bookings from "./Custom Components/ViewBooking";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Toast from "react-native-toast-message";
+import Admin from "./Admin Screens/admin";
+import Profile from "./Custom Components/Profile";
+import ShowUsers from "./Admin Screens/Users";
+import UpdateProfile from "./Custom Components/UpdateProfile";
+ 
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+
+
+
+const LoginNav = () => {
+  const Stack = createNativeStackNavigator();
+  return(
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="Login" component={Login} />
+    <Stack.Screen name="Signup" component={Signup} />
+    <Stack.Screen name="UserLoggedin" component={UserNav} />
+    <Stack.Screen name="AdminLoggedin" component={AdminNav} />
+  </Stack.Navigator>
+  )
+
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const UserNav = () => {
+  const Stack = createNativeStackNavigator();
+  return(
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="Home" component={Home}  />
+    <Stack.Screen name="Profile" component={Profile} />
+    <Stack.Screen name="Detailview" component={Detailview} />
+    <Stack.Screen name="Payment" component={Payment} />
+    <Stack.Screen name="Bookings" component={Bookings} />
+    <Stack.Screen name="UserLogout" component={LoginNav} />
+    <Stack.Screen name="UpdateProfile" component={UpdateProfile} />
+  </Stack.Navigator>
+  )
+
+}
+
+const AdminNav=()=>{
+  const Stack = createNativeStackNavigator();
+return(
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+  <Stack.Screen name="Admin" component={Admin}  />
+  <Stack.Screen name="Users" component={ShowUsers}  />
+  <Stack.Screen name="AdminLogout" component={LoginNav}  />
+</Stack.Navigator>
+
+)
+
+}
+
+
+
+export default function App() {
+  const [isLogedIn, setIsLogedIn] = useState(false)
+  const [userType, setUserType] = useState('')
+
+  async function getdata() {
+    try{
+      const data = await AsyncStorage.getItem('isLoggedIn')
+      const usertype = await AsyncStorage.getItem('userType')
+
+      console.log("log",data)
+      setIsLogedIn(data)
+      console.log("state",isLogedIn)
+
+      setUserType(usertype)
+      console.log("type",userType)
+    }catch(err){
+      console.log("Error in Chnaging State")
+    }
+  
+  }
+
+  useEffect(() => {
+    getdata()
+    console.log("State Updated")
+  }, [AsyncStorage])
+
+
+  
+
+  return (
+    <NavigationContainer>
+    {isLogedIn &&userType=='Admin' ?<AdminNav/>:isLogedIn? <UserNav/> : <LoginNav/>}
+    <Toast/>
+  </NavigationContainer>
+ 
+  )
+}
+
+
+
