@@ -150,6 +150,14 @@ export default function Login() {
                         <Feather name={showpassword ? 'eye' : 'eye-off'} size={20} color={'black'} />
                     </Pressable>
 
+                    
+                <Pressable style={Styles.btn} onPress={() => {
+                   alertDlt()
+                }}>
+                    <Text style={Styles.btntext}>Delete Account</Text>
+                </Pressable>
+
+
                 </View>
                 <Pressable style={Styles.btn} onPress={() => handlesubmit()}>
                     <Text style={Styles.btntext}>Log in</Text>
