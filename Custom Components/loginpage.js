@@ -138,6 +138,7 @@ export default function Login() {
               
                 <TextInput style={Styles.input} placeholder="Enter Your Email Address" onChange={e => handleemail(e)}></TextInput>
                 {email.length < 1 ? null : emailVerify ? (null) : (<Text style={Styles.ralert}>Please Enter a vaild Email Address</Text>)}
+               
                 <View style={[Styles.input]}>
 
                     <TextInput style={{ fontSize: 13, fontWeight: 'bold', textAlign: 'center' }} placeholder="Enter Your Password"
@@ -150,18 +151,17 @@ export default function Login() {
                         <Feather name={showpassword ? 'eye' : 'eye-off'} size={20} color={'black'} />
                     </Pressable>
 
-                    
-                <Pressable style={Styles.btn} onPress={() => {
-                   alertDlt()
-                }}>
-                    <Text style={Styles.btntext}>Delete Account</Text>
+                </View>
+                
+                <Pressable style={{alignSelf:'flex-end',right:10}} onPress={()=>navigation.navigate('Forgot')}>
+                    <Text style={[{ marginTop: 10, fontSize: 15 }]}>Forgot Password?</Text>
+
                 </Pressable>
 
-
-                </View>
                 <Pressable style={Styles.btn} onPress={() => handlesubmit()}>
                     <Text style={Styles.btntext}>Log in</Text>
                 </Pressable>
+
                 <Pressable onPress={() => navigation.navigate('Signup')}>
                     <Text style={[{ marginTop: 10, fontSize: 15 }]}>Didn't have an account? Create Account</Text>
 

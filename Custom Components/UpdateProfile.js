@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, Pressable, Alert, StyleSheet, Image, TouchableOpacity, TextInput, ScrollView } from "react-native"
+import { View, Text, SafeAreaView, Pressable, Alert, StyleSheet, Image, TouchableOpacity, TextInput, ScrollView ,ActivityIndicator} from "react-native"
 import { Styles } from "../Common Component/Styles"
 import { useEffect, useState } from "react"
 import Loading from "../Common Component/loading"
@@ -17,6 +17,7 @@ import { Avatar } from "react-native-paper";
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import * as ImageManipulator from 'expo-image-manipulator';
+import { faL } from "@fortawesome/free-solid-svg-icons";
 
 
 
@@ -35,6 +36,11 @@ export default function UpdateProfile() {
     const [email, setEmail] = useState("")
     const [image, setImage] = useState("")
     const route = useRoute()
+
+    const [isLoading, setloading] = useState(false)
+    const [loading, setLoading] = useState(false)
+
+
 
 
 
@@ -102,20 +108,21 @@ export default function UpdateProfile() {
             console.log('Result', result);
 
             if (result.canceled === false) {
-                const resizedImage = await ImageManipulator.manipulateAsync(
-                    result.assets[0].uri,
-                    [{ resize: { width: 300 } }],
-                    { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG }
-                );
+                setLoading(true)
 
-                const base64Image = await FileSystem.readAsStringAsync(resizedImage.uri, {
+                const imageuri = result.assets[0].uri;
+                 
+
+                const base64Image = await FileSystem.readAsStringAsync(imageuri, {
                     encoding: FileSystem.EncodingType.Base64,
                 });
                 
                 const fileSizeBytes = base64Image.length;
                 console.log(fileSizeBytes / (1024 * 1024))
 
-                setImage(`data:image/jpeg;base64,${base64Image}`);
+                const Cloudinaryurl= await uploadImageToCloudinary(base64Image)
+
+                setImage(Cloudinaryurl);
                 // console.log(image)
                 Toast.show({
                     type: 'success',
@@ -123,7 +130,11 @@ export default function UpdateProfile() {
                     visibilityTime: 3000,
                     position: 'bottom'
                 })
+                setLoading(false)
+
+
             }
+        
         } catch (error) {
             Toast.show({
                 type: 'error',
@@ -133,6 +144,34 @@ export default function UpdateProfile() {
             })
             // alert('Error Occur: ' + error.message)
         }
+    };
+
+    const uploadImageToCloudinary = async (base64Image) => {
+        try {
+            const cloudName = 'stayease'; // Your Cloudinary cloud name
+            const uploadPreset = 'stayease profile'; // Name of your Cloudinary upload preset
+    
+            const cloudinaryUploadEndpoint = `https://api.cloudinary.com/v1_1/${cloudName}/upload`;
+    
+            const response = await fetch(cloudinaryUploadEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    file: `data:image/jpeg;base64,${base64Image}`,
+                    upload_preset: uploadPreset // Specify the upload preset name
+                }),
+            });
+    
+            const data = await response.json();
+            console.log('data',data)
+            return data.secure_url; // URL of the uploaded image
+        } catch (error) {
+            console.error('Error uploading image to Cloudinary:', error);
+            return null;
+        }
+        
     };
 
 
@@ -145,6 +184,7 @@ export default function UpdateProfile() {
         }
         axios.post(`${API_BASE_URL}/update-user`, formdata).then(res => {
             console.log(res.data)
+            setloading(false)
             if (res.data.status == 'ok') {
                 Toast.show({
                     type: 'success',
@@ -181,18 +221,16 @@ export default function UpdateProfile() {
                 <View style={[Styles.container, { alignItems: "center", justifyContent: 'flex-start', top: '0%' }]}>
 
                     <TouchableOpacity style={styles.imgbox} onPress={() => Selectphoto()}>
+                    {loading && <ActivityIndicator color='black' style={{position:'absolute',zIndex:2}} size={"large"} />}
                         <Avatar.Image
                             size={179}
-                            source={{
-                                uri: image == '' || image == null ? 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQMAAADCCAMAAAB6zFdcAAAAM1BMVEXFzeD////Byt7L0uPByd7Q1+b7/P3j5/Dv8fbe4+3r7vTFzuDL0+P19/rn6/LZ3urW2+lU+LHUAAAFLklEQVR4nO2dC3arMAxEQXwCcfjsf7XPkLw2tEka5AEziu8CeuKpJVmyLLIskUgkEkdFbsT+HXEQKbNqOPWN59y72D9nd/z/vWqbOv/mozSY9n116vIl1acYg1++G9v+5/rzvMs+QwL/7x/O9a/lT5zL2D9uF7wAzcP1e+pP2AQi4/mZAJ6TfQ3EtY9N4D+jdQ2k6F8K4OltayDFKyP4cghmI6PzVvDnHrDuEqR9UwFPY1IEufw+C72yh8LeIUFOaxSY6K0dFt2qTXDDVJCUi0IBT2vHHmTUSWAnPjgZtBJ4p2BjJ4RIYCSHlCpEAi+CAXMowiSwIIJoguKSE7k5rD8aPWDg3gnKg8EPLrGXEUL5tGC2ijr2OkIIjAlfEJdVBLMNcmprQEnAW09YUzT5C9aNADgbfMGaPQlOgrwj1cAlDZIGGVYD2ktIpAasiRNQgzxpkOektoCMjUkDT+zFaEFqwNqohtSgiL0YHcHlVAMaoCooM6SJo/qK7RGk+yBpkGVBl2w2NAi7aEwamNEAWE5MGiQNkgZJg6RB0sCEBoj+C3YN0j5IGkyks3LKnSegdaSkQdIgaUCtwcf7RJHy02OjVG3/+knvSlxJd+uK7Emb6eqOrQVBoJvgCtu16xYasF23QXsPWDVI+yArN9CALTyW6LhAqAE8NuaEcQH2fOMbtkNS+e7IC8MaYIuJM3TnRGwxcYbvPQ+0eDBD95TFIRv3rwyx17Qa/EGRbmqSAz1xvSP2ktaDvW3MOV9xoJ0i43tftEPgc4n4U1Ls9ajAbgTOkSCh02AW1GxJ4w2gCKwSIAspF0pLmIB5BNaXvhnwnMSXMn6DqrBzBoUrqKoiXdp8B6qqWMVeSADyzijhNyDeBiinyOwSUc95uAemYZ66sl0wLYGcFPmK6gsgCTRzZJxAlJe5TQFyQiA3hQxRVuSOChPBXrEW2trBf/RDts1sg+C8iXZA1oKwc9IY++dDCDojUKcKd5T67JF6ou4C9SHBhjO4os2hiWupv1Hm0JY00LpFKx5xQmsLpjRQdisy19R/om3MsaSB9rxsSgOdBKY00E5SZOxBeoa2kGJJA+01gyEN1JmjJQ20jxnYq+p3qPNGQxqo66qtHQ3UfUlJA0MalKJ+8NnyPfh/hFzOnbpFr6vP7JeNGaALw0BJMfzemT4+IhqSYq8hFESDInNj3ky4BPSXroieLPZDAuI7nuROsUS84iAvqKmT5gWxVxEIQgJuY8BsA+6NgPmyMXVkQHXuM+cMuBEIjO98Z4K78r5pOFtVpWiRn7Qd+aop5QU9AqJuMyYVRKoNJkT58OD/cuy1vYUX4LTBvLgrzVAcXwYpthPgSjcc2ybkgjoRvKQvjqrCVl7gEU11RJMQGTeYFvicbjyaCnsrMFG3R1JBsnZjR/hEhf4gJiHi0NOg1nCOL8OejvAJ3RBTBScy7O4GHlCfXCwV4hrBkvMlQmYpZXQjWLJ7sJTyEEawZNfMsowUC/+m38kxiNtgbDCMZgfHIMUuaVEA3cYnBnx5aAu8e9xMASkYFJjoNpo/K+7oVnBPg68xuKw8zoHoPXp0pCzHg0bDV0CTa3EsjmBJjUunsB9u35Ua08wkGecmuIEIEVIReoIFwTf38JHhEQgcxuqOlx4qCBFBCnY7uKH/uhV0SHRU9CNFUO1EB0A9TMKIIczoggP+QxpRUQ0cM+MMrmiezG7x0bmoKDYCZhLqgVjf8WvhfLhkfaPnFt/di8zq6XNbfIczMqsHDW3xTdrYPFvrP7kiUsVMV4ODAAAAAElFTkSuQmCC'
-                                    : image
-                            }} />
+                            source={{ uri: image?image:null}} />
                         <TouchableOpacity style={styles.editButton}>
                             <Feather name="camera" size={24} color="white" />
                         </TouchableOpacity>
                     </TouchableOpacity>
 
-                    <Pressable style={styles.button} onPress={() => setImage('')}>
+                    <Pressable style={styles.button} onPress={() => setImage('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQMAAADCCAMAAAB6zFdcAAAAM1BMVEXFzeD////Byt7L0uPByd7Q1+b7/P3j5/Dv8fbe4+3r7vTFzuDL0+P19/rn6/LZ3urW2+lU+LHUAAAFLklEQVR4nO2dC3arMAxEQXwCcfjsf7XPkLw2tEka5AEziu8CeuKpJVmyLLIskUgkEkdFbsT+HXEQKbNqOPWN59y72D9nd/z/vWqbOv/mozSY9n116vIl1acYg1++G9v+5/rzvMs+QwL/7x/O9a/lT5zL2D9uF7wAzcP1e+pP2AQi4/mZAJ6TfQ3EtY9N4D+jdQ2k6F8K4OltayDFKyP4cghmI6PzVvDnHrDuEqR9UwFPY1IEufw+C72yh8LeIUFOaxSY6K0dFt2qTXDDVJCUi0IBT2vHHmTUSWAnPjgZtBJ4p2BjJ4RIYCSHlCpEAi+CAXMowiSwIIJoguKSE7k5rD8aPWDg3gnKg8EPLrGXEUL5tGC2ijr2OkIIjAlfEJdVBLMNcmprQEnAW09YUzT5C9aNADgbfMGaPQlOgrwj1cAlDZIGGVYD2ktIpAasiRNQgzxpkOektoCMjUkDT+zFaEFqwNqohtSgiL0YHcHlVAMaoCooM6SJo/qK7RGk+yBpkGVBl2w2NAi7aEwamNEAWE5MGiQNkgZJg6RB0sCEBoj+C3YN0j5IGkyks3LKnSegdaSkQdIgaUCtwcf7RJHy02OjVG3/+knvSlxJd+uK7Emb6eqOrQVBoJvgCtu16xYasF23QXsPWDVI+yArN9CALTyW6LhAqAE8NuaEcQH2fOMbtkNS+e7IC8MaYIuJM3TnRGwxcYbvPQ+0eDBD95TFIRv3rwyx17Qa/EGRbmqSAz1xvSP2ktaDvW3MOV9xoJ0i43tftEPgc4n4U1Ls9ajAbgTOkSCh02AW1GxJ4w2gCKwSIAspF0pLmIB5BNaXvhnwnMSXMn6DqrBzBoUrqKoiXdp8B6qqWMVeSADyzijhNyDeBiinyOwSUc95uAemYZ66sl0wLYGcFPmK6gsgCTRzZJxAlJe5TQFyQiA3hQxRVuSOChPBXrEW2trBf/RDts1sg+C8iXZA1oKwc9IY++dDCDojUKcKd5T67JF6ou4C9SHBhjO4os2hiWupv1Hm0JY00LpFKx5xQmsLpjRQdisy19R/om3MsaSB9rxsSgOdBKY00E5SZOxBeoa2kGJJA+01gyEN1JmjJQ20jxnYq+p3qPNGQxqo66qtHQ3UfUlJA0MalKJ+8NnyPfh/hFzOnbpFr6vP7JeNGaALw0BJMfzemT4+IhqSYq8hFESDInNj3ky4BPSXroieLPZDAuI7nuROsUS84iAvqKmT5gWxVxEIQgJuY8BsA+6NgPmyMXVkQHXuM+cMuBEIjO98Z4K78r5pOFtVpWiRn7Qd+aop5QU9AqJuMyYVRKoNJkT58OD/cuy1vYUX4LTBvLgrzVAcXwYpthPgSjcc2ybkgjoRvKQvjqrCVl7gEU11RJMQGTeYFvicbjyaCnsrMFG3R1JBsnZjR/hEhf4gJiHi0NOg1nCOL8OejvAJ3RBTBScy7O4GHlCfXCwV4hrBkvMlQmYpZXQjWLJ7sJTyEEawZNfMsowUC/+m38kxiNtgbDCMZgfHIMUuaVEA3cYnBnx5aAu8e9xMASkYFJjoNpo/K+7oVnBPg68xuKw8zoHoPXp0pCzHg0bDV0CTa3EsjmBJjUunsB9u35Ua08wkGecmuIEIEVIReoIFwTf38JHhEQgcxuqOlx4qCBFBCnY7uKH/uhV0SHRU9CNFUO1EB0A9TMKIIczoggP+QxpRUQ0cM+MMrmiezG7x0bmoKDYCZhLqgVjf8WvhfLhkfaPnFt/di8zq6XNbfIczMqsHDW3xTdrYPFvrP7kiUsVMV4ODAAAAAElFTkSuQmCC')}>
                         <AntDesign name="delete" size={22} color="white" style={styles.icon} />
                         <Text style={styles.text}>Remove Profile Pic</Text>
                     </Pressable>
@@ -204,13 +242,15 @@ export default function UpdateProfile() {
                     <TextInput style={[Styles.input, { marginTop: 20 }]} defaultValue={name} placeholder="Enter Your Name" onChange={name => handlename(name)}></TextInput>
                     {name.length < 1 ? null : nameVerify ? (<Text style={Styles.galert}>Verified</Text>) : (<Text style={Styles.ralert}>Username Must Contains Atleast 4 Characters</Text>)}
 
-                    <TextInput style={[Styles.input, { marginTop: 20 }]} defaultValue={number} placeholder="Enter Your Mobile Number" onChange={e => handlenumber(e)}></TextInput>
+                    <TextInput style={[Styles.input, { marginTop: 20 }]} defaultValue={number} maxLength={10} placeholder="Enter Your Mobile Number" onChange={e => handlenumber(e)}></TextInput>
                     {number.length < 1 ? null : numberVerify ? (<Text style={Styles.galert}>Verified</Text>) : (<Text style={Styles.ralert}>Please Enter a vaild Phone Number</Text>)}
 
                     <TextInput editable={false} style={[Styles.input, { marginTop: 20 }]} defaultValue={email} placeholder="Enter Your Email" ></TextInput>
 
-                    <Pressable style={Styles.btn} onPress={() => Updateprofile()}>
-                        <Text style={Styles.btntext} >Update</Text>
+                    <Pressable style={Styles.btn} onPress={() =>{ {isLoading?(null):setloading(true)
+                                                                                    Updateprofile()}  }}>
+                            {isLoading?<ActivityIndicator color='white'/>:(
+                        <Text style={Styles.btntext} >Update</Text>)}
 
                     </Pressable>
 

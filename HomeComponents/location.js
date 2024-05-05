@@ -1,70 +1,48 @@
 
-import { View , ScrollView,Text,Image,} from "react-native"
+import { View , ScrollView,Text,Image,Pressable,TouchableOpacity} from "react-native"
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { Styles } from "../Common Component/Styles"
-import { faLocationDot, faSearch, faBars, faIndianRupeeSign, faHouse, faHotel, faTag, faGift, faHeadset } from "@fortawesome/free-solid-svg-icons";
+import { faLocationDot, faSearch, faBars, faIndianRupeeSign, faHouse, faHotel, faTag, faGift, faHeadset, faL } from "@fortawesome/free-solid-svg-icons";
+import { useNavigation } from "@react-navigation/native";
 
 
 
-export default function Location(){
-    return(
-        <ScrollView style={{ backgroundColor: '', maxHeight: 130 }} horizontal >
+export default function Locations({userLocation,User}){
+    const navigation = useNavigation();
 
-        <View style={Styles.locationContainer}>
+    
+const locations = [
+    { name: 'Nearby',value:userLocation, iconColor: '#0d0d0c', icon: faLocationDot },
+    { name: 'Alappuzha',value:'Alappuzha', image: require("../assets/licensed-image.jpg") },
+    { name: 'Agra',value:'Agra', image: require("../assets/agra2.jpg") },
+    { name: 'Hyderbad',value:'Hyderbad', image: require("../assets/hyderbad.jpg") },
+    { name: 'Madgaon',value:'Madgaon', image: require("../assets/madgaon.jpg") },
+    { name: 'Mumbai', value:'Mumbai',image: require("../assets/mumbai.jpg") },
+    { name: 'Gurgaon',value:'Gurgaon', image: require("../assets/gurgaon.jpeg") },
+];
 
-            <View style={Styles.box}>
-                <View style={[Styles.locationbox, { backgroundColor: '#0d0d0c' }]}>
-                    <FontAwesomeIcon size={30} color="white" icon={faLocationDot} />
-                </View>
-                <Text style={Styles.boxtext}>Nearby</Text>
+
+    return (
+        <ScrollView style={{ backgroundColor: '', maxHeight: 130 }} horizontal showsHorizontalScrollIndicator={false}>
+            <View style={Styles.locationContainer}>
+                {locations.map((location, index) => (
+                    <TouchableOpacity key={index} onPress={() => navigation.navigate('Search',{data:location.value})}>
+                        <View style={Styles.box}>
+                            {location.iconColor && (
+                                <View style={[Styles.locationbox, { backgroundColor: location.iconColor }]}>
+                                    <FontAwesomeIcon size={30} color="white" icon={location.icon} />
+                                </View>
+                            )}
+                            {location.image && (
+                                <View style={Styles.locationbox}>
+                                    <Image style={Styles.locationimg} source={location.image}></Image>
+                                </View>
+                            )}
+                            <Text style={Styles.boxtext}>{location.name}</Text>
+                        </View>
+                    </TouchableOpacity>
+                ))}
             </View>
-
-            <View style={Styles.box}>
-                <View style={Styles.locationbox}>
-                    <Image style={Styles.locationimg} source={require("../assets/licensed-image.jpg")}></Image>
-                </View>
-                <Text style={Styles.boxtext}>Banglore</Text>
-            </View>
-
-            <View style={Styles.box}>
-                <View style={Styles.locationbox}>
-                    <Image style={[Styles.locationimg, { marginTop: 0 }]} source={require("../assets/agra2.jpg")}></Image>
-                </View>
-                <Text style={[Styles.boxtext, {}]}>Agra</Text>
-            </View>
-
-            <View style={Styles.box}>
-                <View style={Styles.locationbox}>
-                    <Image style={Styles.locationimg} source={require("../assets/hyderbad.jpg")}></Image>
-                </View>
-                <Text style={Styles.boxtext}>Hyderbad</Text>
-            </View>
-
-            <View style={[Styles.box,]}>
-                <View style={Styles.locationbox}>
-                    <Image style={Styles.locationimg} source={require("../assets/madgaon.jpg")}></Image>
-                </View>
-                <Text style={Styles.boxtext}>Madgaon</Text>
-            </View>
-
-            <View style={[Styles.box, {}]}>
-                <View style={Styles.locationbox}>
-                    <Image style={Styles.locationimg} source={require("../assets/mumbai.jpg")}></Image>
-                </View>
-                <Text style={Styles.boxtext}>Mumbai</Text>
-            </View>
-
-            <View style={[Styles.box, {}]}>
-                <View style={Styles.locationbox}>
-                    <Image style={Styles.locationimg} source={require("../assets/gurgaon.jpeg")}></Image>
-                </View>
-                <Text style={Styles.boxtext}>Gurgaon</Text>
-            </View>
-
-
-        </View>
-
-    </ScrollView>
-
-    )
+        </ScrollView>
+    );
 }

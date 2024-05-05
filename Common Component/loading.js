@@ -8,8 +8,8 @@ export default function Loading(){
 
         <View style={Styles.loading}>
             {/* <Image style={Styles.recomendationimage} source={require('../assets/logo1.png')}></Image> */}
-            <Text style={Styles.loadingtext}>Loading....</Text>
-            <ActivityIndicator color='black' style={{marginTop:10,}} size={50}/>
+            {/* <Text style={Styles.loadingtext}>Loading....</Text> */}
+            <ActivityIndicator color='black' style={{marginTop:0,}} size={50}/>
 
         </View>
     )

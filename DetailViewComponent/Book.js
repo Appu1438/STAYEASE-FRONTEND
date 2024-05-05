@@ -14,7 +14,7 @@ export default function Bookingfooter({ payment }) {
             <View>
                 <View style={{ flexDirection: 'row' }}>
                     <FontAwesomeIcon style={{ marginTop: 5, left: 0 }} size={20} icon={faIndianRupeeSign} />
-                    <Text style={[Styles.bookingtext,{fontSize: 15}]}>722</Text>
+                    <Text style={[Styles.bookingtext, { fontSize: 15 }]}>722</Text>
                     <Text style={[Styles.bookingtext, { textDecorationLine: 'line-through', fontSize: 10, top: 5, left: 0 }]}>3367</Text>
                 </View>
                 <View>
@@ -23,12 +23,12 @@ export default function Bookingfooter({ payment }) {
             </View>
             <View>
                 <Pressable style={Styles.bookingbtn} onPress={() => {
-                  if(!isBooked){
-                    payment(true)
-                    setIsBooked(true)
-                  }else{
-                    navigation.navigate('Bookings')
-                  }
+                    if (!isBooked) {
+                        payment(true)
+                        setIsBooked(true)
+                    } else {
+                        navigation.navigate('Bookings')
+                    }
                 }}>
                     <Text style={Styles.bookingbtntext}>
                         {isBooked ? "Go to the Bookings" : "Book Now & Pay At Hotel"}

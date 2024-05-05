@@ -1,9 +1,7 @@
 import { SafeAreaView, ScrollView, KeyboardAvoidingView, View, StatusBar, BackHandler, Alert } from "react-native";
 import Homeheader from "../HomeComponents/header";
-import Location from "../HomeComponents/location";
 import RecommendationsText from "../HomeComponents/recommendationText";
 import RecommendationsOne from "../HomeComponents/recommendationsOne";
-import RecommendationsTwo from "../HomeComponents/recommendationsTwo";
 import Footer from "../Common Component/footer";
 import { Styles } from "../Common Component/Styles";
 import Navbar from "../HomeComponents/navbar";
@@ -14,6 +12,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import API_BASE_URL from "../Api";
 import { useFocusEffect } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
+import * as Location from 'expo-location';
+import Locations from "../HomeComponents/location";
+import { faUncharted } from "@fortawesome/free-brands-svg-icons";
 
 
 
@@ -22,7 +24,14 @@ import { useFocusEffect } from "@react-navigation/native";
 
 export default function Home() {
 
+    const [isMenubar, setMenubar] = useState(false)
+    const [isLoading, setloading] = useState(true)
     const [userData, setUserData] = useState('')
+    const [userLocation, setUserLocation] = useState();
+
+   
+    
+
 
     async function getdata() {
         const token = await AsyncStorage.getItem('token');
@@ -63,21 +72,51 @@ export default function Home() {
         })
     )
 
+
+    const getUserLocation = async () => {
+        try {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                Toast.show({
+                    type: 'error',
+                    text1: 'Location Permission Denied',
+                    visibilityTime: 3000,
+                    position: 'bottom'
+                });
+                console.log('Location permission denied');
+                return;
+            }
+
+           
+
+            let location = await Location.getCurrentPositionAsync({
+                accuracy: Location.Accuracy.High,
+            });
+            const { latitude, longitude } = location.coords;
+
+            let address = await Location.reverseGeocodeAsync({ latitude, longitude });
+            // console.log(address);
+            setUserLocation(address[0].city)
+        } catch (error) {
+            // console.error(error);
+            // Handle error while getting the location
+        }
+    };
+
+
+  
+
+    
+  
     useEffect(() => {
-        getdata()
-    }, )
-
-
-    const [isMenubar, setMenubar] = useState(false)
-    const [isLoading, setloading] = useState(true)
-
-    useEffect(() => {
-        setTimeout(() => {
-            setloading(false)
-        }, 1000);
+        getdata(),
+        getUserLocation()
     })
 
-    if (isLoading) {
+    
+
+
+    if (!userData) {
         return (
             <Loading />
         )
@@ -92,15 +131,15 @@ export default function Home() {
                 <StatusBar backgroundColor="white" barStyle="dark-content" />
                 <View style={[Styles.container, { alignItems: 'flex-start' }]}>
 
-                    <Homeheader Navbar={setMenubar} />
+                    <Homeheader Navbar={setMenubar} User={userData} />
                     <Navbar isState={isMenubar} setState={setMenubar} user={userData} />
 
                     <ScrollView>
 
-                        <Location />
+                        <Locations userLocation={userLocation} User={userData} />
                         <RecommendationsText />
-                        <RecommendationsOne />
-                        <RecommendationsTwo />
+                        <RecommendationsOne userLocation={userLocation} user={userData?userData._id:null} />
+                        <RecommendationsOne userLocation={userLocation} user={userData?userData._id:null} />
 
                     </ScrollView>
 

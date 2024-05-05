@@ -15,21 +15,35 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "To Find Nearby Hotels "
+      },
+      "bundleIdentifier": "com.adithyanskumar.NewProject"
     },
     "android": {
       "permissions": [
         "CAMERA_ROLL",
         "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE"
+        "WRITE_EXTERNAL_STORAGE",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
       ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "plum"
-      }
+      },
+      "package": "com.adithyanskumar.NewProject"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c3250b01-6ab4-4185-a3fc-ecaa1f586525"
+      }
+    },
+    "plugins": [
+    ]
   }
 }

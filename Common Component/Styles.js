@@ -93,7 +93,7 @@ export let Styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 25,
-        flexDirection: 'row',
+        // flexDirection: 'row',
         paddingLeft: 0
 
     },
@@ -101,7 +101,7 @@ export let Styles = StyleSheet.create({
         width: '80%',
         borderWidth: 0,
         textAlign: 'center',
-        fontSize: 20,
+        fontSize: 15,
     },
     locationContainer: {
         flexDirection: 'row',
@@ -159,8 +159,8 @@ export let Styles = StyleSheet.create({
     },
     recomendationContentBox: {
         backgroundColor: '#F1ECEC',
-        width: 330,
-        height: 320,
+        width: 300,
+        height: 300,
         marginLeft: 10,
         borderRadius: 25,
         marginTop: 10,
@@ -199,14 +199,14 @@ export let Styles = StyleSheet.create({
     ratingText: {
         color: 'black',
         fontWeight: 'bold',
-        fontSize: 15,
+        fontSize: 14,
         marginTop: 0,
         fontStyle: 'normal'
     },
     pricetext: {
         color: 'black',
         fontWeight: 'bold',
-        fontSize: 20,
+        fontSize: 15,
         marginTop: 5,
         left: 5,
         fontStyle: 'normal'
@@ -299,7 +299,7 @@ export let Styles = StyleSheet.create({
     },
     bookingLasttext: {
         color: '#016DD0',
-        fontSize: 15,
+        fontSize: 12,
         paddingLeft: 5,
         alignSelf: 'flex-end',
         right: '15%',
@@ -367,13 +367,13 @@ export let Styles = StyleSheet.create({
         top: '10%'
     },
     navtextone: {
-        fontSize: 15,
+        fontSize: 13,
         fontWeight: 'bold',
-        left:10
+        // left:10
 
     },
     navtexttwo: {
-        fontSize: 15,
+        fontSize: 13,
         color: 'grey',
         left:10
     },
@@ -398,10 +398,10 @@ export let Styles = StyleSheet.create({
         justifyContent: 'space-between',
         borderBottomColor: 'grey',
         borderBottomWidth: 1,
-        top: '10%',
+        // top: '10%',
         marginTop:'5%'
     },
-    confirmbox:{
+    confirmboxg:{
         width:'100%',
         height:120,
         backgroundColor:'#347442',
@@ -410,14 +410,34 @@ export let Styles = StyleSheet.create({
         alignItems:'flex-start',
         // paddingTop:'5%'
     },
+    confirmboxy:{
+        width:'100%',
+        height:120,
+        backgroundColor:'#dbc607',
+        justifyContent:'flex-start',
+        paddingLeft:'5%',
+        alignItems:'flex-start',
+        // paddingTop:'5%'
+    },
     confirmtext:{
         color:'white',
-        fontSize:20,
+        fontSize:13,
         fontWeight:'bold'
 
     },confirmboxtwo:{
         width:'100%',
         height:180,
+        backgroundColor:'#ffff',
+        justifyContent:'center',
+        paddingLeft:'5%',
+        borderTopRightRadius:30,
+        borderTopLeftRadius:30,
+        marginTop:-20,
+        paddingTop:'2%'
+    },
+    confirmboxtwoC:{
+        width:'100%',
+        height:120,
         backgroundColor:'#ffff',
         justifyContent:'center',
         paddingLeft:'5%',
@@ -436,10 +456,26 @@ export let Styles = StyleSheet.create({
         flexDirection:'row',
         paddingLeft:'2%'
     },
+    offerg:{
+        width:250,
+        height:30,
+        backgroundColor:'#347442',
+        borderRadius:10,
+        top:10,
+        justifyContent:'flex-start',alignItems:'center',
+        flexDirection:'row',
+        paddingLeft:'2%',
+    
+    },
     offertext:{
-    fontSize:15,
+    fontSize:12,
     fontWeight:'bold',
     color:'#B99207'
+    },
+    offertextg:{
+    fontSize:12,
+    fontWeight:'bold',
+    color:'#ffff'
     },
     orderdetails:{
 
@@ -457,11 +493,22 @@ export let Styles = StyleSheet.create({
     },
     checkingdetails:{
         width:'95%',
-        height:310,
+        height:510,
         // backgroundColor:'red',
         top:'2%',
         alignSelf:"center",
-        alignItems:'center'
+        alignItems:'center',
+        paddingBottom:5
+        // maxHeight:450
+    },
+    checkingdetailsC:{
+        width:'95%',
+        height:440,
+        // backgroundColor:'red',
+        top:'2%',
+        alignSelf:"center",
+        alignItems:'center',
+        // maxHeight:450
     },
     checkingbox:{
         flexDirection: 'row',
@@ -479,12 +526,14 @@ export let Styles = StyleSheet.create({
         height:95,
         backgroundColor:'white',
         alignItems:'flex-start',
+        elevation:5
     },
     footercontent:{
         flexDirection:'row',
         width:'100%',
         alignItems:'flex-start',
         justifyContent:'space-around',
+        top:10
         // backgroundColor:'red'
 
     },
@@ -493,7 +542,7 @@ export let Styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-start',
         marginTop: 0,
-        alignItems: 'center'
+        alignItems: 'center',
     },
     bookingsBox:{
         width:'100%',
@@ -599,6 +648,35 @@ export let Styles = StyleSheet.create({
                 marginBottom: 20,
                 textAlign: 'center',
             },
+            SearchContentBox: {
+                backgroundColor: '#F1ECEC',
+                width: 330,
+                height: 330,
+                marginLeft: 10,
+                borderRadius: 25,
+                marginTop: 10,
+                overflow: 'hidden'
+        
+            },
+            Searchimage: {
+                width: '100%',
+                height: 200,
+                objectFit: 'cover',
+                marginTop: -15
+        
+            },
+            cardField: {
+                width: '100%',
+                height: 50,
+                marginVertical: 20,
+              },
+              BookingHeading:{ 
+                flexDirection: 'row',
+                 justifyContent: 'space-around', 
+                 top: '11%',
+                 width:'100%',
+                 borderBottomWidth:0.5,
+                 paddingBottom:10 }
 
 
 

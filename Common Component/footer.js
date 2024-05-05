@@ -2,16 +2,37 @@ import { View, Text, SafeAreaView, Pressable, TextInput, ScrollView, Image, Touc
 import { Styles } from "./Styles";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { useState, useEffect } from "react";
-import { faLocationDot, faSearch, faBars, faIndianRupeeSign, faHouse, faHotel, faTag, faGift, faHeadset } from "@fortawesome/free-solid-svg-icons";
-import { faHeart, faStar, } from "@fortawesome/free-regular-svg-icons";
+import { faLocationDot, faSearch, faBars, faIndianRupeeSign, faHouse, faHotel, faTag, faGift, faHeadset,faHeart} from "@fortawesome/free-solid-svg-icons";
+import { faStar, } from "@fortawesome/free-regular-svg-icons";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import API_BASE_URL from "../Api";
+import Feather from 'react-native-vector-icons/Feather';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 
-export default function Footer() {
 
+export default function Footer({}) {
+
+    const [userData, setUserData] = useState('')
+
+    useEffect(()=>{
+        getdata()
+    })
+    async function getdata() {
+        const token = await AsyncStorage.getItem('token');
+        // console.log("Profile",token);
+        axios.post(`${API_BASE_URL}/user-data`, { token: token })
+            .then(res => {
+                // console.log(res.data);
+                setUserData(res.data.data)
+
+            });
+    }
+
+    
  
     const navigation = useNavigation()
     return (
@@ -21,38 +42,38 @@ export default function Footer() {
 
             <Pressable>
                 <View style={Styles.footerbox}>
-                    <FontAwesomeIcon size={25} icon={faHouse} />
+                    <Feather size={25} name="home"/>
                     <Text style={Styles.footertext}>Home</Text>
                 </View>
             </Pressable>
 
-            <Pressable onPress={() => navigation.navigate("Bookings")}>
+            <Pressable onPress={() => navigation.navigate("Bookings",{data:userData})}>
                 <View style={Styles.footerbox}>
-                    <FontAwesomeIcon size={25} icon={faHotel} />
+                <FontAwesome size={25} name="building-o"/>
                     <Text style={Styles.footertext}>Bookings</Text>
                 </View>
             </Pressable>
 
-            <Pressable>
-                <View style={Styles.footerbox}>
-                    <FontAwesomeIcon size={25} icon={faTag} />
-                    <Text style={Styles.footertext}>Offers</Text>
+            <Pressable onPress={()=>navigation.navigate("Search",{data:null})}>
+                <View style={Styles.footerbox}  >
+                <Feather size={25} name="search"/>
+                    <Text style={Styles.footertext}>Search</Text>
                 </View>
             </Pressable>
 
 
 
-            <Pressable>
-                <View style={Styles.footerbox}>
-                    <FontAwesomeIcon size={25} icon={faGift} />
-                    <Text style={Styles.footertext}>Win5000</Text>
+            <Pressable onPress={() => navigation.navigate("Fav",{data:userData})}>
+                <View style={Styles.footerbox} >
+                <Feather size={25} name="heart"/>
+                    <Text style={Styles.footertext}>Favourites</Text>
                 </View>
 
             </Pressable>
 
             <Pressable>
                 <View style={Styles.footerbox}>
-                    <FontAwesomeIcon size={25} icon={faHeadset} />
+                <Ionicons size={25} name="headset-outline"/>
                     <Text style={Styles.footertext}>NeedHelp</Text>
                 </View>
             </Pressable>
