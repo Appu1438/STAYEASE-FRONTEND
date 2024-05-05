@@ -62,7 +62,6 @@ export default function Footer({}) {
             </Pressable>
 
 
-
             <Pressable onPress={() => navigation.navigate("Fav",{data:userData})}>
                 <View style={Styles.footerbox} >
                 <Feather size={25} name="heart"/>
