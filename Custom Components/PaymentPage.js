@@ -147,7 +147,7 @@ export default function PaymentPage() {
                 navigation.navigate('Bookings', { data: UserData })
                 navigation.navigate('Confirmation', { data: bookingId })
             } else {
-                navigation.navigate("Bookings")
+                navigation.navigate("Bookings", { data: UserData })
             }
         }
         catch (err) {

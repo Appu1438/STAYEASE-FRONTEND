@@ -33,7 +33,7 @@ export let Styles = StyleSheet.create({
     signinimg: {
         width: 180,
         height: 180,
-        marginTop:-20
+        marginTop: -20
     },
     input: {
         width: 300,
@@ -44,9 +44,9 @@ export let Styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: 'bold',
         borderRadius: 10,
-        flexDirection:'column',
-        alignItems:'center',
-        justifyContent:'center'
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center'
 
 
     },
@@ -64,7 +64,7 @@ export let Styles = StyleSheet.create({
         color: 'white',
         fontSize: 15,
         fontWeight: 'bold',
-        fontFamily:'sans-serif'
+        fontFamily: 'sans-serif'
     },
 
     homeheader: {
@@ -152,20 +152,23 @@ export let Styles = StyleSheet.create({
         flexDirection: 'row',
         overflow: 'scroll',
         width: '100%',
-        height: 400,
+        height: 410,
         //  backgroundColor:'red',
-        padding: 10,
+        paddingBottom: 15,
+        paddingLeft: 10,
+        paddingRight: 10
 
     },
     recomendationContentBox: {
-        backgroundColor: '#F1ECEC',
         width: 300,
         height: 300,
         marginLeft: 10,
-        borderRadius: 25,
         marginTop: 10,
-        overflow: 'hidden'
-
+        borderRadius: 20,
+        borderWidth: 0.5,
+        borderColor: '#000000',
+        overflow: 'hidden',
+        
     },
     recomendationimage: {
         width: '100%',
@@ -235,7 +238,7 @@ export let Styles = StyleSheet.create({
     },
     detailViewImgBox: {
         width: '100%',
-        height: 250,
+        height: 280,
         flexDirection: "row",
         overflow: 'scroll',
         justifyContent: 'flex-start',
@@ -375,7 +378,7 @@ export let Styles = StyleSheet.create({
     navtexttwo: {
         fontSize: 13,
         color: 'grey',
-        left:10
+        left: 10
     },
     profilecontainer: {
         backgroundColor: 'white',
@@ -388,7 +391,7 @@ export let Styles = StyleSheet.create({
         color: "black",
         fontSize: 25,
         fontWeight: 'bold',
-      
+
     },
     profilebox: {
         flexDirection: 'row',
@@ -399,118 +402,118 @@ export let Styles = StyleSheet.create({
         borderBottomColor: 'grey',
         borderBottomWidth: 1,
         // top: '10%',
-        marginTop:'5%'
+        marginTop: '5%'
     },
-    confirmboxg:{
-        width:'100%',
-        height:120,
-        backgroundColor:'#347442',
-        justifyContent:'flex-start',
-        paddingLeft:'5%',
-        alignItems:'flex-start',
+    confirmboxg: {
+        width: '100%',
+        height: 120,
+        backgroundColor: '#347442',
+        justifyContent: 'flex-start',
+        paddingLeft: '5%',
+        alignItems: 'flex-start',
         // paddingTop:'5%'
     },
-    confirmboxy:{
-        width:'100%',
-        height:120,
-        backgroundColor:'#dbc607',
-        justifyContent:'flex-start',
-        paddingLeft:'5%',
-        alignItems:'flex-start',
+    confirmboxy: {
+        width: '100%',
+        height: 120,
+        backgroundColor: '#dbc607',
+        justifyContent: 'flex-start',
+        paddingLeft: '5%',
+        alignItems: 'flex-start',
         // paddingTop:'5%'
     },
-    confirmtext:{
-        color:'white',
-        fontSize:13,
-        fontWeight:'bold'
+    confirmtext: {
+        color: 'white',
+        fontSize: 13,
+        fontWeight: 'bold'
 
-    },confirmboxtwo:{
-        width:'100%',
-        height:180,
-        backgroundColor:'#ffff',
-        justifyContent:'center',
-        paddingLeft:'5%',
-        borderTopRightRadius:30,
-        borderTopLeftRadius:30,
-        marginTop:-20,
-        paddingTop:'2%'
+    }, confirmboxtwo: {
+        width: '100%',
+        height: 180,
+        backgroundColor: '#ffff',
+        justifyContent: 'center',
+        paddingLeft: '5%',
+        borderTopRightRadius: 30,
+        borderTopLeftRadius: 30,
+        marginTop: -20,
+        paddingTop: '2%'
     },
-    confirmboxtwoC:{
-        width:'100%',
-        height:120,
-        backgroundColor:'#ffff',
-        justifyContent:'center',
-        paddingLeft:'5%',
-        borderTopRightRadius:30,
-        borderTopLeftRadius:30,
-        marginTop:-20,
-        paddingTop:'2%'
+    confirmboxtwoC: {
+        width: '100%',
+        height: 120,
+        backgroundColor: '#ffff',
+        justifyContent: 'center',
+        paddingLeft: '5%',
+        borderTopRightRadius: 30,
+        borderTopLeftRadius: 30,
+        marginTop: -20,
+        paddingTop: '2%'
     },
-    offer:{
-        width:250,
-        height:30,
-        backgroundColor:'#F9E28E',
-        borderRadius:10,
-        top:10,
-        justifyContent:'flex-start',alignItems:'center',
-        flexDirection:'row',
-        paddingLeft:'2%'
+    offer: {
+        width: 250,
+        height: 30,
+        backgroundColor: '#F9E28E',
+        borderRadius: 10,
+        top: 10,
+        justifyContent: 'flex-start', alignItems: 'center',
+        flexDirection: 'row',
+        paddingLeft: '2%'
     },
-    offerg:{
-        width:250,
-        height:30,
-        backgroundColor:'#347442',
-        borderRadius:10,
-        top:10,
-        justifyContent:'flex-start',alignItems:'center',
-        flexDirection:'row',
-        paddingLeft:'2%',
-    
-    },
-    offertext:{
-    fontSize:12,
-    fontWeight:'bold',
-    color:'#B99207'
-    },
-    offertextg:{
-    fontSize:12,
-    fontWeight:'bold',
-    color:'#ffff'
-    },
-    orderdetails:{
+    offerg: {
+        width: 250,
+        height: 30,
+        backgroundColor: '#347442',
+        borderRadius: 10,
+        top: 10,
+        justifyContent: 'flex-start', alignItems: 'center',
+        flexDirection: 'row',
+        paddingLeft: '2%',
 
-        flexDirection:'row',top:'2%',justifyContent:"space-evenly"
     },
-    confirmboxthree:{
-        backgroundColor:'white',
+    offertext: {
+        fontSize: 12,
+        fontWeight: 'bold',
+        color: '#B99207'
+    },
+    offertextg: {
+        fontSize: 12,
+        fontWeight: 'bold',
+        color: '#ffff'
+    },
+    orderdetails: {
+
+        flexDirection: 'row', top: '2%', justifyContent: "space-evenly"
+    },
+    confirmboxthree: {
+        backgroundColor: 'white',
         // height:1000
     },
-    paymentimg:{
-        width:150,
-        height:100,
-        resizeMode:"cover",
-        borderRadius:10
+    paymentimg: {
+        width: 150,
+        height: 100,
+        resizeMode: "cover",
+        borderRadius: 10
     },
-    checkingdetails:{
-        width:'95%',
-        height:510,
+    checkingdetails: {
+        width: '95%',
+        height: 510,
         // backgroundColor:'red',
-        top:'2%',
-        alignSelf:"center",
-        alignItems:'center',
-        paddingBottom:5
+        top: '2%',
+        alignSelf: "center",
+        alignItems: 'center',
+        paddingBottom: 5
         // maxHeight:450
     },
-    checkingdetailsC:{
-        width:'95%',
-        height:440,
+    checkingdetailsC: {
+        width: '95%',
+        height: 440,
         // backgroundColor:'red',
-        top:'2%',
-        alignSelf:"center",
-        alignItems:'center',
+        top: '2%',
+        alignSelf: "center",
+        alignItems: 'center',
         // maxHeight:450
     },
-    checkingbox:{
+    checkingbox: {
         flexDirection: 'row',
         width: '90%',
         height: 65,
@@ -521,162 +524,163 @@ export let Styles = StyleSheet.create({
         top: '5%',
         // marginTop:'5%'
     },
-    CheckingFooter:{
-        width:'100%',
-        height:95,
-        backgroundColor:'white',
-        alignItems:'flex-start',
-        elevation:5
+    CheckingFooter: {
+        width: '100%',
+        height: 95,
+        backgroundColor: 'white',
+        alignItems: 'flex-start',
+        elevation: 5
     },
-    footercontent:{
-        flexDirection:'row',
-        width:'100%',
-        alignItems:'flex-start',
-        justifyContent:'space-around',
-        top:10
+    footercontent: {
+        flexDirection: 'row',
+        width: '100%',
+        alignItems: 'flex-start',
+        justifyContent: 'space-around',
+        top: 10
         // backgroundColor:'red'
 
     },
-    bookingContainer:{
+    bookingContainer: {
         backgroundColor: 'white',
         flex: 1,
         justifyContent: 'flex-start',
         marginTop: 0,
         alignItems: 'center',
     },
-    bookingsBox:{
-        width:'100%',
-        height:350,
-        backgroundColor:'white',
-        top:'10%',
-        borderBottomColor:'grey',
-        borderBottomWidth:2,
-        borderTopColor:'grey',
-        borderTopWidth:2,
+    bookingsBox: {
+        width: '100%',
+        height: 350,
+        backgroundColor: 'white',
+        top: '10%',
+        borderBottomColor: 'grey',
+        borderBottomWidth: 2,
+        borderTopColor: 'grey',
+        borderTopWidth: 2,
     },
-    bookedimg:{
-        width:'90%',
-        height:130,
-        resizeMode:"cover",
-        borderRadius:10
+    bookedimg: {
+        width: '90%',
+        height: 130,
+        resizeMode: "cover",
+        borderRadius: 10
     },
-    BookingboxContainer:{ 
+    BookingboxContainer: {
         // backgroundColor: 'blue', 
-        width: '100%', 
-        height: 180, 
+        width: '100%',
+        height: 180,
         flexDirection: 'row',
-         justifyContent: 'center', 
-         alignItems: 'center'
-         },
-         bookingContainerboxes:{
-            width: '50%',
-             height: 165,
-            //   backgroundColor: 'red' ,
-              alignItems:'center',
-              justifyContent:'center'
-         },
-         bookingContainerboxesone:{
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    bookingContainerboxes: {
+        width: '50%',
+        height: 165,
+        //   backgroundColor: 'red' ,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    bookingContainerboxesone: {
         //   backgroundColor: 'green', 
-          width: '100%', height: 100, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' 
+        width: '100%', height: 100, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'
 
-         },
-         bookingHoteldetails:{
-            width: 70,
-            height: 70,
-            borderRadius: 50,
-            marginLeft: 0,
-            marginTop: 10,
-            justifyContent: 'center',
-            alignItems: 'center',
-            overflow: 'hidden',
-            backgroundColor: 'grey',
-         },
-         bookingContainerboxlast:{
-            //  backgroundColor: 'pink',
-              width: '100%', height: 70, 
-              flexDirection: 'row', 
-              justifyContent: 'center',
-               alignItems: 'center' 
-            },
-            ralert:{
-                color:'red'
-            },
-            galert:{
-                color:"green",
-                // alignSelf:'flex-start',
-                // left:'20%'
-            },
-            radiobtndiv:{
-                width: 400,
-                height:55,
-                flexDirection:'row',
-                alignSelf:'flex-start',
-                marginTop:20,
-                alignItems:'center',
-                justifyContent:'space-evenly'
-            },
-            radiobtninnerdiv:{
-               flexDirection:'row'
-            },
-            radiobtntext:{
-                top:10
-            },
-            cardBox: {
-                padding: 10,
-              },
-              cardContainer: {
-                backgroundColor: "white",
-                borderRadius: 10,
-                padding: 20,
-                elevation: 2,
-              },
-              CardContainer: {
-                alignItems: "center",
-              },
-              CardText: {
-                fontSize: 16,
-                marginBottom: 10,
-              },
-              Userscontainer: {
-                flex: 1,
-                padding: 20,
-                backgroundColor: '#fff',
-            },
-            Usersheading: {
-                fontSize: 24,
-                fontWeight: 'bold',
-                marginBottom: 20,
-                textAlign: 'center',
-            },
-            SearchContentBox: {
-                backgroundColor: '#F1ECEC',
-                width: 330,
-                height: 330,
-                marginLeft: 10,
-                borderRadius: 25,
-                marginTop: 10,
-                overflow: 'hidden'
-        
-            },
-            Searchimage: {
-                width: '100%',
-                height: 200,
-                objectFit: 'cover',
-                marginTop: -15
-        
-            },
-            cardField: {
-                width: '100%',
-                height: 50,
-                marginVertical: 20,
-              },
-              BookingHeading:{ 
-                flexDirection: 'row',
-                 justifyContent: 'space-around', 
-                 top: '11%',
-                 width:'100%',
-                 borderBottomWidth:0.5,
-                 paddingBottom:10 }
+    },
+    bookingHoteldetails: {
+        width: 70,
+        height: 70,
+        borderRadius: 50,
+        marginLeft: 0,
+        marginTop: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        overflow: 'hidden',
+        backgroundColor: 'grey',
+    },
+    bookingContainerboxlast: {
+        //  backgroundColor: 'pink',
+        width: '100%', height: 70,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    ralert: {
+        color: 'red'
+    },
+    galert: {
+        color: "green",
+        // alignSelf:'flex-start',
+        // left:'20%'
+    },
+    radiobtndiv: {
+        width: 400,
+        height: 55,
+        flexDirection: 'row',
+        alignSelf: 'flex-start',
+        marginTop: 20,
+        alignItems: 'center',
+        justifyContent: 'space-evenly'
+    },
+    radiobtninnerdiv: {
+        flexDirection: 'row'
+    },
+    radiobtntext: {
+        top: 10
+    },
+    cardBox: {
+        padding: 10,
+    },
+    cardContainer: {
+        backgroundColor: "white",
+        borderRadius: 10,
+        padding: 20,
+        elevation: 2,
+    },
+    CardContainer: {
+        alignItems: "center",
+    },
+    CardText: {
+        fontSize: 16,
+        marginBottom: 10,
+    },
+    Userscontainer: {
+        flex: 1,
+        padding: 20,
+        backgroundColor: '#fff',
+    },
+    Usersheading: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        textAlign: 'center',
+    },
+    SearchContentBox: {
+        backgroundColor: '#F1ECEC',
+        width: 330,
+        height: 330,
+        marginLeft: 10,
+        borderRadius: 25,
+        marginTop: 10,
+        overflow: 'hidden'
+
+    },
+    Searchimage: {
+        width: '100%',
+        height: 200,
+        objectFit: 'cover',
+        marginTop: -15
+
+    },
+    cardField: {
+        width: '100%',
+        height: 50,
+        marginVertical: 20,
+    },
+    BookingHeading: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        top: '11%',
+        width: '100%',
+        borderBottomWidth: 0.5,
+        paddingBottom: 10
+    }
 
 
 

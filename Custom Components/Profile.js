@@ -44,14 +44,13 @@ export default function Profile() {
 
    useFocusEffect(
     React.useCallback(()=>{
-        getdata()
 
     })
    )
 
    useEffect(() => {
-
-  },[])
+    getdata()
+  })
 
     function SignOut() {
         AsyncStorage.setItem('isLoggedIn', '')

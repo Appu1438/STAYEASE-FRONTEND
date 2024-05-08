@@ -8,22 +8,22 @@ import axios from "axios";
 import API_BASE_URL from "../Api";
 import Toast from "react-native-toast-message";
 
-export default function Cancelled({Bookings}){
+export default function Cancelled({ Bookings }) {
 
-  
+
     const navigation = useNavigation()
 
     const [loading, setLoading] = useState(false);
 
     const [Showloading, setShowLoading] = useState(true);
 
-    useEffect(()=>{
+    useEffect(() => {
         setTimeout(() => {
             setShowLoading(false)
         }, 2000);
     })
 
-    
+
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         if (isNaN(date.getTime())) {
@@ -78,6 +78,19 @@ export default function Cancelled({Bookings}){
                         <Text style={styles.heading}>Payment Status:</Text>
                         <Text style={styles.value}>{item.PaymentStatus}</Text>
                     </View>
+                    
+                    {item.PaymentStatus == 'paid'||item.PaymentStatus=='Refunded' ? (<View style={styles.header}>
+                        <Text style={styles.heading}>Amount Paid:</Text>
+                        <Text style={styles.value}>{item.PaidAmount}</Text>
+                    </View>)
+                    : (null)}
+
+
+                    {item.PaymentStatus=='Refunded'?(<View style={styles.header}>
+                        <Text style={styles.heading}>Refunded Amount:</Text>
+                        <Text style={styles.value}>{item.RefundedAmount}</Text>
+                    </View>):(null)}
+
                     <TouchableOpacity style={styles.button} onPress={() => {
                         {
                             loading ? null : setLoading(true)

@@ -77,6 +77,10 @@ export default function Upcoming({Bookings}){
                         <Text style={styles.heading}>Payment Status:</Text>
                         <Text style={styles.value}>{item.PaymentStatus}</Text>
                     </View>
+                    {item.PaymentStatus=='paid'?(<View style={styles.header}>
+                        <Text style={styles.heading}>Amount Paid:</Text>
+                        <Text style={styles.value}>{item.PaidAmount}</Text>
+                    </View>):(null)}
                     <TouchableOpacity style={styles.button} onPress={() => {
                         {
                             loading ? null : setLoading(true)

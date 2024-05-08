@@ -1,9 +1,9 @@
 import { View, StatusBar, Text, ScrollView, SafeAreaView, Pressable, Image, Modal, StyleSheet, TouchableOpacity, useWindowDimensions, ActivityIndicator, FlatList } from "react-native";
 import { Styles } from "../Common Component/Styles";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Loading from "../Common Component/loading";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute,useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import API_BASE_URL from "../Api";
 import Toast from "react-native-toast-message";
@@ -44,8 +44,14 @@ export default function Bookings() {
     useEffect(() => {
         console.log(UserData)
         getBookings()
+
         // console.log(BookingDetails)
     }, [])
+
+    // useFocusEffect(
+    //     React.useCallback(()=>{
+    //     })
+    // )
 
 
 
@@ -58,12 +64,12 @@ export default function Bookings() {
                 // console.log(response.data.data)
                 setBookingDetails(response.data.data);
                 separateBookings(response.data.data)
-                Toast.show({
-                    type: 'success',
-                    text1: 'Your Bookings',
-                    visibilityTime: 3000,
-                    position: 'bottom'
-                });
+                // Toast.show({
+                //     type: 'success',
+                //     text1: 'Your Bookings',
+                //     visibilityTime: 3000,
+                //     position: 'bottom'
+                // });
             } else {
                 Toast.show({
                     type: 'error',

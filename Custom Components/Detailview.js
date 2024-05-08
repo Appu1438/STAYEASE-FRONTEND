@@ -1,4 +1,4 @@
-import { View, StatusBar, Text, ScrollView, SafeAreaView, Pressable, Image, Modal, StyleSheet, TouchableOpacity, useWindowDimensions,ActivityIndicator, Linking } from "react-native";
+import { View, StatusBar, Text, ScrollView, SafeAreaView, Pressable, Image, Modal, Dimensions, TouchableOpacity, useWindowDimensions, ActivityIndicator, Linking, PanResponder } from "react-native";
 import { Styles } from "../Common Component/Styles";
 import Moreimages from "../DetailViewComponent/Moreimage";
 import OtherDetails from "../DetailViewComponent/OtherDetails";
@@ -6,7 +6,7 @@ import BookingDetails from "../DetailViewComponent/bookingDetails";
 import Bookingfooter from "../DetailViewComponent/Book";
 import RecommendationsText from "../HomeComponents/recommendationText";
 import RecommendationsOne from "../HomeComponents/recommendationsOne";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Loading from "../Common Component/loading";
 import Payment from "./confirmation";
 import Bookings from "./ViewBooking";
@@ -18,7 +18,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome"
 import { faHeart } from "@fortawesome/free-regular-svg-icons"
 import { faStar } from "@fortawesome/free-regular-svg-icons"
 import { faUserGroup, faSquareParking, } from "@fortawesome/free-solid-svg-icons"
-import { faCalendarDays, faUser,faBed } from "@fortawesome/free-solid-svg-icons"
+import { faCalendarDays, faUser, faBed } from "@fortawesome/free-solid-svg-icons"
 import { faIndianRupeeSign } from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -34,6 +34,10 @@ import ConfirmationModal from "../Common Component/ConfirmationModal";
 
 export default function Detailview({ }) {
     let windowwidth = useWindowDimensions().width
+
+    const scrollViewRef = useRef(null);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const windowWidth = Dimensions.get('window').width;
 
     const navigation = useNavigation()
 
@@ -78,26 +82,26 @@ export default function Detailview({ }) {
     useEffect(() => {
         calculateTotalAmount();
     }, [selectedFromDate, selectedToDate]);
-    
+
 
     const setDates = () => {
         const currentDate = new Date();
         const oneHourAhead = new Date(currentDate.getTime() + (1 * 60 * 60 * 1000)); // Adding 1 hour
-        
+
         const tomorrowDate = new Date(currentDate.getTime());
         tomorrowDate.setDate(currentDate.getDate() + 1);
         const oneHourAheadTomorrow = new Date(tomorrowDate.getTime() + (1 * 60 * 60 * 1000)); // Adding 1 hour
-    
+
         setUnformatedSelectedFromDate(oneHourAhead);
         setUnformatedSelectedToDate(oneHourAheadTomorrow);
-    
+
         const formattedOneHourAhead = formatDate(oneHourAhead);
         const formattedOneHourAheadTomorrow = formatDate(oneHourAheadTomorrow);
-    
+
         setSelectedFromDate(formattedOneHourAhead);
         setSelectedToDate(formattedOneHourAheadTomorrow);
     };
-    
+
     // Function to format date to 'YYYY-MM-DD'
     const formatDate = (date) => {
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -139,13 +143,13 @@ export default function Detailview({ }) {
 
     const handleFromConfirm = (date) => {
         hideFromDatePicker();
-    
+
         // Setting selected from date to one hour ahead
         const oneHourAhead = new Date(date.getTime() + (1 * 60 * 60 * 1000));
         setUnformatedSelectedFromDate(oneHourAhead);
         const formattedFromDate = formatDate(oneHourAhead);
         setSelectedFromDate(formattedFromDate);
-    
+
         // Setting selected to date to one hour ahead of the next day
         const tomorrowDate = new Date(date.getTime());
         tomorrowDate.setDate(tomorrowDate.getDate() + 1);
@@ -154,21 +158,21 @@ export default function Detailview({ }) {
         const formattedToDate = formatDate(oneHourAheadTomorrow);
         setSelectedToDate(formattedToDate);
     };
-    
+
     const handleToConfirm = (date) => {
 
         hideToDatePicker();
         const oneHourAhead = new Date(date.getTime() + (1 * 60 * 60 * 1000)); // Adding 1 hour
 
         const formattedDate = formatDate(oneHourAhead);
-       
+
         if (formattedDate < selectedFromDate) {
 
             const nextDay = new Date(unformatedselectedFromDate);
             nextDay.setDate(nextDay.getDate() + 1);
             setUnformatedSelectedToDate(nextDay)
             const formattedNextDay = formatDate(nextDay);
-           
+
             setSelectedToDate(formattedNextDay);
             Toast.show({
                 type: 'error',
@@ -181,92 +185,92 @@ export default function Detailview({ }) {
             setSelectedToDate(formattedDate);
         }
     };
-    
-   const handleIncRoom=()=>{
-    console.log('plus')
-    if(Rooms!=4){
-        setRooms(Rooms+1)
-        setExtraAmount(ExtraAmount+220)
-        setTotal(Total+220)
-    }else{
-        Toast.show({
-            type: 'error',
-            text1: 'Max limit Reached',
-            visibilityTime: 2000,
-            position: 'bottom'
-        });
+
+    const handleIncRoom = () => {
+        console.log('plus')
+        if (Rooms != 4) {
+            setRooms(Rooms + 1)
+            setExtraAmount(ExtraAmount + 220)
+            setTotal(Total + 220)
+        } else {
+            Toast.show({
+                type: 'error',
+                text1: 'Max limit Reached',
+                visibilityTime: 2000,
+                position: 'bottom'
+            });
+        }
     }
-   }
-   const handleDecRoom=()=>{
-    console.log('minus')
-    if(Rooms!=1){
-        setRooms(Rooms-1)
-        setExtraAmount(ExtraAmount-220)
-        setTotal(Total-220)
+    const handleDecRoom = () => {
+        console.log('minus')
+        if (Rooms != 1) {
+            setRooms(Rooms - 1)
+            setExtraAmount(ExtraAmount - 220)
+            setTotal(Total - 220)
 
-    }else{
-        Toast.show({
-            type: 'error',
-            text1: 'Minimum One Room',
-            visibilityTime: 2000,
-            position: 'bottom'
-        });
+        } else {
+            Toast.show({
+                type: 'error',
+                text1: 'Minimum One Room',
+                visibilityTime: 2000,
+                position: 'bottom'
+            });
+        }
     }
-   }
-   const handleIncGuests=()=>{
-    console.log('plus')
-    const limit=Rooms*4
-    if(Guests!=limit){
-        setGuests(Guests+1)
-        setExtraAmount(ExtraAmount+75)
-        setTotal(Total+75)
+    const handleIncGuests = () => {
+        console.log('plus')
+        const limit = Rooms * 4
+        if (Guests != limit) {
+            setGuests(Guests + 1)
+            setExtraAmount(ExtraAmount + 75)
+            setTotal(Total + 75)
 
-    }else{
-        Toast.show({
-            type: 'error',
-            text1: 'Max limit for 1 Room is 4',
-            visibilityTime: 2000,
-            position: 'bottom'
-        });
+        } else {
+            Toast.show({
+                type: 'error',
+                text1: 'Max limit for 1 Room is 4',
+                visibilityTime: 2000,
+                position: 'bottom'
+            });
+        }
     }
-   }
-   const handleDecGuests=()=>{
-    console.log('minus')
-    if(Guests!=1){
-        setGuests(Guests-1)
-        setExtraAmount(ExtraAmount-75)
-        setTotal(Total-75)
+    const handleDecGuests = () => {
+        console.log('minus')
+        if (Guests != 1) {
+            setGuests(Guests - 1)
+            setExtraAmount(ExtraAmount - 75)
+            setTotal(Total - 75)
 
-    }else{
-        Toast.show({
-            type: 'error',
-            text1: 'Minimum One Person',
-            visibilityTime: 2000,
-            position: 'bottom'
-        });
+        } else {
+            Toast.show({
+                type: 'error',
+                text1: 'Minimum One Person',
+                visibilityTime: 2000,
+                position: 'bottom'
+            });
+        }
     }
-   }
 
-   const calculateTotalAmount =async () => {
-    // Calculate the number of days between selectedFromDate and selectedToDate
-    const startDate = await new Date(unformatedselectedFromDate);
-    const endDate =await new Date(unformatedselectedToDate);
-    const numberOfDays =await Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+    const calculateTotalAmount = async () => {
+        // Calculate the number of days between selectedFromDate and selectedToDate
+        const startDate = await new Date(unformatedselectedFromDate);
+        const endDate = await new Date(unformatedselectedToDate);
+        const numberOfDays = await Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
 
-    // Calculate the total amount based on room rate for the first day
-    // Assuming discounted rate is per day
-    const baseTotalAmount = BaseAmount;
+        // Calculate the total amount based on room rate for the first day
+        // Assuming discounted rate is per day
+        const baseTotalAmount = BaseAmount;
 
-    // Calculate the total amount for extra days beyond the first day
-    const extraDays = numberOfDays-1 ; // Exclude the first day
-    const extraDayRate = 340; // Additional rate per extra day
-    const extraDayAmount = extraDays * extraDayRate;
-    // Calculate the total amount including extra days
-    const totalAmount = baseTotalAmount + extraDayAmount;
+        // Calculate the total amount for extra days beyond the first day
+        const extraDays = numberOfDays - 1; // Exclude the first day
+        const extraDayRate = 340; // Additional rate per extra day
+        const extraDayAmount = extraDays * extraDayRate;
+        // Calculate the total amount including extra days
+        const totalAmount = baseTotalAmount + extraDayAmount;
 
-    // Update the Total state with the calculated amount
-    setTotal(totalAmount+ExtraAmount);
-};
+        // Update the Total state with the calculated amount
+        setTotal(totalAmount + ExtraAmount);
+    };
 
 
 
@@ -399,15 +403,15 @@ export default function Detailview({ }) {
                 userId: userData._id,
                 hotelId: Hoteldata._id,
                 hotelName: Hoteldata.hotelname,
-                BookedAt:new Date(),
+                BookedAt: new Date(),
                 CheckIn: unformatedselectedFromDate,
                 CheckOut: unformatedselectedToDate,
                 Rooms: Rooms,
                 Guests: Guests,
-                BookingId : generateBookingId(6),
-                TotalAmount:parseInt(Total)+parseInt(Hoteldata.taxandfee),
-                BookingStatus:"Confirmed",
-                PaymentStatus:'Not paid'
+                BookingId: generateBookingId(6),
+                TotalAmount: parseInt(Total) + parseInt(Hoteldata.taxandfee),
+                BookingStatus: "Confirmed",
+                PaymentStatus: 'Not paid'
                 // Add other booking details as needed
             };
             const response = await axios.post(`${API_BASE_URL}/submit-booking`, bookingData, {
@@ -419,7 +423,7 @@ export default function Detailview({ }) {
             if (response.data.status === 'ok') {
                 // Handle success, e.g., show a success message to the user
                 // console.log(response.data.data)
-                navigation.navigate('Confirmation',{data:response.data.data._id})
+                navigation.navigate('Confirmation', { data: response.data.data._id })
                 Toast.show({
                     type: 'success',
                     text1: 'Booking  successfull',
@@ -457,15 +461,22 @@ export default function Detailview({ }) {
         return bookingId;
     }
 
-    
-    const OpenMaps=()=>{
+
+    const OpenMaps = () => {
         console.log('Maps')
-        const Mapurl=Hoteldata.locationlink
-       
-         Linking.openURL(Mapurl);
+        const Mapurl = Hoteldata.locationlink
+
+        Linking.openURL(Mapurl);
 
     }
-    
+
+  
+
+    const handleImageChange = (index) => {
+        setCurrentIndex(index);
+        scrollViewRef.current.scrollTo({ x: windowWidth * index, y: 0, animated: true });
+    };
+
 
 
     if (!Hoteldata) {
@@ -478,19 +489,28 @@ export default function Detailview({ }) {
         return (
 
             <SafeAreaView style={[Styles.container, { alignItems: 'flex-start' }]}>
-                <StatusBar backgroundColor="white" barStyle="dark-content" />
+                <StatusBar translucent={true} backgroundColor="transparent" barStyle="light-content" />
 
                 <ScrollView style={{}}>
 
                     <ScrollView>
                         <View>
-                            <Pressable style={Styles.favourite} onPress={() => { isFav ? removeFromFavorites(Hoteldata._id) : addToFavorites(Hoteldata._id) }}>
+                            <Pressable style={[Styles.favourite,{top:40}]} onPress={() => { isFav ? removeFromFavorites(Hoteldata._id) : addToFavorites(Hoteldata._id) }}>
                                 <FontAwesome size={25} name={isFav ? 'heart' : 'heart-o'} color={isFav ? 'red' : 'black'} />
                             </Pressable>
                         </View>
 
-                        <ScrollView horizontal style={{ backgroundColor: 'red' }}>
-                            <View style={Styles.detailViewImgBox}>
+                        <ScrollView
+                            ref={scrollViewRef}
+                            horizontal
+                            pagingEnabled
+                            showsHorizontalScrollIndicator={false}
+                            onMomentumScrollEnd={(event) => {
+                                const newIndex = Math.round(event.nativeEvent.contentOffset.x / windowWidth);
+                                setCurrentIndex(newIndex);
+                            }}
+                              >                  
+                                <View style={Styles.detailViewImgBox}>
                                 {Hoteldata.images.map((image, index) => (
                                     <View key={index}>
                                         <Image style={[Styles.detailimg, { width: windowwidth }]} source={{ uri: image }} />
@@ -513,9 +533,9 @@ export default function Detailview({ }) {
 
                             <Text style={[Styles.detailText, { color: 'grey', fontSize: 15, marginTop: 0 }]}>{Hoteldata.location}</Text>
 
-                           <TouchableOpacity onPress={()=>OpenMaps()}>
-                            <Text style={[Styles.detailText, { color: '#016DD0', fontSize: 13 }]}>View on Map</Text>
-                            </TouchableOpacity> 
+                            <TouchableOpacity onPress={() => OpenMaps()}>
+                                <Text style={[Styles.detailText, { color: '#016DD0', fontSize: 13 }]}>View on Map</Text>
+                            </TouchableOpacity>
 
                             <Text style={[Styles.detailText, { fontSize: 15 }]}>Why Book this?</Text>
 
@@ -533,7 +553,7 @@ export default function Detailview({ }) {
                         <View style={Styles.bookingboxContainer}>
                             <View style={Styles.bookingbox}>
                                 <View style={[Styles.bookingboxes, {}]}>
-                                    
+
                                     <FontAwesomeIcon size={20} icon={faCalendarDays} />
                                     <FontAwesomeIcon size={20} icon={faBed} />
                                     <FontAwesomeIcon size={20} icon={faUserGroup} />
@@ -542,53 +562,53 @@ export default function Detailview({ }) {
 
                                 <View style={[Styles.bookingboxes, { width: '26%' }]}>
                                     <Text style={Styles.bookingtext}>Dates</Text>
-                                    <Text style={Styles.bookingtext}>Rooms</Text> 
-                                    <Text style={Styles.bookingtext}>Guests</Text> 
+                                    <Text style={Styles.bookingtext}>Rooms</Text>
+                                    <Text style={Styles.bookingtext}>Guests</Text>
                                     <Text style={Styles.bookingtext}>Booking For</Text>
                                 </View>
 
                                 <View style={[Styles.bookingboxes, { width: '64%', backgroundColor: 're' }]}>
 
-                                    <TouchableOpacity style={{flexDirection:'row',alignSelf:'flex-end',right:'10%'}}>
+                                    <TouchableOpacity style={{ flexDirection: 'row', alignSelf: 'flex-end', right: '10%' }}>
 
-                                    <TouchableOpacity onPress={showFromDatePicker}>
-                                        <Text style={Styles.bookingLasttext}>{selectedFromDate} -</Text>
-                                    </TouchableOpacity>
+                                        <TouchableOpacity onPress={showFromDatePicker}>
+                                            <Text style={Styles.bookingLasttext}>{selectedFromDate} -</Text>
+                                        </TouchableOpacity>
 
-                                    <TouchableOpacity  onPress={showToDatePicker}>
-                                        <Text style={Styles.bookingLasttext}>{selectedToDate}</Text>
-                                     </TouchableOpacity>
-
-                                    </TouchableOpacity>
-
-                                    <TouchableOpacity style={{flexDirection:'row',alignSelf:'flex-end',right:'15%'}}>
-
-                                    <TouchableOpacity onPress={handleDecRoom}> 
-                                        <AntDesign name="minussquareo" size={20}color='black'/>
-                                    </TouchableOpacity>
-
-                                    <Text style={[Styles.bookingLasttext,{alignSelf:'center'}]}>{Rooms}</Text>
-
-                                    <TouchableOpacity  onPress={handleIncRoom} >
-                                    <AntDesign name="plussquareo" size={20}color='black'/>
-                                     </TouchableOpacity>
+                                        <TouchableOpacity onPress={showToDatePicker}>
+                                            <Text style={Styles.bookingLasttext}>{selectedToDate}</Text>
+                                        </TouchableOpacity>
 
                                     </TouchableOpacity>
 
-                                    <TouchableOpacity style={{flexDirection:'row',alignSelf:'flex-end',right:'15%'}}>
+                                    <TouchableOpacity style={{ flexDirection: 'row', alignSelf: 'flex-end', right: '15%' }}>
 
-                                    <TouchableOpacity onPress={handleDecGuests}> 
-                                        <AntDesign name="minussquareo" size={20}color='black'/>
+                                        <TouchableOpacity onPress={handleDecRoom}>
+                                            <AntDesign name="minussquareo" size={20} color='black' />
+                                        </TouchableOpacity>
+
+                                        <Text style={[Styles.bookingLasttext, { alignSelf: 'center' }]}>{Rooms}</Text>
+
+                                        <TouchableOpacity onPress={handleIncRoom} >
+                                            <AntDesign name="plussquareo" size={20} color='black' />
+                                        </TouchableOpacity>
+
                                     </TouchableOpacity>
 
-                                    <Text style={[Styles.bookingLasttext,{alignSelf:'center'}]}>{Guests}</Text>
+                                    <TouchableOpacity style={{ flexDirection: 'row', alignSelf: 'flex-end', right: '15%' }}>
 
-                                    <TouchableOpacity  onPress={handleIncGuests} >
-                                    <AntDesign name="plussquareo" size={20}color='black'/>
-                                     </TouchableOpacity>
+                                        <TouchableOpacity onPress={handleDecGuests}>
+                                            <AntDesign name="minussquareo" size={20} color='black' />
+                                        </TouchableOpacity>
+
+                                        <Text style={[Styles.bookingLasttext, { alignSelf: 'center' }]}>{Guests}</Text>
+
+                                        <TouchableOpacity onPress={handleIncGuests} >
+                                            <AntDesign name="plussquareo" size={20} color='black' />
+                                        </TouchableOpacity>
 
                                     </TouchableOpacity>
-                                
+
                                     <Text style={Styles.bookingLasttext}>{userData.name}</Text>
                                 </View>
                             </View>
@@ -597,8 +617,10 @@ export default function Detailview({ }) {
                             isVisible={isFromDatePickerVisible}
                             mode="date"
                             minimumDate={new Date()} // Disable past dates
-                            onConfirm={(date)=>{handleFromConfirm(date),
-                                            showToDatePicker()}}
+                            onConfirm={(date) => {
+                                handleFromConfirm(date),
+                                    showToDatePicker()
+                            }}
                             onCancel={hideFromDatePicker}
                         />
                         <DateTimePickerModal
@@ -628,14 +650,18 @@ export default function Detailview({ }) {
                         </View>
                     </View>
                     <View>
-                        <TouchableOpacity style={Styles.bookingbtn} onPress={()=>{{loading?null:setloading(true)
-                                                                                                submitBooking()}}} >
-                            {loading?<ActivityIndicator color='white'/>:(
-                                  <Text style={Styles.bookingbtntext}>
-                                  Book Now & Pay At Hotel
-                              </Text>
+                        <TouchableOpacity style={Styles.bookingbtn} onPress={() => {
+                            {
+                                loading ? null : setloading(true)
+                                submitBooking()
+                            }
+                        }} >
+                            {loading ? <ActivityIndicator color='white' /> : (
+                                <Text style={Styles.bookingbtntext}>
+                                    Book Now & Pay At Hotel
+                                </Text>
                             )}
-                          
+
                         </TouchableOpacity>
                     </View>
                 </View>

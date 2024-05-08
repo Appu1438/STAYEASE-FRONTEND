@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faBookSkull, faL, faTag } from "@fortawesome/free-solid-svg-icons";
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute, } from "@react-navigation/native";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import API_BASE_URL from "../Api";
@@ -42,14 +42,17 @@ export default function Confirmation() {
 
     const currentDate = new Date()
     const [Looading, setLoading] = useState(false);
-    const [LooadingPay, setLoadingPay] = useState(false);
+    const [RefundedAmount, setRefundedAmount] = useState(0);
+    const [isModal, setIsModal] = useState(false);
 
 
     useEffect(() => {
         getdata();
         getBookingdetails();
-        setLoadingPay(false)
+
     }, []);
+
+
 
     const getOffer = async (BookingDetails) => {
         const bookingTime = new Date(BookingDetails.BookedAt);
@@ -78,14 +81,19 @@ export default function Confirmation() {
 
 
         // If current date is greater than checkout date, set booking as expired
-        if (BookingDetails.BookingStatus == 'Cancelled') {
+        if (BookingDetails.BookingStatus == 'Cancelled' && BookingDetails.PaymentStatus!='Refunded') {
             setTotal('');
             setNormalMessage('Your booking Cancelled');
             setOfferMessage(' No offers available');
             setBookingsts('Cancelled');
+        }else if(BookingDetails.BookingStatus == 'Cancelled' && BookingDetails.PaymentStatus=='Refunded'){
+            setTotal('');
+            setNormalMessage(`Your booking Cancelled , Rs ${BookingDetails.RefundedAmount} has been Refunded`);
+            setOfferMessage(' No offers available');
+            setBookingsts('Cancelled');
         } else if (BookingDetails.PaymentStatus == 'paid' && BookingDetails.BookingStatus != 'Cancelled' && currentTime < checkoutTime) {
             setTotal('');
-            setNormalMessage('Payment Successfull , Your are Paid ');
+            setNormalMessage(`Payment Successfull${BookingDetails.PaidAmount < BookingDetails.TotalAmount ? (` , You got a discount of ${parseInt(BookingDetails.TotalAmount) - parseInt(BookingDetails.PaidAmount)}`) : (null)}`);
             setOfferMessage(` Enjoy Your Booking `);
         }
         else if (currentTime > checkoutTime && BookingDetails.BookingStatus != 'Cancelled') {
@@ -212,6 +220,7 @@ export default function Confirmation() {
                 await getOffer(response.data.data)
                 setCheckin(new Date(response.data.data.CheckIn))
 
+
             } else {
                 Toast.show({
                     type: 'error',
@@ -310,10 +319,12 @@ export default function Confirmation() {
     }
 
     async function initiateRefund() {
-        console.log("Refund")
+
+        
         const data = {
             paymentMethodId: BookingDetails.PaymentDetails[0].paymentMethodId,
-            amount: BookingDetails.PaymentDetails[0].amount,
+            // amount: BookingDetails.PaymentDetails[0].amount,
+            amount:RefundedAmount*100,
             id: BookingDetails._id
         };
         try {
@@ -361,6 +372,32 @@ export default function Confirmation() {
         Linking.openURL(dialerUrl);
     }
 
+    async function calculaterefund() {
+
+        const currentDate = new Date();
+        const checkIn = new Date(BookingDetails.CheckIn);
+        const timeDifferenceInMillis = currentDate.getTime() - checkIn.getTime();
+        const timeDifferenceInHours = Math.abs(timeDifferenceInMillis / (1000 * 60 * 60)); // Convert milliseconds to hours
+
+        let refundPercentage = 0;
+        if (timeDifferenceInHours >= 4) {
+            refundPercentage = 1.00;
+        } else if (timeDifferenceInHours >= 3) {
+            refundPercentage = 0.75;
+        } else if (timeDifferenceInHours >= 2) {
+            refundPercentage = 0.50;
+        } else if (timeDifferenceInHours >= 1) {
+            refundPercentage = 0.25;
+        } else {
+            refundPercentage = 0
+        }
+
+        const refundAmount = parseInt(BookingDetails.PaidAmount) * refundPercentage;
+        setRefundedAmount(refundAmount)
+        return refundAmount;
+    }
+
+
 
 
 
@@ -390,11 +427,9 @@ export default function Confirmation() {
                             <Text style={[Styles.confirmtext, { top: '25%' }]}>Your booking is {Bookingsts}</Text>
 
                             {
-                                Bookingsts == 'Cancelled' && BookingDetails.PaymentStatus != 'Refunded' || Bookingsts == 'expired' ? null :
-                                    currentDate > Checkin ? (
+                                Bookingsts == 'Cancelled' || Bookingsts == 'expired' ? null
+                                    : currentDate > Checkin && Bookingsts != 'Cancelled' ? (
                                         <Text style={[Styles.confirmtext, { top: '26%' }]}>Cancellation Not Available </Text>
-                                    ) : BookingDetails.PaymentStatus == 'Refunded' ? (
-                                        <Text style={[Styles.confirmtext, { top: '26%' }]}>The Amount has been Refunded </Text>
                                     ) : (
                                         <Text style={[Styles.confirmtext, { top: '26%' }]}>Cancellation available until {formateTime(Checkin)} </Text>
                                     )
@@ -553,8 +588,12 @@ export default function Confirmation() {
                                     <>
                                         <Pressable style={[Styles.btn, { width: '95%', top: 20 }]} onPress={() => {
                                             {
-                                                Looading ? null : setLoading(true)
-                                                alertCan()
+                                                Looading !== null ?
+                                                    BookingDetails.PaymentStatus == 'paid' ?
+                                                        (setIsModal(true), calculaterefund(), setLoading(true), alertCan()) :
+                                                        (setLoading(true), alertCan()) :
+                                                    null;
+
                                             }
                                         }}>
                                             {Looading ? <ActivityIndicator color='white' /> : (
@@ -567,20 +606,29 @@ export default function Confirmation() {
 
                                     </>
                                 )}
-                                {Bookingsts == 'Cancelled' || currentDate > Checkin || Bookingsts == 'expired' ? (null) : (
+                                {currentDate > Checkin && Bookingsts != 'Cancelled' || Bookingsts == 'expired' ? (null) : (
 
                                     <>
-                                        <View style={{ alignSelf: 'flex-start' }}>
-                                            <Text style={[Styles.navtextone, { alignSelf: 'flex-start',left:17,top:25 }]}>Cancellation Charges Applicable!!</Text>
-                                        </View>
+                                        <TouchableOpacity style={{ alignSelf: 'flex-start',width:'100%',height:25,top:5 }}
+                                            onPress={() => {
+                                                setIsModal(true)
+                                                calculaterefund()
+                                            }} >
+                                            <Text
+                                                style={[Styles.navtextone, { alignSelf: 'flex-start', left: 19, top: 30 }]}
+                                            >
+                                                View Cancellation Charges!!</Text>
+                                        </TouchableOpacity>
 
                                     </>
                                 )}
 
-                                <View style={[Styles.checkingbox,]}>
+                                <View style={[Styles.checkingbox,{borderBottomWidth:0}]}>
 
                                     <View>
-                                        <Text style={[Styles.navtextone, { top: '0%' }]}>For any queries related to your bookings, feel free to contact us. We're here to assist you!</Text>
+                                        <Text
+
+                                            style={[Styles.navtextone, { top: '0%' }]}>For any queries related to your bookings, feel free to contact us. We're here to assist you!</Text>
                                     </View>
 
 
@@ -624,6 +672,62 @@ export default function Confirmation() {
 
 
                 </SafeAreaView>
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={isModal}
+                    onRequestClose={() => setIsModal(false)}
+                >
+
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                            <Text style={styles.modalTitle}>Cancellation Policy</Text>
+                            <Text style={styles.message}>This is a refund policy based on established guidelines.</Text>
+
+                            <View style={styles.row}>
+                                <Text style={styles.leftText}>Cancel Before 4 hours of Check-in</Text>
+                                <Text style={styles.rightText}>100% Return</Text>
+                            </View>
+                            <View style={styles.row}>
+                                <Text style={styles.leftText}>Before 3 hours</Text>
+                                <Text style={styles.rightText}>75%</Text>
+                            </View>
+                            <View style={styles.row}>
+                                <Text style={styles.leftText}>Before 2 hours</Text>
+                                <Text style={styles.rightText}>50%</Text>
+                            </View>
+                            <View style={styles.row}>
+                                <Text style={styles.leftText}>Before 1 hour</Text>
+                                <Text style={styles.rightText}>25%</Text>
+                            </View>
+                            <View style={styles.row}>
+                                <Text style={styles.leftText}>Less than 1 hour</Text>
+                                <Text style={styles.rightText}>0%</Text>
+                            </View>
+                            {BookingDetails.PaymentStatus == 'paid' ? (
+                                <Text style={styles.note}>
+                                    Refund Based on Current Status: Rs {RefundedAmount}
+                                </Text>
+                            )
+                             : (null)}
+
+                            <TouchableOpacity style={{ marginTop:20, zIndex: 1,alignSelf:'center' }} onPress={() => setIsModal(false)}>
+                                <AntDesign name="closecircleo" size={25} color='black' />
+                            </TouchableOpacity>
+
+                            {/* <Pressable
+                                onPress={() => setIsModal(false)}>
+                                <Text
+                                    style={styles.closeButton}
+                                >
+                                    Close
+                                </Text>
+                            </Pressable> */}
+
+                        </View>
+                    </View>
+                </Modal>
+
             </Modal>
 
 
@@ -661,6 +765,56 @@ const styles = StyleSheet.create({
         marginLeft: 0,
         color: '#444', /* Darker text color */
         marginTop: 5, /* Adjusted margin for better alignment with icon */
-    }
-
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+        backgroundColor: '#fff',
+        padding: 20,
+        borderRadius: 10,
+        width: '85%',
+    },
+    modalTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        textAlign: 'center',
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 5,
+    },
+    leftText: {
+        flex: 1,
+        textAlign: 'left',
+        fontSize: 12,
+    },
+    rightText: {
+        flex: 1,
+        textAlign: 'right',
+        fontSize: 12,
+    },
+    note: {
+        fontSize: 15,
+        marginTop: 10,
+        // fontStyle: 'italic',
+        textAlign: 'center',
+    },
+    closeButton: {
+        alignSelf: 'center',
+        marginTop: 20,
+        color: 'black',
+        // textDecorationLine: 'underline',
+        fontSize: 15,
+    },
+    message: {
+        fontSize: 13,
+        marginBottom: 10,
+        textAlign: 'center',
+    },
 })
