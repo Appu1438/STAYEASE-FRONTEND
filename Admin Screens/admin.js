@@ -100,8 +100,12 @@ export default function Admin() {
                     <Pressable style={styles.actionButton} onPress={() => navigation.navigate('Users')}>
                         <Text style={styles.actionButtonText}>Users</Text>
                     </Pressable>
+
                     <Pressable style={styles.actionButton} onPress={() => navigation.navigate('AddHotel')}>
                         <Text style={styles.actionButtonText}>Add Hotel</Text>
+                    </Pressable>
+                    <Pressable style={styles.actionButton} onPress={() => navigation.navigate('Pendings')}>
+                        <Text style={styles.actionButtonText}>Pending Requests</Text>
                     </Pressable>
                 </View>
             </View>

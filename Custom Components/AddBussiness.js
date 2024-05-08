@@ -1,6 +1,6 @@
 
 
-import { View, Text, SafeAreaView, Pressable, Alert, StyleSheet, Image, TouchableOpacity, TextInput, ScrollView } from "react-native"
+import { View, Text, SafeAreaView, Pressable, Alert, StyleSheet, Image, TouchableOpacity, TextInput, ScrollView, ActivityIndicator } from "react-native"
 import { Styles } from "../Common Component/Styles"
 import { useEffect, useState } from "react"
 import Loading from "../Common Component/loading"
@@ -20,10 +20,11 @@ import * as FileSystem from 'expo-file-system';
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as DocumentPicker from 'expo-document-picker';
 import { encode } from 'base-64';
+import { faL } from "@fortawesome/free-solid-svg-icons";
 
 
 
-export default function AddHotel() {
+export default function Addbussiness() {
     const navigation = useNavigation()
     const [HoteluserId,setHotelUserId]=useState('')
     const [Hotelname, setHotelName] = useState("")
@@ -44,11 +45,33 @@ export default function AddHotel() {
     const [imageThree, setimageThree] = useState("")
     const [imagefour, setimageFour] = useState("")
 
+    const [loadingOne, setLoadingOne] = useState(false)
+    const [loadingTwo, setLoadingTwo] = useState(false)
+    const [loadingThree, setLoadingThree] = useState(false)
+    const [loadingFour, setLoadingFour] = useState(false)
+    const [Loading, SetLoading] = useState(false)
+
     const route = useRoute()
+
+    useEffect(()=>{
+        getdata()
+    }),[]
 
 
   
-    const selectImage = async (State) => {
+
+    async function getdata() {
+        const token = await AsyncStorage.getItem('token');
+        // console.log("Profile",token);
+        axios.post(`${API_BASE_URL}/user-data`, { token: token })
+            .then(res => {
+                // console.log(res.data);
+                HoteluserId(res.data.data._id)
+
+            });
+    }
+    const selectImage = async (State,loading) => {
+        loading(true)
         try {
             const result = await DocumentPicker.getDocumentAsync({
                 type: 'image/*',
@@ -74,6 +97,7 @@ export default function AddHotel() {
             } else if (result.canceled ) {
                 console.log('Image selection cancelled.');
             }
+            loading(false)
         } catch (error) {
             console.error('Error selecting image: ', error);
         }
@@ -107,48 +131,51 @@ export default function AddHotel() {
     };
 
     async function handleSubmit(){
-        const Hoteldata={
-            hoteluserid:HoteluserId,
-            hotelname:Hotelname,
-            hotelnumber:Hotelnumber,
-            location:Location,
-            locationlink:LocationLink,
-            actualrate:ActualRate,
-            discountedrate:DiscountRate,
-            discountpercentage:DiscountPercentage,
-            taxandfee:TaxandFee,
-            rating:Rating,
-            reviewcount:ReviewCount,
-            facilities:[FacilityOne,FacilityTwo,FacilityThree],
-            images:[imageone,imagetwo,imageThree,imagefour]
-        }
-
-        await axios.post(`${API_BASE_URL}/add-hotel`,Hoteldata).then(res=>{
-            console.log(res.data)
-            if(res.data.status=='ok'){
-                Toast.show({
-                    type:'success',
-                    text1:JSON.stringify(res.data.data),
-                    visibilityTime:3000,
-                    position:'bottom'
-                })
-                navigation.navigate('Admin')
-            }else{
+        Loading(true)
+            const Hoteldata={
+                hoteluserid:HoteluserId,
+                hotelname:Hotelname,
+                hotelnumber:Hotelnumber,
+                location:Location,
+                locationlink:LocationLink,
+                actualrate:ActualRate,
+                discountedrate:DiscountRate,
+                discountpercentage:DiscountPercentage,
+                taxandfee:TaxandFee,
+                rating:Rating,
+                reviewcount:ReviewCount,
+                facilities:[FacilityOne,FacilityTwo,FacilityThree],
+                images:[imageone,imagetwo,imageThree,imagefour]
+            }
+    
+            await axios.post(`${API_BASE_URL}/req-hotel`,Hoteldata).then(res=>{
+                console.log(res.data)
+                if(res.data.status=='ok'){
+                    Toast.show({
+                        type:'success',
+                        text1:JSON.stringify(res.data.data),
+                        visibilityTime:3000,
+                        position:'bottom'
+                    })
+                    navigation.navigate('Home')
+                }else{
+                    Toast.show({
+                        type:'error',
+                        text1:JSON.stringify(res.data.data),
+                        visibilityTime:3000,
+                        position:'bottom'
+                    })
+                }
+             }).catch(err=>{
                 Toast.show({
                     type:'error',
-                    text1:JSON.stringify(res.data.data),
+                    text1:'Unknown Error Occured',
                     visibilityTime:3000,
                     position:'bottom'
                 })
-            }
-         }).catch(err=>{
-            Toast.show({
-                type:'error',
-                text1:'Unknown Error Occured',
-                visibilityTime:3000,
-                position:'bottom'
-            })
-       })
+           })
+           Loading(false)
+        
     }
 
     return (
@@ -156,7 +183,7 @@ export default function AddHotel() {
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
                 <View style={[Styles.container, styles.container]}>
                     <Image style={Styles.signinimg} source={require("../assets/hotels.png")} />
-                    <TextInput style={Styles.input} placeholder=" Hotel Name" onChange={(e) => setHotelName(e.nativeEvent.text)} />
+                    <TextInput style={Styles.input} placeholder=" Hotel Name Inculde STAYEASE" onChange={(e) => setHotelName(e.nativeEvent.text)} />
                     <TextInput style={Styles.input} placeholder=" Hotel Number" onChange={(e) => setHotelNumber(e.nativeEvent.text)} />
                     <TextInput style={Styles.input} placeholder="Location" onChange={(e) => setLocation(e.nativeEvent.text)} />
                     <TextInput style={Styles.input} placeholder="Location Google Map Link" onChange={(e) => setLocationLink(e.nativeEvent.text)} />
@@ -170,21 +197,22 @@ export default function AddHotel() {
                     <TextInput style={Styles.input} placeholder="Facility Two" onChange={(e) => setFacilityTwo(e.nativeEvent.text)} />
                     <TextInput style={Styles.input} placeholder="Facility Three" onChange={(e) => setFacilityThree(e.nativeEvent.text)} />
 
-                    <Pressable style={Styles.input} onPress={() => selectImage(setimageOne)} >
-                        <Text style={Styles}>{imageone ? "Selected" : "Select Image"}</Text>
+                    <Pressable style={Styles.input} onPress={() => selectImage(setimageOne,setLoadingOne)} >
+                        <Text style={Styles}>{loadingOne?'Processing':imageone ? "Selected" : "Select Image"}</Text>
                     </Pressable>
-                    <Pressable style={Styles.input} onPress={() => selectImage(setimageTwo)} >
-                        <Text style={Styles}>{imagetwo ? "Selected" : "Select Image"}</Text>
+                    <Pressable style={Styles.input} onPress={() => selectImage(setimageTwo,setLoadingTwo)} >
+                        <Text style={Styles}>{loadingTwo?'Processing':imagetwo ? "Selected" : "Select Image"}</Text>
                     </Pressable>
-                    <Pressable style={Styles.input} onPress={() => selectImage(setimageThree)} >
-                        <Text style={Styles}>{imageThree ? "Selected" : "Select Image"}</Text>
+                    <Pressable style={Styles.input} onPress={() => selectImage(setimageThree,setLoadingThree)} >
+                        <Text style={Styles}>{loadingThree?'Processing':imageThree ? "Selected" : "Select Image"}</Text>
                     </Pressable>
-                    <Pressable style={Styles.input} onPress={() => selectImage(setimageFour)} >
-                        <Text style={Styles}>{imagefour ? "Selected" : "Select Image"}</Text>
+                    <Pressable style={Styles.input} onPress={() => selectImage(setimageFour,setLoadingFour)} >
+                        <Text style={Styles}>{loadingFour?'Processing':imagefour ? "Selected" : "Select Image"}</Text>
                     </Pressable>
 
-                    <Pressable style={Styles.btn} onPress={()=>handleSubmit()} >
-                        <Text style={Styles.btntext}>Add</Text>
+                    <Pressable style={Styles.btn} onPress={()=>{Loading?null:
+                                                                        handleSubmit()}} >
+                        <Text style={Styles.btntext}>{Loading?<ActivityIndicator color='white'/>:'Request'}</Text>
                     </Pressable>
                 </View>
             </ScrollView>

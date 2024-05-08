@@ -20,8 +20,11 @@ import Fav from "./Custom Components/Favourites";
 import { StripeProvider } from "@stripe/stripe-react-native";
 import PaymentPage from "./Custom Components/PaymentPage";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-
-
+import { Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet } from "react-native";
+import Addbussiness from "./Custom Components/AddBussiness";
+import PendingRequests from "./Admin Screens/Pendings";
+import PendingDetailview from "./Admin Screens/PendingDetailview";
 
 
 const LoginNav = () => {
@@ -50,9 +53,7 @@ const UserNav = () => {
       <Stack.Screen name="UserLogout" component={LoginNav} />
       <Stack.Screen name="UpdateProfile" component={UpdateProfile} />
       <Stack.Screen name="Search" component={Search} />
-      <Stack.Screen name="Fav" component={Fav} />
-      <Stack.Screen name="Drawer" component={DrawerScreens} />
-      
+      <Stack.Screen name="Fav" component={Fav} />      
     </Stack.Navigator>
   )
 
@@ -66,11 +67,32 @@ const AdminNav = () => {
       <Stack.Screen name="Users" component={ShowUsers} />
       <Stack.Screen name="AdminLogout" component={LoginNav} />
       <Stack.Screen name="AddHotel" component={AddHotel} />
+      <Stack.Screen name="Pendings" component={PendingRequests} />
+      <Stack.Screen name="PendingsDetails" component={PendingDetailview} />
     </Stack.Navigator>
 
   )
 
 }
+
+const DrawerContent = ({ navigation }) => {
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity onPress={() => navigation.closeDrawer()}>
+      </TouchableOpacity>
+      <View style={styles.itemContainer}>
+        <Text style={styles.itemText}>Item 1</Text>
+      </View>
+      <View style={styles.itemContainer}>
+        <Text style={styles.itemText}>Item 2</Text>
+      </View>
+      <View style={styles.itemContainer}>
+        <Text style={styles.itemText}>Item 3</Text>
+      </View>
+    </View>
+  );
+};
+
 
 const DrawerScreens = () => {
   const Drawer = createDrawerNavigator();
@@ -78,9 +100,14 @@ const DrawerScreens = () => {
   return (
     <Drawer.Navigator   screenOptions={{
       headerShown: false, // Hide header
-    }}>
+    }}
+    >
+      
       <Drawer.Screen name="Homepage" component={Home} />
       <Drawer.Screen name="Profile" component={Profile} />
+      <Drawer.Screen name="Your Bussiness" component={Addbussiness} />
+      <Drawer.Screen name="Manage Bussiness" component={Addbussiness} />
+      <Drawer.Screen name="Bussiness Bookings" component={Addbussiness} />
     </Drawer.Navigator>
   )
 };
@@ -130,3 +157,16 @@ export default function App() {
 
 
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 50, // Adjust as needed
+    paddingHorizontal: 20, // Adjust as needed
+  },
+  itemContainer: {
+    marginBottom: 20, // Adjust as needed
+  },
+  itemText: {
+    fontSize: 18, // Adjust as needed
+  },
+});
