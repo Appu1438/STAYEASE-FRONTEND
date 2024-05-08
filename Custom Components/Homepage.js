@@ -15,7 +15,6 @@ import { useFocusEffect } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 import * as Location from 'expo-location';
 import Locations from "../HomeComponents/location";
-import { faUncharted } from "@fortawesome/free-brands-svg-icons";
 
 
 
@@ -24,7 +23,6 @@ import { faUncharted } from "@fortawesome/free-brands-svg-icons";
 
 export default function Home() {
 
-    const [isMenubar, setMenubar] = useState(false)
     const [isLoading, setloading] = useState(true)
     const [userData, setUserData] = useState('')
     const [userLocation, setUserLocation] = useState();
@@ -131,8 +129,8 @@ export default function Home() {
                 <StatusBar backgroundColor="white" barStyle="dark-content" />
                 <View style={[Styles.container, { alignItems: 'flex-start' }]}>
 
-                    <Homeheader Navbar={setMenubar} User={userData} />
-                    <Navbar isState={isMenubar} setState={setMenubar} user={userData} />
+                    <Homeheader />
+                    {/* <Navbar  /> */}
 
                     <ScrollView>
 

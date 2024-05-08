@@ -652,7 +652,8 @@ export let Styles = StyleSheet.create({
         textAlign: 'center',
     },
     SearchContentBox: {
-        backgroundColor: '#F1ECEC',
+        // backgroundColor: '#F1ECEC',
+        borderWidth:0.5,
         width: 330,
         height: 330,
         marginLeft: 10,

@@ -33,13 +33,13 @@
     "expo-image-manipulator": "~12.0.3",
     "expo-image-picker": "~15.0.4",
     "expo-location": "~17.0.1",
-    "expo-payments-stripe": "^10.0.1",
+    "expo-payments-stripe": "^8.4.0",
     "expo-paypal": "^1.1.2",
     "expo-status-bar": "~1.12.1",
     "expo-system-ui": "~3.0.4",
     "frames-react-native": "^1.1.9",
     "lottie-react-native": "6.7.0",
-    "razorpay": "^2.9.3",
+    "razorpay": "^0.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.51.3",
@@ -59,7 +59,7 @@
     "react-native-toast-message": "^2.2.0",
     "react-native-vector-icons": "^10.0.3",
     "react-native-web": "~0.19.10",
-    "rn-credit-card": "^0.2.0"
+    "rn-credit-card": "^0.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0"

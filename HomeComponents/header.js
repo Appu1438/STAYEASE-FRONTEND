@@ -9,7 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 
 
 
-export default function Homeheader({Navbar,User}){
+export default function Homeheader({}){
 
     const navigation=useNavigation()
     return(
@@ -18,7 +18,7 @@ export default function Homeheader({Navbar,User}){
 
         <View style={Styles.bar}>
 
-            <Pressable onPress={() =>Navbar(true)}>
+            <Pressable onPress={() =>navigation.openDrawer()}>
                 <FontAwesomeIcon size={30} icon={faBars} />
             </Pressable>
         </View>

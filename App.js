@@ -19,6 +19,8 @@ import Search from "./Custom Components/Search";
 import Fav from "./Custom Components/Favourites";
 import { StripeProvider } from "@stripe/stripe-react-native";
 import PaymentPage from "./Custom Components/PaymentPage";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+
 
 
 
@@ -40,16 +42,17 @@ const UserNav = () => {
   const Stack = createNativeStackNavigator();
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Home" component={Home} />
-      <Stack.Screen name="Profile" component={Profile} />
+      <Stack.Screen name="Home" component={DrawerScreens} />
       <Stack.Screen name="Detailview" component={Detailview} />
-      <Stack.Screen name="Confirmation" component={Confirmation}  />
+      <Stack.Screen name="Confirmation" component={Confirmation} />
       <Stack.Screen name="Payment" component={PaymentPage} />
       <Stack.Screen name="Bookings" component={Bookings} />
       <Stack.Screen name="UserLogout" component={LoginNav} />
       <Stack.Screen name="UpdateProfile" component={UpdateProfile} />
       <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="Fav" component={Fav} />
+      <Stack.Screen name="Drawer" component={DrawerScreens} />
+      
     </Stack.Navigator>
   )
 
@@ -68,6 +71,19 @@ const AdminNav = () => {
   )
 
 }
+
+const DrawerScreens = () => {
+  const Drawer = createDrawerNavigator();
+
+  return (
+    <Drawer.Navigator   screenOptions={{
+      headerShown: false, // Hide header
+    }}>
+      <Drawer.Screen name="Homepage" component={Home} />
+      <Drawer.Screen name="Profile" component={Profile} />
+    </Drawer.Navigator>
+  )
+};
 
 
 
