@@ -25,6 +25,8 @@ import { StyleSheet } from "react-native";
 import Addbussiness from "./Custom Components/AddBussiness";
 import PendingRequests from "./Admin Screens/Pendings";
 import PendingDetailview from "./Admin Screens/PendingDetailview";
+import Viewbussiness from "./Custom Components/ViewBussines";
+
 
 
 const LoginNav = () => {
@@ -75,24 +77,6 @@ const AdminNav = () => {
 
 }
 
-const DrawerContent = ({ navigation }) => {
-  return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.closeDrawer()}>
-      </TouchableOpacity>
-      <View style={styles.itemContainer}>
-        <Text style={styles.itemText}>Item 1</Text>
-      </View>
-      <View style={styles.itemContainer}>
-        <Text style={styles.itemText}>Item 2</Text>
-      </View>
-      <View style={styles.itemContainer}>
-        <Text style={styles.itemText}>Item 3</Text>
-      </View>
-    </View>
-  );
-};
-
 
 const DrawerScreens = () => {
   const Drawer = createDrawerNavigator();
@@ -106,7 +90,7 @@ const DrawerScreens = () => {
       <Drawer.Screen name="Homepage" component={Home} />
       <Drawer.Screen name="Profile" component={Profile} />
       <Drawer.Screen name="Your Bussiness" component={Addbussiness} />
-      <Drawer.Screen name="Manage Bussiness" component={Addbussiness} />
+      <Drawer.Screen name="Manage Bussiness" component={Viewbussiness} />
       <Drawer.Screen name="Bussiness Bookings" component={Addbussiness} />
     </Drawer.Navigator>
   )

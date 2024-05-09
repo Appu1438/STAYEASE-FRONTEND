@@ -1,4 +1,4 @@
-import { View, StatusBar, Text, ScrollView, SafeAreaView, Pressable, Image, Modal, Dimensions, TouchableOpacity, useWindowDimensions, ActivityIndicator, Linking, PanResponder } from "react-native";
+import { View, StatusBar, Text, ScrollView, SafeAreaView, Pressable, Image, Modal, Dimensions, TouchableOpacity, useWindowDimensions, ActivityIndicator, Linking, PanResponder, Alert } from "react-native";
 import { Styles } from "../Common Component/Styles";
 
 import { useEffect, useState, useRef } from "react";
@@ -67,45 +67,81 @@ export default function PendingDetailview({ }) {
         scrollViewRef.current.scrollTo({ x: windowWidth * index, y: 0, animated: true });
     };
 
-    async function  AcceptRequest(){
-        const HotelData={
-            hoteluserid:Hoteldata.hoteluserid,
-            hotelname:Hoteldata.hotelname,
-            hotelnumber:Hoteldata.hotelnumber,
-            location:Hoteldata.location,
-            locationlink:Hoteldata.locationlink,
-            actualrate:Hoteldata.actualrate,
-            discountedrate:Hoteldata.discountedrate,
-            discountpercentage:Hoteldata.discountpercentage,
-            taxandfee:Hoteldata.taxandfee,
-            rating:Hoteldata.rating,
-            reviewcount:Hoteldata.reviewcount,
-            facilities:Hoteldata.facilities,
-            images:Hoteldata.images
+    const handleAccept = () => {
+        Alert.alert('Accept Request', 'Do you want to Accept this Request', [{
+            text: 'cancel',
+            onPress: () => {
+                null
+                setloadingAccept(false)
+            },
+            style: 'cancel'
+        }, {
+            text: 'Accept',
+            onPress: () => AcceptRequest(),
+            style: 'cancel'
+        }
+        ])
+
+    }
+    const handleReject = () => {
+        Alert.alert('Reject Request', 'Do you want to Reject this Request', [{
+            text: 'cancel',
+            onPress: () => {
+                null
+                setloadingReject(false)
+            },
+            style: 'cancel'
+        }, {
+            text: 'Reject',
+            onPress: () => removeFromPendings(),
+            style: 'cancel'
+        }
+        ])
+
+    }
+
+    async function AcceptRequest() {
+        const HotelData = {
+            hoteluserid: Hoteldata.hoteluserid,
+            hotelname: Hoteldata.hotelname,
+            hotelnumber: Hoteldata.hotelnumber,
+            location: Hoteldata.location,
+            locationlink: Hoteldata.locationlink,
+            actualrate: Hoteldata.actualrate,
+            discountedrate: Hoteldata.discountedrate,
+            discountpercentage: Hoteldata.discountpercentage,
+            taxandfee: Hoteldata.taxandfee,
+            extraperhead: Hoteldata.extraperhead,
+            extraperroom: Hoteldata.extraperroom,
+            extraperday: Hoteldata.extraperday,
+            rating: Hoteldata.rating,
+            reviewcount: Hoteldata.reviewcount,
+            facilities: Hoteldata.facilities,
+            images: Hoteldata.images
         }
         setloadingAccept(true)
 
         try {
-            await axios.post(`${API_BASE_URL}/add-hotel`,HotelData).then(res=>{
+            await axios.post(`${API_BASE_URL}/add-hotel`, HotelData).then(res => {
                 console.log(res.data)
-                if(res.data.status=='ok'){
+                if (res.data.status == 'ok') {
                     Toast.show({
-                        type:'success',
-                        text1:JSON.stringify(res.data.data),
-                        visibilityTime:3000,
-                        position:'bottom'
+                        type: 'success',
+                        text1: JSON.stringify(res.data.data),
+                        visibilityTime: 3000,
+                        position: 'bottom'
                     })
                     removeFromPendings()
-                }else{
+                } else {
                     Toast.show({
-                        type:'error',
-                        text1:JSON.stringify(res.data.data),
-                        visibilityTime:3000,
-                        position:'bottom'
+                        type: 'error',
+                        text1: JSON.stringify(res.data.data),
+                        visibilityTime: 3000,
+                        position: 'bottom'
                     })
                 }
-             })
-            
+            })
+
         } catch (error) {
             console.log(error)
         }
@@ -114,30 +150,30 @@ export default function PendingDetailview({ }) {
 
     }
 
-    async function removeFromPendings(){
+    async function removeFromPendings() {
         console.log('remove')
         setloadingReject(true)
         try {
-            await axios.post(`${API_BASE_URL}/remove-pending-hotels`,{_id:Hoteldata._id}).then(res=>{
+            await axios.post(`${API_BASE_URL}/remove-pending-hotels`, { _id: Hoteldata._id }).then(res => {
                 console.log(res.data)
-                if(res.data.status=='ok'){
-                    Toast.show({
-                        type:'success',
-                        text1:JSON.stringify(res.data.data),
-                        visibilityTime:3000,
-                        position:'bottom'
-                    })
+                if (res.data.status == 'ok') {
+                    // Toast.show({
+                    //     type: 'success',
+                    //     text1: JSON.stringify(res.data.data),
+                    //     visibilityTime: 3000,
+                    //     position: 'bottom'
+                    // })
                     navigation.navigate('Admin')
-                }else{
+                } else {
                     Toast.show({
-                        type:'error',
-                        text1:JSON.stringify(res.data.data),
-                        visibilityTime:3000,
-                        position:'bottom'
+                        type: 'error',
+                        text1: JSON.stringify(res.data.data),
+                        visibilityTime: 3000,
+                        position: 'bottom'
                     })
                 }
             })
-            
+
         } catch (error) {
             console.log(error)
         }
@@ -217,7 +253,7 @@ export default function PendingDetailview({ }) {
 
                     <View>
                         <TouchableOpacity style={Styles.bookingbtn} onPress={() => {
-                            { loadingReject ? (null) : removeFromPendings() }
+                            { loadingReject ? (null) : handleReject() }
 
                         }} >
                             {loadingReject ? <ActivityIndicator color='white' /> : (
@@ -230,7 +266,7 @@ export default function PendingDetailview({ }) {
                     </View>
                     <View>
                         <TouchableOpacity style={Styles.bookingbtn} onPress={() => {
-                            { loadingAccept ? (null) : AcceptRequest() }
+                            { loadingAccept ? (null) : handleAccept() }
 
 
                         }} >

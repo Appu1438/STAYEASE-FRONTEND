@@ -43,7 +43,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.51.3",
-    "react-native": "0.74.1",
+    "react-native": "^0.74.1",
     "react-native-datepicker": "^1.7.2",
     "react-native-document-picker": "^9.1.1",
     "react-native-gesture-handler": "~2.16.1",

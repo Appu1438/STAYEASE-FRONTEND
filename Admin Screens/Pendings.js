@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Pressable, ScrollView, Image, FlatList, StatusBar } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faStar, faIndianRupeeSign } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
+import axios, { all } from "axios";
 import API_BASE_URL from "../Api";
 import Toast from "react-native-toast-message";
 import { Styles } from "../Common Component/Styles";
 
-export default function PendingRequests({navigation}) {
+export default function PendingRequests({ navigation }) {
     const [allHotels, setAllHotels] = useState([]);
 
     useEffect(() => {
@@ -47,7 +47,7 @@ export default function PendingRequests({navigation}) {
             }}
         >
             <View style={Styles.recomendationContentBox}>
-                
+
                 <Image style={Styles.recomendationimage} source={{ uri: item.images[0] }} />
                 <View style={Styles.rating}>
                     <FontAwesomeIcon style={{ paddingTop: 28 }} color="red" icon={faStar} size={15} />
@@ -67,11 +67,12 @@ export default function PendingRequests({navigation}) {
     );
 
     return (
-        <ScrollView style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
             <StatusBar backgroundColor="white" barStyle="dark-content" />
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                <FlatList data={allHotels} keyExtractor={(item) => item._id} renderItem={renderHotelCard} />
+                {allHotels.length > 0 ? (<FlatList data={allHotels} keyExtractor={(item) => item._id} renderItem={renderHotelCard} />
+                ) : (<Text style={{fontSize:20}}>No Pending Request Found</Text>)}
             </View>
-        </ScrollView>
+        </View>
     );
 }
