@@ -1,4 +1,4 @@
-import { View, StatusBar, Text, ScrollView, SafeAreaView, Pressable, Image, Modal, Dimensions, TouchableOpacity, useWindowDimensions, ActivityIndicator, Linking, PanResponder } from "react-native";
+import { View, StatusBar, Text, ScrollView, SafeAreaView, Pressable, Image, Modal, Dimensions, TouchableOpacity, useWindowDimensions, ActivityIndicator, Linking, PanResponder, Alert } from "react-native";
 import { Styles } from "../Common Component/Styles";
 import Moreimages from "../DetailViewComponent/Moreimage";
 import OtherDetails from "../DetailViewComponent/OtherDetails";
@@ -83,6 +83,12 @@ export default function Detailview({ }) {
         calculateTotalAmount();
     }, [selectedFromDate, selectedToDate]);
 
+    useEffect(() => {
+        console.log('decr')
+        if (Guests > Rooms * parseInt(Hoteldata.personsperroom)) {
+            setGuests(Rooms * parseInt(Hoteldata.personsperroom))
+        }
+    }, [Rooms, Guests])
 
     const setDates = () => {
         const currentDate = new Date();
@@ -188,14 +194,14 @@ export default function Detailview({ }) {
 
     const handleIncRoom = () => {
         console.log('plus')
-        if (Rooms != 4) {
+        if (Rooms != parseInt(Hoteldata.availablerooms)) {
             setRooms(Rooms + 1)
-            setExtraAmount(ExtraAmount + 220)
-            setTotal(Total + 220)
+            setExtraAmount(ExtraAmount + parseInt(Hoteldata.extraperroom))
+            setTotal(Total + parseInt(Hoteldata.extraperroom))
         } else {
             Toast.show({
                 type: 'error',
-                text1: 'Max limit Reached',
+                text1: `Currently Only ${Rooms} Rooms Available`,
                 visibilityTime: 2000,
                 position: 'bottom'
             });
@@ -205,8 +211,10 @@ export default function Detailview({ }) {
         console.log('minus')
         if (Rooms != 1) {
             setRooms(Rooms - 1)
-            setExtraAmount(ExtraAmount - 220)
-            setTotal(Total - 220)
+            setExtraAmount(ExtraAmount - parseInt(Hoteldata.extraperroom))
+            setTotal(Total - parseInt(Hoteldata.extraperroom))
+            setGuests(parseInt(Hoteldata.personsperroom) * Rooms)
+
 
         } else {
             Toast.show({
@@ -216,19 +224,21 @@ export default function Detailview({ }) {
                 position: 'bottom'
             });
         }
+
+
     }
     const handleIncGuests = () => {
         console.log('plus')
-        const limit = Rooms * 4
-        if (Guests != limit) {
+        const limit = Rooms * parseInt(Hoteldata.personsperroom)
+        if (Guests < limit) {
             setGuests(Guests + 1)
-            setExtraAmount(ExtraAmount + 75)
-            setTotal(Total + 75)
+            setExtraAmount(ExtraAmount + parseInt(Hoteldata.extraperhead))
+            setTotal(Total + parseInt(Hoteldata.extraperhead))
 
         } else {
             Toast.show({
                 type: 'error',
-                text1: 'Max limit for 1 Room is 4',
+                text1: `Max Persons in ${Rooms} Room is ${limit}`,
                 visibilityTime: 2000,
                 position: 'bottom'
             });
@@ -238,8 +248,8 @@ export default function Detailview({ }) {
         console.log('minus')
         if (Guests != 1) {
             setGuests(Guests - 1)
-            setExtraAmount(ExtraAmount - 75)
-            setTotal(Total - 75)
+            setExtraAmount(ExtraAmount - parseInt(Hoteldata.extraperhead))
+            setTotal(Total - parseInt(Hoteldata.extraperhead))
 
         } else {
             Toast.show({
@@ -263,7 +273,7 @@ export default function Detailview({ }) {
 
         // Calculate the total amount for extra days beyond the first day
         const extraDays = numberOfDays - 1; // Exclude the first day
-        const extraDayRate = 340; // Additional rate per extra day
+        const extraDayRate = parseInt(Hoteldata.extraperday); // Additional rate per extra day
         const extraDayAmount = extraDays * extraDayRate;
         // Calculate the total amount including extra days
         const totalAmount = baseTotalAmount + extraDayAmount;
@@ -395,56 +405,83 @@ export default function Detailview({ }) {
         return favorites.includes(hotelId);
     };
 
+    const handleBook=()=>{
+        Alert.alert('Book Hotel', 'Do you want to Book this Hotel', [{
+            text: 'cancel',
+            onPress: () => {
+                null
+                setloading(false)
+            },
+            style: 'cancel'
+        }, {
+            text: 'Book',
+            onPress: () => submitBooking(),
+            style: 'cancel'
+        }
+        ]) 
+       }
+
 
     const submitBooking = async () => {
-        try {
-            const token = await AsyncStorage.getItem('token');
-            const bookingData = {
-                userId: userData._id,
-                hotelId: Hoteldata._id,
-                hotelName: Hoteldata.hotelname,
-                BookedAt: new Date(),
-                CheckIn: unformatedselectedFromDate,
-                CheckOut: unformatedselectedToDate,
-                Rooms: Rooms,
-                Guests: Guests,
-                BookingId: generateBookingId(6),
-                TotalAmount: parseInt(Total) + parseInt(Hoteldata.taxandfee),
-                BookingStatus: "Confirmed",
-                PaymentStatus: 'Not paid'
-                // Add other booking details as needed
-            };
-            const response = await axios.post(`${API_BASE_URL}/submit-booking`, bookingData, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            setloading(false)
-            if (response.data.status === 'ok') {
-                // Handle success, e.g., show a success message to the user
-                // console.log(response.data.data)
-                navigation.navigate('Confirmation', { data: response.data.data._id })
-                Toast.show({
-                    type: 'success',
-                    text1: 'Booking  successfull',
-                    visibilityTime: 3000,
-                    position: 'bottom'
+        if(Rooms<=Guests){
+            try {
+                const token = await AsyncStorage.getItem('token');
+                const bookingData = {
+                    userId: userData._id,
+                    hotelId: Hoteldata._id,
+                    hotelName: Hoteldata.hotelname,
+                    BookedAt: new Date(),
+                    CheckIn: unformatedselectedFromDate,
+                    CheckOut: unformatedselectedToDate,
+                    Rooms: Rooms,
+                    Guests: Guests,
+                    BookingId: generateBookingId(6),
+                    TotalAmount: parseInt(Total) + parseInt(Hoteldata.taxandfee),
+                    BookingStatus: "Confirmed",
+                    PaymentStatus: 'Not paid'
+                    // Add other booking details as needed
+                };
+                const response = await axios.post(`${API_BASE_URL}/submit-booking`, bookingData, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
                 });
-            } else {
-                // Handle error from the backend, e.g., display an error message to the user
+                setloading(false)
+                if (response.data.status === 'ok') {
+                    // Handle success, e.g., show a success message to the user
+                    // console.log(response.data.data)
+                    navigation.navigate('Confirmation', { data: response.data.data._id })
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Booking  successfull',
+                        visibilityTime: 3000,
+                        position: 'bottom'
+                    });
+                } else {
+                    // Handle error from the backend, e.g., display an error message to the user
+                    Toast.show({
+                        type: 'error',
+                        text1: 'Failed to book',
+                        visibilityTime: 3000,
+                        position: 'bottom'
+                    });
+                }
+            } catch (error) {
+                // Handle network errors or other exceptions
+                console.error('Error submitting booking:', error);
                 Toast.show({
                     type: 'error',
-                    text1: 'Failed to book',
+                    text1: 'Error submitting booking',
                     visibilityTime: 3000,
                     position: 'bottom'
                 });
-            }
-        } catch (error) {
-            // Handle network errors or other exceptions
-            console.error('Error submitting booking:', error);
+        }
+       
+        }else{
+            setloading(false)
             Toast.show({
                 type: 'error',
-                text1: 'Error submitting booking',
+                text1: 'Please fill Rooms and Guests Correctly',
                 visibilityTime: 3000,
                 position: 'bottom'
             });
@@ -470,7 +507,7 @@ export default function Detailview({ }) {
 
     }
 
-  
+
 
     const handleImageChange = (index) => {
         setCurrentIndex(index);
@@ -495,7 +532,7 @@ export default function Detailview({ }) {
 
                     <ScrollView>
                         <View>
-                            <Pressable style={[Styles.favourite,{top:40}]} onPress={() => { isFav ? removeFromFavorites(Hoteldata._id) : addToFavorites(Hoteldata._id) }}>
+                            <Pressable style={[Styles.favourite, { top: 40 }]} onPress={() => { isFav ? removeFromFavorites(Hoteldata._id) : addToFavorites(Hoteldata._id) }}>
                                 <FontAwesome size={25} name={isFav ? 'heart' : 'heart-o'} color={isFav ? 'red' : 'black'} />
                             </Pressable>
                         </View>
@@ -509,8 +546,8 @@ export default function Detailview({ }) {
                                 const newIndex = Math.round(event.nativeEvent.contentOffset.x / windowWidth);
                                 setCurrentIndex(newIndex);
                             }}
-                              >                  
-                                <View style={Styles.detailViewImgBox}>
+                        >
+                            <View style={Styles.detailViewImgBox}>
                                 {Hoteldata.images.map((image, index) => (
                                     <View key={index}>
                                         <Image style={[Styles.detailimg, { width: windowwidth }]} source={{ uri: image }} />
@@ -653,7 +690,7 @@ export default function Detailview({ }) {
                         <TouchableOpacity style={Styles.bookingbtn} onPress={() => {
                             {
                                 loading ? null : setloading(true)
-                                submitBooking()
+                                handleBook()
                             }
                         }} >
                             {loading ? <ActivityIndicator color='white' /> : (

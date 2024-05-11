@@ -40,6 +40,8 @@ export default function Addbussiness() {
     const [FacilityOne, setFacilityOne] = useState("")
     const [FacilityTwo, setFacilityTwo] = useState("")
     const [FacilityThree, setFacilityThree] = useState("")
+    const [AvailableRooms, setAvailableRooms] = useState("")
+    const [PersonsPerRoom, setPersonsPerRoom] = useState("")
     const [ExtraRateperhead, setExtraRateperhead] = useState("")
     const [ExtraRateperRoom, setExtraRateperRoom] = useState("")
     const [ExtraRateperDay, setExtraRateperDay] = useState("")
@@ -135,6 +137,15 @@ export default function Addbussiness() {
     };
 
     async function handleSubmit() {
+        if (!Hotelname || !Hotelnumber || !Location || !LocationLink || !ActualRate || !DiscountRate || !DiscountPercentage || !TaxandFee || !Rating || !FacilityOne || !AvailableRooms || !PersonsPerRoom || !ExtraRateperhead || !ExtraRateperRoom || !ExtraRateperDay || !imageone || !imagetwo || !imageThree || !imagefour) {
+            Toast.show({
+                type: 'error',
+                text1: 'Please fill in all the required fields',
+                visibilityTime: 3000,
+                position: 'bottom'
+            });
+            return;
+        }
         SetLoading(true)
 
         const Hoteldata = {
@@ -147,11 +158,12 @@ export default function Addbussiness() {
             discountedrate: DiscountRate,
             discountpercentage: DiscountPercentage,
             taxandfee: TaxandFee,
-            extraperhead:ExtraRateperhead,
-            extraperroom:ExtraRateperRoom,
-            extraperday:ExtraRateperDay,
+            availablerooms: AvailableRooms,
+            personsperroom: PersonsPerRoom,
+            extraperhead: ExtraRateperhead,
+            extraperroom: ExtraRateperRoom,
+            extraperday: ExtraRateperDay,
             rating: Rating,
-            reviewcount: ReviewCount,
             facilities: [FacilityOne, FacilityTwo, FacilityThree],
             images: [imageone, imagetwo, imageThree, imagefour]
         }
@@ -191,12 +203,14 @@ export default function Addbussiness() {
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
                 <View style={[Styles.container, styles.container]}>
 
-                    <Image style={{width:170,height:150,top:-10}} source={require("../assets/hotels.png")} />
-                    <Text style={styles.message}>Grow your business with Us</Text>
+                    <Image style={{ width: 170, height: 150, top: -10 }} source={require("../assets/hotels.png")} />
+                    <Text style={styles.message}>Grow Up Your Business With Us</Text>
+                    <Text style={styles.requestMessage}>Interested in adding your business? Let us know!</Text>
+
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
                         <TextInput style={[Styles.input, { width: '45%' }]} placeholder=" Hotel Name Inculde Stay Ease" onChange={(e) => setHotelName(e.nativeEvent.text)} />
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder=" Hotel Number" onChange={(e) => setHotelNumber(e.nativeEvent.text)} />
+                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder=" Hotel Contact Number" onChange={(e) => setHotelNumber(e.nativeEvent.text)} />
                     </View>
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
@@ -216,37 +230,46 @@ export default function Addbussiness() {
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
                         <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Rating" onChange={(e) => setRating(e.nativeEvent.text)} />
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Review Count" onChange={(e) => setReviewCount(e.nativeEvent.text)} />
-                    </View>
-
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
                         <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Facility One" onChange={(e) => setFacilityOne(e.nativeEvent.text)} />
+                        {/* <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Review Count" onChange={(e) => setReviewCount(e.nativeEvent.text)} /> */}
+                    </View>
+
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
                         <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Facility Two" onChange={(e) => setFacilityTwo(e.nativeEvent.text)} />
-                    </View>
-
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
                         <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Facility Three" onChange={(e) => setFacilityThree(e.nativeEvent.text)} />
+
+                    </View>
+
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
                         <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Extra Rate Per Head" onChange={(e) => setExtraRateperhead(e.nativeEvent.text)} />
-                    </View>
-
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
                         <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Extra Rate Per Room" onChange={(e) => setExtraRateperRoom(e.nativeEvent.text)} />
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Extra Rate Per Day" onChange={(e) => setExtraRateperDay(e.nativeEvent.text)} />
+
                     </View>
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
+                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Extra Rate Per Day" onChange={(e) => setExtraRateperDay(e.nativeEvent.text)} />
+                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="No: Of Rooms Currently Available" onChange={(e) => setAvailableRooms(e.nativeEvent.text)} />
+                    </View>
+
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
+                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="No: Of Persons Per Room" onChange={(e) => setPersonsPerRoom(e.nativeEvent.text)} />
                         <Pressable style={[Styles.input, { width: '45%' }]} onPress={() => selectImage(setimageOne, setLoadingOne)} >
                             <Text style={Styles}>{loadingOne ? 'Processing' : imageone ? "Selected" : "Select Image"}</Text>
                         </Pressable>
+                    </View>
+
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
+
                         <Pressable style={[Styles.input, { width: '45%' }]} onPress={() => selectImage(setimageTwo, setLoadingTwo)} >
                             <Text style={Styles}>{loadingTwo ? 'Processing' : imagetwo ? "Selected" : "Select Image"}</Text>
+                        </Pressable>
+                        <Pressable style={[Styles.input, { width: '45%' }]} onPress={() => selectImage(setimageThree, setLoadingThree)} >
+                            <Text style={Styles}>{loadingThree ? 'Processing' : imageThree ? "Selected" : "Select Image"}</Text>
                         </Pressable>
                     </View>
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
-                        <Pressable style={[Styles.input, { width: '45%' }]} onPress={() => selectImage(setimageThree, setLoadingThree)} >
-                            <Text style={Styles}>{loadingThree ? 'Processing' : imageThree ? "Selected" : "Select Image"}</Text>
-                        </Pressable>
+
                         <Pressable style={[Styles.input, { width: '45%' }]} onPress={() => selectImage(setimageFour, setLoadingFour)} >
                             <Text style={Styles}>{loadingFour ? 'Processing' : imagefour ? "Selected" : "Select Image"}</Text>
                         </Pressable></View>
@@ -272,11 +295,15 @@ const styles = StyleSheet.create({
     container: {
         alignItems: "center",
         justifyContent: 'flex-start',
-        paddingTop: '2%',
+        paddingTop: '0%',
+        paddingBottom: 20
     },
     message: {
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: 'bold',
-        marginBottom: 20,
+        marginBottom: 5,
     },
+    requestMessage: {
+        fontSize: 15
+    }
 })

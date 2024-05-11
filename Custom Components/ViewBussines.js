@@ -30,6 +30,7 @@ export default function Viewbussiness() {
     const navigation = useNavigation()
 
     const [HoteluserId, setHotelUserId] = useState('')
+    const [Loading, setLoading] = useState(true)
 
     const route = useRoute()
 
@@ -79,6 +80,7 @@ export default function Viewbussiness() {
                 position: "bottom",
             });
         }
+        setLoading(false)
     };
 
     const renderHotelCard = ({ item }) => (
@@ -110,15 +112,20 @@ export default function Viewbussiness() {
     );
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1,backgroundColor:'white'}}>
+            <StatusBar backgroundColor="white" barStyle="dark-content" />
+
             <View style={{ left: '5%', top: '5%', alignSelf: 'flex-start' }}>
                 <Text style={Styles.profile}>Your Bussiness</Text>
             </View>
-            <View style={{ flex: 1, alignItems: "center", justifyContent: "center",top:'5%' }}>
+            <View style={{ flex: 1, alignItems: "center", justifyContent: "center", top: '5%' }}>
+                <>{Loading ? (<ActivityIndicator size={30} color='black' />) 
+                : (
+                     allHotels.length > 0 ? (<FlatList data={allHotels} keyExtractor={(item) => item._id} renderItem={renderHotelCard} />
+                    ) : (<Text style={{ fontSize: 20 }}>No Hotels Found</Text>)
 
-                <StatusBar backgroundColor="white" barStyle="dark-content" />
-                {allHotels.length > 0 ? (<FlatList data={allHotels} keyExtractor={(item) => item._id} renderItem={renderHotelCard} />
-                ) : (<Text style={{ fontSize: 20 }}>No Hotels Found</Text>)}
+                )}
+                </>
             </View>
         </View>
     );

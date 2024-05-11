@@ -26,6 +26,8 @@ import Addbussiness from "./Custom Components/AddBussiness";
 import PendingRequests from "./Admin Screens/Pendings";
 import PendingDetailview from "./Admin Screens/PendingDetailview";
 import Viewbussiness from "./Custom Components/ViewBussines";
+import Navbar from "./HomeComponents/navbar";
+
 
 
 
@@ -85,13 +87,13 @@ const DrawerScreens = () => {
     <Drawer.Navigator   screenOptions={{
       headerShown: false, // Hide header
     }}
-    >
+   >
       
       <Drawer.Screen name="Homepage" component={Home} />
       <Drawer.Screen name="Profile" component={Profile} />
-      <Drawer.Screen name="Your Bussiness" component={Addbussiness} />
-      <Drawer.Screen name="Manage Bussiness" component={Viewbussiness} />
-      <Drawer.Screen name="Bussiness Bookings" component={Addbussiness} />
+      <Drawer.Screen name="Add Your Bussiness" component={Addbussiness} />
+      <Drawer.Screen name="Manage Your Bussiness" component={Viewbussiness} />
+      <Drawer.Screen name="Your Bussiness Bookings" component={Addbussiness} />
     </Drawer.Navigator>
   )
 };

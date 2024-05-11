@@ -111,11 +111,12 @@ export default function PendingDetailview({ }) {
             discountedrate: Hoteldata.discountedrate,
             discountpercentage: Hoteldata.discountpercentage,
             taxandfee: Hoteldata.taxandfee,
+            availablerooms: Hoteldata.availablerooms,
+            personsperroom: Hoteldata.personsperroom,
             extraperhead: Hoteldata.extraperhead,
             extraperroom: Hoteldata.extraperroom,
             extraperday: Hoteldata.extraperday,
             rating: Hoteldata.rating,
-            reviewcount: Hoteldata.reviewcount,
             facilities: Hoteldata.facilities,
             images: Hoteldata.images
         }

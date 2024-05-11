@@ -110,12 +110,13 @@ export let Styles = StyleSheet.create({
         marginTop: 0,
         width: '100%',
         height: 120,
+        paddingRight:10
 
     },
 
     locationbox: {
-        width: 75,
-        height: 75,
+        width: 70,
+        height: 70,
         borderRadius: 50,
         marginLeft: 0,
         marginTop: 10,
