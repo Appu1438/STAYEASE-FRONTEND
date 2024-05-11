@@ -23,7 +23,7 @@ import * as DocumentPicker from 'expo-document-picker';
 
 
 
-export default function Addbussiness() {
+export default function AddBussiness() {
     const navigation = useNavigation()
 
     const [HoteluserId, setHotelUserId] = useState('')

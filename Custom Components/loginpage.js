@@ -32,7 +32,7 @@ export default function Login() {
                 email: email,
                 password: password
             };
-           
+
             axios.post(`${API_BASE_URL}/login-user`, userdata)
                 .then(res => {
                     if (res.data.status === 'ok') {
@@ -46,12 +46,11 @@ export default function Login() {
                         AsyncStorage.setItem('isLoggedIn', JSON.stringify(true))
                         AsyncStorage.setItem('userType', res.data.userType)
                         if (res.data.userType == 'Admin') {
-                           
                             navigation.navigate("AdminLoggedin");
-                        } else  {
-                            
+                        } else if (res.data.userType == 'Business') {
+                            navigation.navigate("HotelLoggedin");
+                        } else {
                             navigation.navigate("UserLoggedin");
-
                         }
                     } else {
                         Toast.show({
@@ -131,13 +130,13 @@ export default function Login() {
         <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={0} style={[Styles.container]}>
             <View style={{ alignItems: "center", justifyContent: 'center' }} >
                 <Image style={Styles.loginimg} source={require("../assets/loginimg.png")}></Image>
-                <Text style={[Styles.text,{fontSize:18}]}>Sign to View Your Profile </Text>
+                <Text style={[Styles.text, { fontSize: 18 }]}>Sign to View Your Profile </Text>
                 <Text style={[Styles.text, { marginTop: 0, fontSize: 15 }]}>Your profile data is Saved to your account</Text>
-              
-              
+
+
                 <TextInput style={Styles.input} placeholder="Enter Your Email Address" onChange={e => handleemail(e)}></TextInput>
                 {email.length < 1 ? null : emailVerify ? (null) : (<Text style={Styles.ralert}>Please Enter a vaild Email Address</Text>)}
-               
+
                 <View style={[Styles.input]}>
 
                     <TextInput style={{ fontSize: 13, fontWeight: 'bold', textAlign: 'center' }} placeholder="Enter Your Password"
@@ -151,8 +150,8 @@ export default function Login() {
                     </Pressable>
 
                 </View>
-                
-                <Pressable style={{alignSelf:'flex-end',right:10}} onPress={()=>navigation.navigate('Forgot')}>
+
+                <Pressable style={{ alignSelf: 'flex-end', right: 10 }} onPress={() => navigation.navigate('Forgot')}>
                     <Text style={[{ marginTop: 10, fontSize: 15 }]}>Forgot Password?</Text>
 
                 </Pressable>

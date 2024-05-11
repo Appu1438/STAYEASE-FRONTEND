@@ -317,7 +317,7 @@ export default function Search() {
                     
                 </View>
 
-                <View style={{ flex: 1, marginTop: 10, alignItems: 'center' }}>
+                <View style={{ flex: 1, marginTop: 10, alignItems: 'center',paddingBottom:20 }}>
                     {isLoading ? <Loading /> : randomHotels.length == 0 ? (
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                             <Text style={{ fontSize: 20 }}>No hotels found</Text>

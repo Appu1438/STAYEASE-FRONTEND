@@ -85,7 +85,7 @@ export default function Detailview({ }) {
 
     useEffect(() => {
         console.log('decr')
-        if (Guests > Rooms * parseInt(Hoteldata.personsperroom)) {
+        if (Guests-1 > Rooms * parseInt(Hoteldata.personsperroom)) {
             setGuests(Rooms * parseInt(Hoteldata.personsperroom))
         }
     }, [Rooms, Guests])
@@ -429,6 +429,7 @@ export default function Detailview({ }) {
                 const bookingData = {
                     userId: userData._id,
                     hotelId: Hoteldata._id,
+                    hoteluserId:Hoteldata.hoteluserid,
                     hotelName: Hoteldata.hotelname,
                     BookedAt: new Date(),
                     CheckIn: unformatedselectedFromDate,

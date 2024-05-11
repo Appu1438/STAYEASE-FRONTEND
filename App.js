@@ -22,13 +22,12 @@ import PaymentPage from "./Custom Components/PaymentPage";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Text, TouchableOpacity, View } from "react-native";
 import { StyleSheet } from "react-native";
-import Addbussiness from "./Custom Components/AddBussiness";
 import PendingRequests from "./Admin Screens/Pendings";
 import PendingDetailview from "./Admin Screens/PendingDetailview";
-import Viewbussiness from "./Custom Components/ViewBussines";
-import Navbar from "./HomeComponents/navbar";
-
-
+import Navbar from "./HomeComponents/navbar"
+import Viewbussiness from "./HotelScreens/ViewBussines";
+import AddBussiness from "./HotelScreens/AddBusiness";
+import BusinessBookings from "./HotelScreens/ViewBusinessBookings";
 
 
 const LoginNav = () => {
@@ -39,6 +38,7 @@ const LoginNav = () => {
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="Forgot" component={ForgotPassword} />
       <Stack.Screen name="UserLoggedin" component={UserNav} />
+      <Stack.Screen name="HotelLoggedin" component={HotelNav} />
       <Stack.Screen name="AdminLoggedin" component={AdminNav} />
     </Stack.Navigator>
   )
@@ -62,6 +62,20 @@ const UserNav = () => {
   )
 
 }
+const UserDrawerScreens = () => {
+  const Drawer = createDrawerNavigator();
+
+  return (
+    <Drawer.Navigator   screenOptions={{
+      headerShown: false, // Hide header
+    }}
+   > 
+      <Drawer.Screen name="HomeScreen" component={Home} />
+      <Drawer.Screen name="Profile" component={Profile} />
+    </Drawer.Navigator>
+  )
+};
+
 const HotelNav = () => {
   const Stack = createNativeStackNavigator();
   return (
@@ -79,6 +93,22 @@ const HotelNav = () => {
   )
 
 }
+const DrawerScreens = () => {
+  const Drawer = createDrawerNavigator();
+
+  return (
+    <Drawer.Navigator   screenOptions={{
+      headerShown: false, // Hide header
+    }}
+   > 
+      <Drawer.Screen name="Homepage" component={Home} />
+      <Drawer.Screen name="Profile" component={Profile} />
+      <Drawer.Screen name="Add Your Business" component={AddBussiness} />
+      <Drawer.Screen name="Manage Your Business" component={Viewbussiness} />
+      <Drawer.Screen name="Your Business Bookings" component={BusinessBookings} />
+    </Drawer.Navigator>
+  )
+};
 
 const AdminNav = () => {
   const Stack = createNativeStackNavigator();
@@ -97,36 +127,7 @@ const AdminNav = () => {
 }
 
 
-const DrawerScreens = () => {
-  const Drawer = createDrawerNavigator();
 
-  return (
-    <Drawer.Navigator   screenOptions={{
-      headerShown: false, // Hide header
-    }}
-   >
-      
-      <Drawer.Screen name="Homepage" component={Home} />
-      <Drawer.Screen name="Profile" component={Profile} />
-      <Drawer.Screen name="Add Your Business" component={Addbussiness} />
-      <Drawer.Screen name="Manage Your Business" component={Viewbussiness} />
-      <Drawer.Screen name="Your Business Bookings" component={Addbussiness} />
-    </Drawer.Navigator>
-  )
-};
-const UserDrawerScreens = () => {
-  const Drawer = createDrawerNavigator();
-
-  return (
-    <Drawer.Navigator   screenOptions={{
-      headerShown: false, // Hide header
-    }}
-   > 
-      <Drawer.Screen name="Homepage" component={Home} />
-      <Drawer.Screen name="Profile" component={Profile} />
-    </Drawer.Navigator>
-  )
-};
 
 
 
@@ -164,7 +165,7 @@ export default function App() {
       <NavigationContainer>
 
         {isLogedIn && userType == 'Admin' ? <AdminNav /> 
-        : isLogedIn && userType=='Business' ?<HotelNav/>
+        : isLogedIn && userType == 'Business' ? <HotelNav/>
          :isLogedIn?  <UserNav /> 
          : <LoginNav />}
 

@@ -153,11 +153,12 @@ export let Styles = StyleSheet.create({
         flexDirection: 'row',
         overflow: 'scroll',
         width: '100%',
-        height: 410,
+        height: 460,                     
         //  backgroundColor:'red',
         paddingBottom: 15,
         paddingLeft: 10,
-        paddingRight: 10
+        paddingRight: 10,
+        
 
     },
     recomendationContentBox: {
