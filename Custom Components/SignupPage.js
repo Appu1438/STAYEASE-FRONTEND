@@ -3,6 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Styles } from "../Common Component/Styles";
 import { useState } from "react";
 import Feather from 'react-native-vector-icons/Feather';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import axios from "axios";
 import API_BASE_URL from "../Api";
 import Toast from "react-native-toast-message";
@@ -29,14 +30,19 @@ export default function Signup() {
 
     const [loading, setLoading] = useState(false)
 
+    function handleUserTypeChange(type) {
+        setUserType(type);
+    }
+
 
 
 
     function generateOTP() {
+        setLoading(true)
+
         if (nameVerify && numberVerify && emailVerify && passwordVerify) {
             setOTPAttempt(0)
 
-            setLoading(true)
             // Call your backend endpoint to generate OTP
             axios.post(`${API_BASE_URL}/generateOTP`, { email })
                 .then(response => {
@@ -68,7 +74,6 @@ export default function Signup() {
                         position: 'bottom'
                     });
                 });
-                setLoading(false)
         } else {
             Toast.show({
                 type: 'error',
@@ -77,9 +82,12 @@ export default function Signup() {
                 position: 'bottom'
             });
         }
+        setLoading(false)
+
     }
 
     function handleOTPVerification() {
+        setLoading(true)
         console.log('Generated OTP:', generatedOTP);
         console.log('Entered OTP:', OTP);
         if (OTP == generatedOTP) {
@@ -100,10 +108,12 @@ export default function Signup() {
                 position: 'bottom'
             });
         }
+        setLoading(false)
     }
 
 
     function handlesubmit() {
+        setLoading(true)
         const Userdata = {
             name: name,
             number,
@@ -140,7 +150,7 @@ export default function Signup() {
             .catch(error => {
                 console.log(error)
             });
-
+        setLoading(false)
 
     }
 
@@ -189,6 +199,26 @@ export default function Signup() {
                 <Text style={[Styles.text, { fontSize: 18, marginTop: -10 }]}>Sign Up with STAYEASE </Text>
                 <Text style={[{ marginTop: 5, fontSize: 17 }]}>Book Hotels, Starting 599 only</Text>
 
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+
+                    <Text style={{ marginRight: 20, fontSize: 15 }}>Register as:</Text>
+                    <Pressable onPress={() => handleUserTypeChange('User')} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <FontAwesome
+                            name={userType === 'User' ? 'dot-circle-o' : 'circle-o'}
+                            size={20}
+                            color={'black'}
+                        />
+                        <Text style={{ marginLeft: 5 }}>User</Text>
+                    </Pressable>
+                    <Pressable onPress={() => handleUserTypeChange('Business')} style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 20 }}>
+                        <FontAwesome
+                            name={userType === 'Business' ? 'dot-circle-o' : 'circle-o'}
+                            size={20}
+                            color={'black'}
+                        />
+                        <Text style={{ marginLeft: 5 }}>Business</Text>
+                    </Pressable>
+                </View>
 
 
                 <TextInput
@@ -236,11 +266,12 @@ export default function Signup() {
                         onChange={e => setOTP(e.nativeEvent.text)}></TextInput>)
                     : (null)}
 
-                <Pressable 
-                style={Styles.btn} 
-                onPress={() => { showOTPField && OTPAttempt <= 2 ? handleOTPVerification() : generateOTP() }}>
-                    {loading?(<ActivityIndicator color='white'/>):(
-                    <Text style={Styles.btntext} >{showOTPField && OTPAttempt <= 2 ? 'Register' : OTPAttempt > 2 ? 'Resend OTP' : 'Get OTP'}</Text>
+                <Pressable
+                    style={Styles.btn}
+                    onPress={() => {loading?(null):( showOTPField && OTPAttempt <= 2 ? handleOTPVerification() : generateOTP() )}}
+                    >
+                    {loading ? (<ActivityIndicator color='white' />) : (
+                        <Text style={Styles.btntext} >{showOTPField && OTPAttempt <= 2 ? 'Register' : OTPAttempt > 2 ? 'Resend OTP' : 'Get OTP'}</Text>
                     )}
                 </Pressable>
                 <Pressable onPress={() => navigation.navigate("Login")}>

@@ -122,7 +122,7 @@ export default function Viewbussiness() {
                 <>{Loading ? (<ActivityIndicator size={30} color='black' />) 
                 : (
                      allHotels.length > 0 ? (<FlatList data={allHotels} keyExtractor={(item) => item._id} renderItem={renderHotelCard} />
-                    ) : (<Text style={{ fontSize: 20 }}>No Hotels Found</Text>)
+                    ) : (<Text style={{ fontSize: 20 }}>No Business Found</Text>)
 
                 )}
                 </>

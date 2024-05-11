@@ -49,6 +49,23 @@ const UserNav = () => {
   const Stack = createNativeStackNavigator();
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Home" component={UserDrawerScreens} />
+      <Stack.Screen name="Detailview" component={Detailview} />
+      <Stack.Screen name="Confirmation" component={Confirmation} />
+      <Stack.Screen name="Payment" component={PaymentPage} />
+      <Stack.Screen name="Bookings" component={Bookings} />
+      <Stack.Screen name="UserLogout" component={LoginNav} />
+      <Stack.Screen name="UpdateProfile" component={UpdateProfile} />
+      <Stack.Screen name="Search" component={Search} />
+      <Stack.Screen name="Fav" component={Fav} />      
+    </Stack.Navigator>
+  )
+
+}
+const HotelNav = () => {
+  const Stack = createNativeStackNavigator();
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Home" component={DrawerScreens} />
       <Stack.Screen name="Detailview" component={Detailview} />
       <Stack.Screen name="Confirmation" component={Confirmation} />
@@ -91,9 +108,22 @@ const DrawerScreens = () => {
       
       <Drawer.Screen name="Homepage" component={Home} />
       <Drawer.Screen name="Profile" component={Profile} />
-      <Drawer.Screen name="Add Your Bussiness" component={Addbussiness} />
-      <Drawer.Screen name="Manage Your Bussiness" component={Viewbussiness} />
-      <Drawer.Screen name="Your Bussiness Bookings" component={Addbussiness} />
+      <Drawer.Screen name="Add Your Business" component={Addbussiness} />
+      <Drawer.Screen name="Manage Your Business" component={Viewbussiness} />
+      <Drawer.Screen name="Your Business Bookings" component={Addbussiness} />
+    </Drawer.Navigator>
+  )
+};
+const UserDrawerScreens = () => {
+  const Drawer = createDrawerNavigator();
+
+  return (
+    <Drawer.Navigator   screenOptions={{
+      headerShown: false, // Hide header
+    }}
+   > 
+      <Drawer.Screen name="Homepage" component={Home} />
+      <Drawer.Screen name="Profile" component={Profile} />
     </Drawer.Navigator>
   )
 };
@@ -132,8 +162,14 @@ export default function App() {
   return (
     <StripeProvider publishableKey="pk_test_51NtRBkSEmsfUtDI2xbYoEzVmCHkf7UlwgqRxbpKJSSPWugQXbowVpDiMXHhgg7bibtqWxP2GzEjuZieYQ4ns2fIC00kIt633nm">
       <NavigationContainer>
-        {isLogedIn && userType == 'Admin' ? <AdminNav /> : isLogedIn ? <UserNav /> : <LoginNav />}
+
+        {isLogedIn && userType == 'Admin' ? <AdminNav /> 
+        : isLogedIn && userType=='Business' ?<HotelNav/>
+         :isLogedIn?  <UserNav /> 
+         : <LoginNav />}
+
         <Toast />
+
       </NavigationContainer>
     </StripeProvider>
 
