@@ -153,7 +153,7 @@ export let Styles = StyleSheet.create({
         flexDirection: 'row',
         overflow: 'scroll',
         width: '100%',
-        height: 460,                     
+        height: 430,                     
         //  backgroundColor:'red',
         paddingBottom: 15,
         paddingLeft: 10,

@@ -13,10 +13,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import API_BASE_URL from "../Api";
 import Toast from "react-native-toast-message";
 import { Avatar } from "react-native-paper";
-useFocusEffect
+import getdata from "../Service/UserServices.js/Getdata";
 
-import { Ionicons } from '@expo/vector-icons'; 
-import react from "react";
+
+
 
 
 
@@ -25,32 +25,22 @@ export default function Profile() {
 
     const navigation = useNavigation()
 
-
-
-
     const [userData, setUserData] = useState('')
     const [modalVisible, setModalVisible] = useState(false);
 
 
-    async function getdata() {
-        const token = await AsyncStorage.getItem('token');
-        // console.log("Profile", token);
-        axios.post(`${API_BASE_URL}/user-data`, { token: token })
-            .then(res => {
-                // console.log(res.data);
-                setUserData(res.data.data)
-            });
-    }
+  
 
    useFocusEffect(
     React.useCallback(()=>{
-
+        getdata(setUserData)
     })
    )
 
    useEffect(() => {
-    getdata()
-  })
+  },[])
+
+  
 
     function SignOut() {
         AsyncStorage.setItem('isLoggedIn', '')

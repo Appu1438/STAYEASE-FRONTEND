@@ -12,7 +12,10 @@ import Toast from "react-native-toast-message";
 import { useEffect, useState } from 'react';
 import * as Location from 'expo-location';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
+import addToFavorites from '../Service/FavServices/AddFavourites';
+import removeFromFavorites from '../Service/FavServices/RemoveFavourite';
+import getUserFavorites from '../Service/FavServices/GetFavourites';
+import getAllHotels from '../Service/GetHotelServices/GetHotels';
 
 
 
@@ -26,52 +29,12 @@ export default function RecommendationsOne({userLocation, user }) {
 
 
     useEffect(() => {
-        getAllHotels();
+        getAllHotels(setAllHotels,setRandomHotels);
     }, []);
 
     useEffect(() => {
-        getUserFavorites(user)
+        getUserFavorites(user,setFavorites)
     }, [favorites]);
-
-    
-
-
-    const getAllHotels = async () => {
-        try {
-            const response = await axios.get(`${API_BASE_URL}/get-all-hotels`);
-            if (response.data.status === 'ok') {
-                setAllHotels(response.data.data);
-                // Select random 4 hotels to show
-                const shuffledHotels = shuffleArray(response.data.data);
-                setRandomHotels(shuffledHotels.slice(0, 4));
-            } else {
-                Toast.show({
-                    type: 'error',
-                    text1: JSON.stringify(response.data.data),
-                    visibilityTime: 3000,
-                    position: 'bottom'
-                });
-            }
-        } catch (error) {
-            console.error('Error fetching Hotels:', error);
-            Toast.show({
-                type: 'error',
-                text1: 'Error fetching Hotels',
-                visibilityTime: 3000,
-                position: 'bottom'
-            });
-        }
-    };
-
-
-    const shuffleArray = (array) => {
-        const shuffledArray = [...array];
-        for (let i = shuffledArray.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
-        }
-        return shuffledArray;
-    };
 
     const filterHotelsByLocation = () => {
         if (!userLocation) {
@@ -83,78 +46,7 @@ export default function RecommendationsOne({userLocation, user }) {
             return filteredHotels.length > 0 ? filteredHotels : randomHotels;
         }
     };
-
-    const addToFavorites = async (hotelId) => {
-        const userId=user
-        try {
-            // Make a POST request to your backend API to add the hotel to favorites
-            const response = await axios.post(`${API_BASE_URL}/add-to-favorites`, { userId, hotelId });
-            if (response.data.status == 'ok') {
-                // If the hotel is successfully added to favorites, update the state
-                Toast.show({
-                    type: 'success',
-                    text1: 'Added To Favourites',
-                    visibilityTime: 3000,
-                    position: 'bottom'
-                });
-            } else {
-                Toast.show({
-                    type: 'error',
-                    text1: JSON.stringify(response.data.data),
-                    visibilityTime: 3000,
-                    position: 'bottom'
-                });
-                // // Handle error if the hotel could not be added to favorites
-                // console.error('Failed to add hotel to favorites:');
-                // // Display error message to the user if needed
-            }
-        } catch (error) {
-            console.error('Error adding hotel to favorites:');
-            // Display error message to the user if needed
-        }
-    };
-
-    const getUserFavorites = async (userId) => {
-        try {
-            const response = await axios.get(`${API_BASE_URL}/get-favorites/${userId}`);
-            if (response.data.status === 'ok') {
-                // Return the list of favorites
-                // console.log(response.data.data)
-                setFavorites(response.data.data)
-            } else {
-                console.error('Failed to fetch user favorites:', response.data.message);
-                setFavorites( []); // Return an empty array if there's an error
-            }
-        } catch (error) {
-            console.error('Error fetching user favorites:', error);
-            return []; // Return an empty array if there's an error
-        }
-    };
-
-    const removeFromFavorites = async (hotelId) => {
-        try {
-            const response = await axios.post(`${API_BASE_URL}/remove-from-favorites`, { userId: user, hotelId });
-            if (response.data.status === 'ok') {
-                Toast.show({
-                    type: 'success',
-                    text1: 'Removed From Favourites',
-                    visibilityTime: 3000,
-                    position: 'bottom'
-                });
-                setFavorites(favorites.filter(favorite => favorite !== hotelId));
-            }else{
-                Toast.show({
-                    type: 'error',
-                    text1:JSON.stringify(response.data.data),
-                    visibilityTime: 3000,
-                    position: 'bottom'
-                });
-            }
-        } catch (error) {
-            console.error('Error removing hotel from favorites:', error);
-        }
-    };
-    
+   
     const isFavorite = (hotelId) => {
         return favorites.includes(hotelId);
     };
@@ -180,7 +72,7 @@ export default function RecommendationsOne({userLocation, user }) {
         }}>
             <View style={Styles.recomendationContentBox}>
 
-                <Pressable style={Styles.favourite} onPress={()=>{isFav?removeFromFavorites(item._id):addToFavorites(item._id)}}>
+                <Pressable style={Styles.favourite} onPress={()=>{isFav? removeFromFavorites(user, item._id, favorites, setFavorites)  :addToFavorites(item._id,user)}}>
                 <FontAwesome size={25} name={isFav ? 'heart' : 'heart-o'} color={isFav ? 'red' : 'black'} />
                 </Pressable>
 

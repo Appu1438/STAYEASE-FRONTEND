@@ -15,7 +15,8 @@ import { useFocusEffect } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 import * as Location from 'expo-location';
 import Locations from "../HomeComponents/location";
-
+import getdata from "../Service/UserServices.js/Getdata";
+import getUserLocation from "../Service/UserServices.js/GetUserLocation";
 
 
 
@@ -28,19 +29,12 @@ export default function Home() {
     const [userLocation, setUserLocation] = useState();
 
    
+    useEffect(() => {
+        getdata(setUserData),
+        getUserLocation(setUserLocation)
+    },[])
+
     
-
-
-    async function getdata() {
-        const token = await AsyncStorage.getItem('token');
-        // console.log("Profile",token);
-        axios.post(`${API_BASE_URL}/user-data`, { token: token })
-            .then(res => {
-                // console.log(res.data);
-                setUserData(res.data.data)
-
-            });
-    }
 
     const handleBackPress = () => {
         Alert.alert('Exit App', 'Are you sure want to exit?',
@@ -69,50 +63,6 @@ export default function Home() {
 
         })
     )
-
-
-    const getUserLocation = async () => {
-        try {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-                Toast.show({
-                    type: 'error',
-                    text1: 'Location Permission Denied',
-                    visibilityTime: 3000,
-                    position: 'bottom'
-                });
-                console.log('Location permission denied');
-                return;
-            }
-
-           
-
-            let location = await Location.getCurrentPositionAsync({
-                accuracy: Location.Accuracy.High,
-            });
-            const { latitude, longitude } = location.coords;
-
-            let address = await Location.reverseGeocodeAsync({ latitude, longitude });
-            // console.log(address);
-            setUserLocation(address[0].city)
-        } catch (error) {
-            // console.error(error);
-            // Handle error while getting the location
-        }
-    };
-
-
-  
-
-    
-  
-    useEffect(() => {
-        getdata(),
-        getUserLocation()
-    })
-
-    
-
 
     if (!userData) {
         return (
