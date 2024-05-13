@@ -13,9 +13,14 @@ import API_BASE_URL from "../Api";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Loading from "../Common Component/loading";
-import { encode } from "base-64";
-import RazorpayCheckout from 'react-native-razorpay';
-import { CardField, useConfirmPayment, useStripe } from "@stripe/stripe-react-native";
+import getdata from "../Service/UserServices.js/Getdata";
+import formatDate from "../Service/DetailviewService/FormatDate";
+import formateTime from "../Service/DetailviewService/FormateTime";
+import OpenMaps from "../Service/Map and Dial/OpenMaps";
+import OpenDial from "../Service/Map and Dial/Dial";
+import getDateDifference from "../Service/ConfirmationServices/GetdateDifference";
+import getBookingdetails from "../Service/ConfirmationServices/GetBookingDetails";
+import calculaterefund from "../Service/ConfirmationServices/CalculateRefund";
 
 
 
@@ -47,212 +52,12 @@ export default function Confirmation() {
 
 
     useEffect(() => {
-        getdata();
-        getBookingdetails();
+        getdata(setUserData);
+        getBookingdetails(BookingID, setBookingDetails, setHotelData, setTotal, setNormalMessage, setOfferMessage, setBookingsts, setCheckin);
 
     }, []);
 
 
-
-    const getOffer = async (BookingDetails) => {
-        const bookingTime = new Date(BookingDetails.BookedAt);
-        const checkoutTime = new Date(BookingDetails.CheckOut);
-        const checkInTime = new Date(BookingDetails.CheckIn);
-        const currentTime = new Date();
-        console.log('curr', currentTime)
-        console.log('book', bookingTime)
-        console.log('checkout', checkoutTime)
-
-
-        // Calculate the time differences in milliseconds
-        const timeDifferenceBookingToCheckout = checkoutTime.getTime() - bookingTime.getTime();
-        const timeDifferenceBookingToCurrent = currentTime.getTime() - bookingTime.getTime();
-
-        // Calculate the time differences in hours
-        const timeDifferenceBookingToCheckoutInHours = timeDifferenceBookingToCheckout / (1000 * 3600);
-        const timeDifferenceBookingToCurrentInHours = timeDifferenceBookingToCurrent / (1000 * 3600);
-
-
-
-        // Assume total amount is fetched from somewhere
-        const totalAmount = BookingDetails.TotalAmount; // Example total amount
-
-
-
-
-        // If current date is greater than checkout date, set booking as expired
-        if (BookingDetails.BookingStatus == 'Cancelled' && BookingDetails.PaymentStatus!='Refunded') {
-            setTotal('');
-            setNormalMessage('Your booking Cancelled');
-            setOfferMessage(' No offers available');
-            setBookingsts('Cancelled');
-        }else if(BookingDetails.BookingStatus == 'Cancelled' && BookingDetails.PaymentStatus=='Refunded'){
-            setTotal('');
-            setNormalMessage(`Your booking Cancelled , Rs ${BookingDetails.RefundedAmount} has been Refunded`);
-            setOfferMessage(' No offers available');
-            setBookingsts('Cancelled');
-        } else if (BookingDetails.PaymentStatus == 'paid' && BookingDetails.BookingStatus != 'Cancelled' && currentTime < checkoutTime) {
-            setTotal('');
-            setNormalMessage(`Payment Successfull${BookingDetails.PaidAmount < BookingDetails.TotalAmount ? (` , You got a discount of ${parseInt(BookingDetails.TotalAmount) - parseInt(BookingDetails.PaidAmount)}`) : (null)}`);
-            setOfferMessage(` Enjoy Your Booking `);
-        }
-        else if (currentTime > checkoutTime && BookingDetails.BookingStatus != 'Cancelled') {
-            setTotal('');
-            setNormalMessage('Your booking expired');
-            setOfferMessage(' No offers available');
-            setBookingsts('expired');
-        }
-        else if (timeDifferenceBookingToCurrentInHours > 2 && BookingDetails.PaymentStatus != 'paid') {
-            setTotal(totalAmount);
-            setNormalMessage('You Need to Pay Full Amount');
-            setOfferMessage(' Offer Times up!!');
-        } else if (timeDifferenceBookingToCurrentInHours < 2 && BookingDetails.PaymentStatus != 'paid') {
-            let discount = 0
-            if (totalAmount < 1000) {
-                // Apply a discount of ₹75 for total amount less than ₹1000
-                discount = 75
-            } else if (totalAmount >= 1000 && totalAmount < 2000) {
-                // Apply a discount of ₹100 for total amount between ₹1000 and ₹2000
-                discount = 100
-
-
-            } else if (totalAmount >= 2000 && totalAmount < 3000) {
-                // Apply a discount of ₹150 for total amount between ₹2000 and ₹3000
-                discount = 150
-
-            } else if (totalAmount >= 3000) {
-                // Apply a discount of ₹200 for total amount above ₹3000
-                discount = 200
-            }
-            setTotal(totalAmount - discount);
-            setNormalMessage(`Pay now to get an discount of Rs ${(discount)}`);
-            setOfferMessage(' Offer valid till 2 hours after booking');
-
-        } else {
-
-        }
-    }
-
-
-
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        if (isNaN(date.getTime())) {
-            // Handle invalid date string
-            return 'Invalid Date';
-        }
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        const day = date.getDate().toString().padStart(2, '0');
-        const month = months[date.getMonth()];
-        const year = date.getFullYear();
-        return `${day} ${month} ${year}`;
-    };
-
-    const formateTime = (datestring) => {
-        // Create a new Date object with the desired date
-        const date = new Date(datestring);
-
-        // Get the individual components
-        const minutes = date.getMinutes();
-        const hours = date.getHours();
-        const day = date.getDate();
-        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-        ];
-        const monthIndex = date.getMonth();
-        const year = date.getFullYear();
-
-        // Convert hours to 12-hour format and determine AM/PM
-        const period = hours >= 12 ? "PM" : "AM";
-        const formattedHours = hours % 12 || 12; // Handle midnight (0 hours) as 12 AM
-
-        // Format the minutes component with leading zero if needed
-        const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-        const formatedHourwithZero = formattedHours < 10 ? `0${formattedHours}` : formattedHours
-
-        // Format the components into a string
-        const formattedDate = `${day} ${monthNames[monthIndex]} ${year} ${formatedHourwithZero}:${formattedMinutes} ${period}`;
-
-        // Return the formatted date
-        return formattedDate;
-    }
-
-    // Example usage
-
-
-    // Example     
-    const getDateDifference = (startDateString, endDateString) => {
-        const startDate = new Date(startDateString);
-        const endDate = new Date(endDateString);
-        if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-            // Handle invalid date strings
-            return 'Invalid Date';
-        }
-        const difference = endDate - startDate; // Difference in milliseconds
-        const days = Math.floor(difference / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
-        return `${days} `;
-    };
-
-
-
-    async function getdata() {
-        const token = await AsyncStorage.getItem('token');
-        axios.post(`${API_BASE_URL}/user-data`, { token: token })
-            .then(res => {
-                setUserData(res.data.data);
-            })
-            .catch(error => {
-                console.error('Error fetching user data:', error);
-                // Handle error
-            });
-    }
-
-    async function getBookingdetails() {
-        try {
-            const _id = BookingID;
-            const response = await axios.get(`${API_BASE_URL}/get-booking-deatils/${_id}`);
-            if (response.data.status === 'ok') {
-                setBookingDetails(response.data.data);
-                setTotal(response.data.data.TotalAmount);
-
-                getHotelById(response.data.data.hotelId);
-                setBookingsts(response.data.data.BookingStatus)
-                await getOffer(response.data.data)
-                setCheckin(new Date(response.data.data.CheckIn))
-
-
-            } else {
-                Toast.show({
-                    type: 'error',
-                    text1: 'Failed to get booking details',
-                    visibilityTime: 3000,
-                    position: 'bottom'
-                });
-            }
-        } catch (error) {
-            console.error('Error fetching booking details:', error);
-            // Handle error
-        }
-    }
-
-    async function getHotelById(id) {
-        try {
-            const response = await axios.get(`${API_BASE_URL}/get-hotel-byID?id=${id}`);
-            if (response.data.status === 'ok') {
-                setHotelData(response.data.data);
-            } else {
-                Toast.show({
-                    type: 'error',
-                    text1: 'Failed to get hotel details',
-                    visibilityTime: 3000,
-                    position: 'bottom'
-                });
-            }
-        } catch (error) {
-            console.error('Error fetching hotel details:', error);
-            // Handle error
-        }
-    }
 
     function alertCan() {
         Alert.alert('Cancel Booking', 'Do you want to cancel your booking',
@@ -320,11 +125,11 @@ export default function Confirmation() {
 
     async function initiateRefund() {
 
-        
+
         const data = {
             paymentMethodId: BookingDetails.PaymentDetails[0].paymentMethodId,
             // amount: BookingDetails.PaymentDetails[0].amount,
-            amount:RefundedAmount*100,
+            amount: RefundedAmount * 100,
             id: BookingDetails._id
         };
         try {
@@ -357,45 +162,6 @@ export default function Confirmation() {
         navigation.navigate('Confirmation', { data: BookingDetails._id });
     }
 
-    const OpenMaps = () => {
-        console.log('Maps')
-        const Mapurl = HotelData.locationlink
-
-        Linking.openURL(Mapurl);
-
-    }
-
-    const OpenDial = () => {
-        const phoneNumber = HotelData.hotelnumber // Replace with your phone number
-        const dialerUrl = `tel:+91${phoneNumber}`;
-
-        Linking.openURL(dialerUrl);
-    }
-
-    async function calculaterefund() {
-
-        const currentDate = new Date();
-        const checkIn = new Date(BookingDetails.CheckIn);
-        const timeDifferenceInMillis = currentDate.getTime() - checkIn.getTime();
-        const timeDifferenceInHours = Math.abs(timeDifferenceInMillis / (1000 * 60 * 60)); // Convert milliseconds to hours
-
-        let refundPercentage = 0;
-        if (timeDifferenceInHours >= 4) {
-            refundPercentage = 1.00;
-        } else if (timeDifferenceInHours >= 3) {
-            refundPercentage = 0.75;
-        } else if (timeDifferenceInHours >= 2) {
-            refundPercentage = 0.50;
-        } else if (timeDifferenceInHours >= 1) {
-            refundPercentage = 0.25;
-        } else {
-            refundPercentage = 0
-        }
-
-        const refundAmount = parseInt(BookingDetails.PaidAmount) * refundPercentage;
-        setRefundedAmount(refundAmount)
-        return refundAmount;
-    }
 
 
 
@@ -405,17 +171,16 @@ export default function Confirmation() {
     if (!BookingDetails || !HotelData || !UserData) {
         // Show loading indicator until data is fetched
         return (
-            <Modal visible={true} animationType="fade" transparent={true}>
                 <Loading />
-            </Modal>
+            
         )
     }
     else {
 
         return (
-            <Modal visible={true} animationType="fade" transparent={true}>
 
                 <SafeAreaView style={{ flex: 1 }}>
+                    
                     <StatusBar backgroundColor={Bookingsts == 'Confirmed' ? "#347442" : '#dbc607'} barStyle='light-content' />
 
 
@@ -502,14 +267,14 @@ export default function Confirmation() {
 
                             <View style={Styles.orderdetails}>
 
-                                <TouchableOpacity style={styles.box} onPress={() => OpenMaps()}>
+                                <TouchableOpacity style={styles.box} onPress={() => OpenMaps(HotelData.locationlink)}>
                                     <View style={[styles.locationbox]}>
                                         <FontAwesomeIcon size={25} color="#333" icon={faLocationDot} />
                                     </View>
                                     <Text style={styles.boxtext}>Locaton</Text>
                                 </TouchableOpacity>
 
-                                <TouchableOpacity style={styles.box} onPress={() => OpenDial()}>
+                                <TouchableOpacity style={styles.box} onPress={() => OpenDial(HotelData.hotelnumber)}>
                                     <View style={[styles.locationbox]}>
                                         <Feather size={25} color='#333' name="phone" />
                                     </View>
@@ -590,9 +355,9 @@ export default function Confirmation() {
                                             {
                                                 Looading !== null ?
                                                     BookingDetails.PaymentStatus == 'paid' ?
-                                                        (setIsModal(true), calculaterefund(), setLoading(true), alertCan()) :
-                                                        (setLoading(true), alertCan()) :
-                                                    null;
+                                                        (setIsModal(true), calculaterefund(BookingDetails,setRefundedAmount), setLoading(true), alertCan())
+                                                         :  (setLoading(true), alertCan()) 
+                                                         : null;
 
                                             }
                                         }}>
@@ -612,7 +377,7 @@ export default function Confirmation() {
                                         <TouchableOpacity style={{ alignSelf: 'flex-start',width:'100%',height:25,top:5 }}
                                             onPress={() => {
                                                 setIsModal(true)
-                                                calculaterefund()
+                                                calculaterefund(BookingDetails,setRefundedAmount)
                                             }} >
                                             <Text
                                                 style={[Styles.navtextone, { alignSelf: 'flex-start', left: 19, top: 30 }]}
@@ -669,10 +434,7 @@ export default function Confirmation() {
                     </View>
                     {/* <ImporatToNote/> */}
 
-
-
-                </SafeAreaView>
-                <Modal
+                    <Modal
                     animationType="fade"
                     transparent={true}
                     visible={isModal}
@@ -715,20 +477,13 @@ export default function Confirmation() {
                                 <AntDesign name="closecircleo" size={25} color='black' />
                             </TouchableOpacity>
 
-                            {/* <Pressable
-                                onPress={() => setIsModal(false)}>
-                                <Text
-                                    style={styles.closeButton}
-                                >
-                                    Close
-                                </Text>
-                            </Pressable> */}
-
                         </View>
                     </View>
                 </Modal>
 
-            </Modal>
+                </SafeAreaView>
+                
+
 
 
         )

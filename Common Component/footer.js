@@ -11,6 +11,7 @@ import API_BASE_URL from "../Api";
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import getdata from "../Service/UserServices.js/Getdata";
 
 
 
@@ -19,18 +20,9 @@ export default function Footer({}) {
     const [userData, setUserData] = useState('')
 
     useEffect(()=>{
-        getdata()
+        getdata(setUserData)
     })
-    async function getdata() {
-        const token = await AsyncStorage.getItem('token');
-        // console.log("Profile",token);
-        axios.post(`${API_BASE_URL}/user-data`, { token: token })
-            .then(res => {
-                // console.log(res.data);
-                setUserData(res.data.data)
-
-            });
-    }
+   
 
     
  

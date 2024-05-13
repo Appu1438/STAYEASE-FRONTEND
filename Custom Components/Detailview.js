@@ -1,15 +1,11 @@
 import { View, StatusBar, Text, ScrollView, SafeAreaView, Pressable, Image, Modal, Dimensions, TouchableOpacity, useWindowDimensions, ActivityIndicator, Linking, PanResponder, Alert } from "react-native";
 import { Styles } from "../Common Component/Styles";
-import Moreimages from "../DetailViewComponent/Moreimage";
-import OtherDetails from "../DetailViewComponent/OtherDetails";
-import BookingDetails from "../DetailViewComponent/bookingDetails";
-import Bookingfooter from "../DetailViewComponent/Book";
+
 import RecommendationsText from "../HomeComponents/recommendationText";
 import RecommendationsOne from "../HomeComponents/recommendationsOne";
 import { useEffect, useState, useRef } from "react";
 import Loading from "../Common Component/loading";
-import Payment from "./confirmation";
-import Bookings from "./ViewBooking";
+
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import API_BASE_URL from "../Api";
@@ -26,10 +22,20 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import ConfirmationModal from "../Common Component/ConfirmationModal";
-
-
-
-
+import getUserFavorites from "../Service/FavServices/GetFavourites";
+import addToFavorites from "../Service/FavServices/AddFavourites";
+import removeFromFavorites from "../Service/FavServices/RemoveFavourite";
+import gethotelDetails from "../Service/GetHotelServices/HotelbyId";
+import getdata from "../Service/UserServices.js/Getdata";
+import setDates from "../Service/DetailviewService/Setdates";
+import formatDate from "../Service/DetailviewService/FormatDate";
+import handleIncRoom from "../Service/DetailviewService/Increaseroom";
+import handleDecRoom from "../Service/DetailviewService/DecreaseRoom";
+import handleIncGuests from "../Service/DetailviewService/IncreaseGuests";
+import handleDecGuests from "../Service/DetailviewService/DecreaseGuests";
+import { TextPath } from "react-native-svg";
+import calculateTotalAmount from "../Service/DetailviewService/CalculateAmount";
+import OpenMaps from "../Service/Map and Dial/OpenMaps";
 
 
 export default function Detailview({ }) {
@@ -70,54 +76,27 @@ export default function Detailview({ }) {
     const route = useRoute()
 
     useEffect(() => {
-        getdata()
-        gethotelDetails()
-        setDates()
+        getdata(setUserData)
+        gethotelDetails(route.params.data, setHotelData, setBaseAmount, setTotal)
+        setDates(setUnformatedSelectedFromDate, setUnformatedSelectedToDate, setSelectedFromDate, setSelectedToDate)
     }, [])
 
-    useEffect(() => {
-        getUserFavorites(userData._id)
+    useEffect(()=>{
+        getUserFavorites(userData._id, setFavorites)
     })
 
     useEffect(() => {
-        calculateTotalAmount();
+        calculateTotalAmount(unformatedselectedFromDate,unformatedselectedToDate,BaseAmount,Hoteldata,ExtraAmount,setTotal);
     }, [selectedFromDate, selectedToDate]);
 
     useEffect(() => {
         console.log('decr')
-        if (Guests-1 > Rooms * parseInt(Hoteldata.personsperroom)) {
+        if (Guests > Rooms * parseInt(Hoteldata.personsperroom)) {
             setGuests(Rooms * parseInt(Hoteldata.personsperroom))
         }
     }, [Rooms, Guests])
 
-    const setDates = () => {
-        const currentDate = new Date();
-        const oneHourAhead = new Date(currentDate.getTime() + (1 * 60 * 60 * 1000)); // Adding 1 hour
 
-        const tomorrowDate = new Date(currentDate.getTime());
-        tomorrowDate.setDate(currentDate.getDate() + 1);
-        const oneHourAheadTomorrow = new Date(tomorrowDate.getTime() + (1 * 60 * 60 * 1000)); // Adding 1 hour
-
-        setUnformatedSelectedFromDate(oneHourAhead);
-        setUnformatedSelectedToDate(oneHourAheadTomorrow);
-
-        const formattedOneHourAhead = formatDate(oneHourAhead);
-        const formattedOneHourAheadTomorrow = formatDate(oneHourAheadTomorrow);
-
-        setSelectedFromDate(formattedOneHourAhead);
-        setSelectedToDate(formattedOneHourAheadTomorrow);
-    };
-
-    // Function to format date to 'YYYY-MM-DD'
-    const formatDate = (date) => {
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        const day = date.getDate().toString().padStart(2, '0');
-        const month = months[date.getMonth()];
-        //  const month = date.getMonth().toString().padStart(2, '0');
-        const year = date.getFullYear();
-        // const year = date.getFullYear().toString().slice(-2); 
-        return `${day} ${month} ${year}`;
-    };
 
     const showFromDatePicker = () => {
         Toast.show({
@@ -192,220 +171,11 @@ export default function Detailview({ }) {
         }
     };
 
-    const handleIncRoom = () => {
-        console.log('plus')
-        if (Rooms != parseInt(Hoteldata.availablerooms)) {
-            setRooms(Rooms + 1)
-            setExtraAmount(ExtraAmount + parseInt(Hoteldata.extraperroom))
-            setTotal(Total + parseInt(Hoteldata.extraperroom))
-        } else {
-            Toast.show({
-                type: 'error',
-                text1: `Currently Only ${Rooms} Rooms Available`,
-                visibilityTime: 2000,
-                position: 'bottom'
-            });
-        }
-    }
-    const handleDecRoom = () => {
-        console.log('minus')
-        if (Rooms != 1) {
-            setRooms(Rooms - 1)
-            setExtraAmount(ExtraAmount - parseInt(Hoteldata.extraperroom))
-            setTotal(Total - parseInt(Hoteldata.extraperroom))
-            setGuests(parseInt(Hoteldata.personsperroom) * Rooms)
-
-
-        } else {
-            Toast.show({
-                type: 'error',
-                text1: 'Minimum One Room',
-                visibilityTime: 2000,
-                position: 'bottom'
-            });
-        }
-
-
-    }
-    const handleIncGuests = () => {
-        console.log('plus')
-        const limit = Rooms * parseInt(Hoteldata.personsperroom)
-        if (Guests < limit) {
-            setGuests(Guests + 1)
-            setExtraAmount(ExtraAmount + parseInt(Hoteldata.extraperhead))
-            setTotal(Total + parseInt(Hoteldata.extraperhead))
-
-        } else {
-            Toast.show({
-                type: 'error',
-                text1: `Max Persons in ${Rooms} Room is ${limit}`,
-                visibilityTime: 2000,
-                position: 'bottom'
-            });
-        }
-    }
-    const handleDecGuests = () => {
-        console.log('minus')
-        if (Guests != 1) {
-            setGuests(Guests - 1)
-            setExtraAmount(ExtraAmount - parseInt(Hoteldata.extraperhead))
-            setTotal(Total - parseInt(Hoteldata.extraperhead))
-
-        } else {
-            Toast.show({
-                type: 'error',
-                text1: 'Minimum One Person',
-                visibilityTime: 2000,
-                position: 'bottom'
-            });
-        }
-    }
-
-    const calculateTotalAmount = async () => {
-        // Calculate the number of days between selectedFromDate and selectedToDate
-        const startDate = await new Date(unformatedselectedFromDate);
-        const endDate = await new Date(unformatedselectedToDate);
-        const numberOfDays = await Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
-
-        // Calculate the total amount based on room rate for the first day
-        // Assuming discounted rate is per day
-        const baseTotalAmount = BaseAmount;
-
-        // Calculate the total amount for extra days beyond the first day
-        const extraDays = numberOfDays - 1; // Exclude the first day
-        const extraDayRate = parseInt(Hoteldata.extraperday); // Additional rate per extra day
-        const extraDayAmount = extraDays * extraDayRate;
-        // Calculate the total amount including extra days
-        const totalAmount = baseTotalAmount + extraDayAmount;
-
-        // Update the Total state with the calculated amount
-        setTotal(totalAmount + ExtraAmount);
-    };
-
-
-
-
-
-    async function getdata() {
-        const token = await AsyncStorage.getItem('token');
-        // console.log("Profile", token);
-        axios.post(`${API_BASE_URL}/user-data`, { token: token })
-            .then(res => {
-                // console.log(res.data);
-                setUserData(res.data.data)
-            });
-    }
-    async function gethotelDetails() {
-        try {
-            const hotelId = route.params.data
-            await axios.get(`${API_BASE_URL}/get-hotel-byID?id=${hotelId}`).then(res => {
-                console.log(res.data.data)
-                if (res.data.status == 'ok') {
-                    setHotelData(res.data.data)
-                    setBaseAmount(parseInt(res.data.data.discountedrate))
-                    setTotal(parseInt(res.data.data.discountedrate))
-                    // setTotalPlustax(parseInt(res.data.data.discountedrate)+parseInt(res.data.data.taxandfee));
-
-                } else {
-                    Toast.show({
-                        type: 'error',
-                        text1: JSON.stringify(response.data.data),
-                        visibilityTime: 3000,
-                        position: 'bottom'
-                    });
-                }
-            })
-        } catch (err) {
-            Toast.show({
-                type: 'error',
-                text1: JSON.stringify(err),
-                visibilityTime: 3000,
-                position: 'bottom'
-            });
-        }
-
-    }
-
-
-    const getUserFavorites = async (userId) => {
-        try {
-            const response = await axios.get(`${API_BASE_URL}/get-favorites/${userId}`);
-            if (response.data.status === 'ok') {
-                // Return the list of favorites
-                // console.log(response.data.data)
-                setFavorites(response.data.data)
-            } else {
-                console.error('Failed to fetch user favorites:', response.data.message);
-                setFavorites([]); // Return an empty array if there's an error
-            }
-        } catch (error) {
-            console.error('Error fetching user favorites:', error);
-            return []; // Return an empty array if there's an error
-        }
-    };
-
-
-
-
-    const addToFavorites = async (hotelId) => {
-        const userId = userData._id
-        try {
-            // Make a POST request to your backend API to add the hotel to favorites
-            const response = await axios.post(`${API_BASE_URL}/add-to-favorites`, { userId, hotelId });
-            if (response.data.status == 'ok') {
-                // If the hotel is successfully added to favorites, update the state
-                Toast.show({
-                    type: 'success',
-                    text1: 'Added To Favourites',
-                    visibilityTime: 3000,
-                    position: 'bottom'
-                });
-            } else {
-                Toast.show({
-                    type: 'error',
-                    text1: JSON.stringify(response.data.data),
-                    visibilityTime: 3000,
-                    position: 'bottom'
-                });
-                // // Handle error if the hotel could not be added to favorites
-                // console.error('Failed to add hotel to favorites:');
-                // // Display error message to the user if needed
-            }
-        } catch (error) {
-            console.error('Error adding hotel to favorites:');
-            // Display error message to the user if needed
-        }
-    };
-
-    const removeFromFavorites = async (hotelId) => {
-        try {
-            const response = await axios.post(`${API_BASE_URL}/remove-from-favorites`, { userId: userData._id, hotelId });
-            if (response.data.status === 'ok') {
-                Toast.show({
-                    type: 'success',
-                    text1: 'Removed From Favourites',
-                    visibilityTime: 3000,
-                    position: 'bottom'
-                });
-                setFavorites(favorites.filter(favorite => favorite !== hotelId));
-            } else {
-                Toast.show({
-                    type: 'error',
-                    text1: JSON.stringify(response.data.data),
-                    visibilityTime: 3000,
-                    position: 'bottom'
-                });
-            }
-        } catch (error) {
-            console.error('Error removing hotel from favorites:', error);
-        }
-    };
-
     const isFavorite = (hotelId) => {
         return favorites.includes(hotelId);
     };
 
-    const handleBook=()=>{
+    const handleBook = () => {
         Alert.alert('Book Hotel', 'Do you want to Book this Hotel', [{
             text: 'cancel',
             onPress: () => {
@@ -418,18 +188,19 @@ export default function Detailview({ }) {
             onPress: () => submitBooking(),
             style: 'cancel'
         }
-        ]) 
-       }
+        ])
+    }
 
 
     const submitBooking = async () => {
-        if(Rooms<=Guests){
+        if (Rooms <= Guests) {
             try {
                 const token = await AsyncStorage.getItem('token');
                 const bookingData = {
                     userId: userData._id,
+                    username: userData.name,
                     hotelId: Hoteldata._id,
-                    hoteluserId:Hoteldata.hoteluserid,
+                    hoteluserId: Hoteldata.hoteluserid,
                     hotelName: Hoteldata.hotelname,
                     BookedAt: new Date(),
                     CheckIn: unformatedselectedFromDate,
@@ -476,9 +247,9 @@ export default function Detailview({ }) {
                     visibilityTime: 3000,
                     position: 'bottom'
                 });
-        }
-       
-        }else{
+            }
+
+        } else {
             setloading(false)
             Toast.show({
                 type: 'error',
@@ -498,16 +269,6 @@ export default function Detailview({ }) {
         }
         return bookingId;
     }
-
-
-    const OpenMaps = () => {
-        console.log('Maps')
-        const Mapurl = Hoteldata.locationlink
-
-        Linking.openURL(Mapurl);
-
-    }
-
 
 
     const handleImageChange = (index) => {
@@ -533,7 +294,7 @@ export default function Detailview({ }) {
 
                     <ScrollView>
                         <View>
-                            <Pressable style={[Styles.favourite, { top: 40 }]} onPress={() => { isFav ? removeFromFavorites(Hoteldata._id) : addToFavorites(Hoteldata._id) }}>
+                            <Pressable style={[Styles.favourite, { top: 40 }]} onPress={() => { isFav ? removeFromFavorites(userData._id, Hoteldata._id, favorites, setFavorites) : addToFavorites(Hoteldata._id, userData._id) }}>
                                 <FontAwesome size={25} name={isFav ? 'heart' : 'heart-o'} color={isFav ? 'red' : 'black'} />
                             </Pressable>
                         </View>
@@ -571,7 +332,7 @@ export default function Detailview({ }) {
 
                             <Text style={[Styles.detailText, { color: 'grey', fontSize: 15, marginTop: 0 }]}>{Hoteldata.location}</Text>
 
-                            <TouchableOpacity onPress={() => OpenMaps()}>
+                            <TouchableOpacity onPress={() => OpenMaps(Hoteldata.locationlink)}>
                                 <Text style={[Styles.detailText, { color: '#016DD0', fontSize: 13 }]}>View on Map</Text>
                             </TouchableOpacity>
 
@@ -621,13 +382,19 @@ export default function Detailview({ }) {
 
                                     <TouchableOpacity style={{ flexDirection: 'row', alignSelf: 'flex-end', right: '15%' }}>
 
-                                        <TouchableOpacity onPress={handleDecRoom}>
+                                        <TouchableOpacity onPress={() => {
+                                            handleDecRoom(Rooms, Hoteldata, setRooms, setExtraAmount, setTotal, ExtraAmount, Total)
+                                        }
+                                        }>
                                             <AntDesign name="minussquareo" size={20} color='black' />
                                         </TouchableOpacity>
 
                                         <Text style={[Styles.bookingLasttext, { alignSelf: 'center' }]}>{Rooms}</Text>
 
-                                        <TouchableOpacity onPress={handleIncRoom} >
+                                        <TouchableOpacity onPress={() => {
+                                            handleIncRoom(Rooms, Hoteldata, setRooms, setExtraAmount, setTotal, ExtraAmount, Total)
+                                        }
+                                        } >
                                             <AntDesign name="plussquareo" size={20} color='black' />
                                         </TouchableOpacity>
 
@@ -635,13 +402,20 @@ export default function Detailview({ }) {
 
                                     <TouchableOpacity style={{ flexDirection: 'row', alignSelf: 'flex-end', right: '15%' }}>
 
-                                        <TouchableOpacity onPress={handleDecGuests}>
+                                        <TouchableOpacity onPress={() => {
+                                            handleDecGuests(Hoteldata, Guests, setGuests, ExtraAmount, setExtraAmount, Total, setTotal)
+                                        }
+
+                                        }>
                                             <AntDesign name="minussquareo" size={20} color='black' />
                                         </TouchableOpacity>
 
                                         <Text style={[Styles.bookingLasttext, { alignSelf: 'center' }]}>{Guests}</Text>
 
-                                        <TouchableOpacity onPress={handleIncGuests} >
+                                        <TouchableOpacity onPress={() => {
+                                            handleIncGuests(Hoteldata, Guests, setGuests, Rooms, ExtraAmount, setExtraAmount, Total, setTotal)
+                                        }
+                                        } >
                                             <AntDesign name="plussquareo" size={20} color='black' />
                                         </TouchableOpacity>
 

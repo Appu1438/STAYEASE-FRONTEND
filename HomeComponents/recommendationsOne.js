@@ -28,6 +28,7 @@ export default function RecommendationsOne({userLocation, user }) {
     const [favorites, setFavorites] = useState([]);
 
 
+
     useEffect(() => {
         getAllHotels(setAllHotels,setRandomHotels);
     }, []);

@@ -23,6 +23,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import Upcoming from "../ViewBookingComponent/Upcoming";
 import Cancelled from "../ViewBookingComponent/Cancelled";
 import Expired from "../ViewBookingComponent/Expired";
+import getBookings from "../Service/ViewBookingServices/GetBookings";
 
 export default function Bookings() {
     const navigation = useNavigation()
@@ -43,67 +44,63 @@ export default function Bookings() {
 
     useEffect(() => {
         console.log(UserData)
-        getBookings()
+        getBookings(UserData,setBookingDetails,setUpcomingBookings,setCancelledBookings,setExpiredBookings)
 
         // console.log(BookingDetails)
     }, [])
 
-    // useFocusEffect(
-    //     React.useCallback(()=>{
-    //     })
-    // )
+    
 
 
+    // async function getBookings() {
+    //     try {
+    //         // console.log("getbookings")
+    //         const userId = UserData._id;
+    //         const response = await axios.get(`${API_BASE_URL}/get-user-bookings/${userId}`);
+    //         if (response.data.status == 'ok') {
+    //             // console.log(response.data.data)
+    //             setBookingDetails(response.data.data);
+    //             separateBookings(response.data.data)
+    //             // Toast.show({
+    //             //     type: 'success',
+    //             //     text1: 'Your Bookings',
+    //             //     visibilityTime: 3000,
+    //             //     position: 'bottom'
+    //             // });
+    //         } else {
+    //             Toast.show({
+    //                 type: 'error',
+    //                 text1: JSON.stringify(response.data.data),
+    //                 visibilityTime: 3000,
+    //                 position: 'bottom'
+    //             });
+    //         }
+    //     } catch (error) {
+    //         console.error('Error fetching booking details:', error);
+    //     }
+    // }
 
-    async function getBookings() {
-        try {
-            // console.log("getbookings")
-            const userId = UserData._id;
-            const response = await axios.get(`${API_BASE_URL}/get-user-bookings/${userId}`);
-            if (response.data.status == 'ok') {
-                // console.log(response.data.data)
-                setBookingDetails(response.data.data);
-                separateBookings(response.data.data)
-                // Toast.show({
-                //     type: 'success',
-                //     text1: 'Your Bookings',
-                //     visibilityTime: 3000,
-                //     position: 'bottom'
-                // });
-            } else {
-                Toast.show({
-                    type: 'error',
-                    text1: JSON.stringify(response.data.data),
-                    visibilityTime: 3000,
-                    position: 'bottom'
-                });
-            }
-        } catch (error) {
-            console.error('Error fetching booking details:', error);
-        }
-    }
+    // const separateBookings = (bookingDetails) => {
+    //     const upcoming = [];
+    //     const cancelled = [];
+    //     const expired = [];
 
-    const separateBookings = (bookingDetails) => {
-        const upcoming = [];
-        const cancelled = [];
-        const expired = [];
+    //     const currentDate = new Date();
 
-        const currentDate = new Date();
+    //     bookingDetails.forEach(booking => {
+    //         if (booking.BookingStatus === 'Cancelled') {
+    //             cancelled.push(booking);
+    //         } else if (booking.BookingStatus === 'Confirmed' && new Date(booking.CheckOut) > currentDate) {
+    //             upcoming.push(booking);
+    //         } else {
+    //             expired.push(booking);
+    //         }
+    //     });
 
-        bookingDetails.forEach(booking => {
-            if (booking.BookingStatus === 'Cancelled') {
-                cancelled.push(booking);
-            } else if (booking.BookingStatus === 'Confirmed' && new Date(booking.CheckOut) > currentDate) {
-                upcoming.push(booking);
-            } else {
-                expired.push(booking);
-            }
-        });
-
-        setUpcomingBookings(upcoming);
-        setCancelledBookings(cancelled);
-        setExpiredBookings(expired);
-    };
+    //     setUpcomingBookings(upcoming);
+    //     setCancelledBookings(cancelled);
+    //     setExpiredBookings(expired);
+    // };
 
 
 

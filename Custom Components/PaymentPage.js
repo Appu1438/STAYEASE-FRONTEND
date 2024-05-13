@@ -15,6 +15,7 @@ import Loading from "../Common Component/loading";
 import { encode } from "base-64";
 import RazorpayCheckout from 'react-native-razorpay';
 import { CardField, useConfirmPayment, useStripe } from "@stripe/stripe-react-native";
+import getdata from "../Service/UserServices.js/Getdata";
 
 
 export default function PaymentPage() {
@@ -32,20 +33,10 @@ export default function PaymentPage() {
     const { confirmPayment, loading } = useConfirmPayment()
 
     useEffect(()=>{
-        getdata()
+        getdata(setUserData)
     },[])
 
-    async function getdata() {
-        const token = await AsyncStorage.getItem('token');
-        axios.post(`${API_BASE_URL}/user-data`, { token: token })
-            .then(res => {
-                setUserData(res.data.data);
-            })
-            .catch(error => {
-                console.error('Error fetching user data:', error);
-                // Handle error
-            });
-    }
+ 
     const fetchPaymentIntent = async () => {
         console.log('intent')
         const amount = total

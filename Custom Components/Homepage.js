@@ -27,11 +27,12 @@ export default function Home() {
     const [isLoading, setloading] = useState(true)
     const [userData, setUserData] = useState('')
     const [userLocation, setUserLocation] = useState();
+    const [nearbycities, setnearbyCities] = useState();
 
    
     useEffect(() => {
         getdata(setUserData),
-        getUserLocation(setUserLocation)
+        getUserLocation(setUserLocation,setnearbyCities)
     },[])
 
     

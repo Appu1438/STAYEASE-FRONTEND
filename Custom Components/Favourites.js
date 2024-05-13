@@ -15,7 +15,7 @@ import * as Location from 'expo-location';
 import Loading from "../Common Component/loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
+import removeFromFavorites from "../Service/FavServices/RemoveFavourite";
 
 
 export default function Fav() {
@@ -68,30 +68,7 @@ export default function Fav() {
     };
 
     
-    const removeFromFavorites = async (hotelId) => {
-        console.log('remoce')
-        try {
-            const response = await axios.post(`${API_BASE_URL}/remove-from-favorites`, { userId: user._id, hotelId });
-            if (response.data.status === 'ok') {
-                Toast.show({
-                    type: 'success',
-                    text1: 'Removed From Favourites',
-                    visibilityTime: 3000,
-                    position: 'bottom'
-                });
-                setFavorites(favorites.filter(favorite => favorite !== hotelId));
-            }else{
-                Toast.show({
-                    type: 'error',
-                    text1:JSON.stringify(response.data.data),
-                    visibilityTime: 3000,
-                    position: 'bottom'
-                });
-            }
-        } catch (error) {
-            console.error('Error removing hotel from favorites:', error);
-        }
-    };
+
     
  
     const renderHotelCard = ({ item }) => {
@@ -102,7 +79,7 @@ export default function Fav() {
                 <Pressable onPress={() => navigation.navigate('Detailview', { data: hotel._id })}>
                     <View style={Styles.SearchContentBox}>
 
-                    <Pressable style={Styles.favourite} onPress={()=>removeFromFavorites(hotel._id)}>
+                    <Pressable style={Styles.favourite} onPress={()=>removeFromFavorites(user._id,hotel._id,favorites,setFavorites)}>
                         <FontAwesome size={25} name='heart'  color='red'  />
                     </Pressable>
 
