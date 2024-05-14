@@ -13,7 +13,7 @@ async function getBookingdetails(BookingID,setBookingDetails,setHotelData,setTot
             setBookingDetails(response.data.data);
             setTotal(response.data.data.TotalAmount);
 
-            gethotelDetails(response.data.data.hotelId,setHotelData);
+            await gethotelDetails(response.data.data.hotelId,setHotelData);
             setBookingsts(response.data.data.BookingStatus)
             await getOffer(response.data.data,setTotal,setNormalMessage,setOfferMessage,setBookingsts)
             setCheckin(new Date(response.data.data.CheckIn))

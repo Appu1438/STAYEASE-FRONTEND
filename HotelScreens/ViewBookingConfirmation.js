@@ -26,7 +26,7 @@ import CancelBooking from "../Service/ConfirmationServices/Cancel";
 
 
 
-export default function Confirmation() {
+export default function BusinesBookingConfirmation() {
     const route = useRoute();
     const navigation = useNavigation();
 
@@ -105,16 +105,16 @@ export default function Confirmation() {
                             <TouchableOpacity style={{ top: '10%', zIndex: 1 }} onPress={() => navigation.goBack()}>
                                 <AntDesign name="closecircleo" size={20} color='white' />
                             </TouchableOpacity>
-                            <Text style={[Styles.confirmtext, { top: '25%' }]}>Your booking is {Bookingsts}</Text>
+                            <Text style={[Styles.confirmtext, { top: '25%' }]}>This booking is {Bookingsts}</Text>
 
-                            {
+                            {/* {
                                 Bookingsts == 'Cancelled' || Bookingsts == 'expired' ? null
                                     : currentDate > Checkin && Bookingsts != 'Cancelled' ? (
                                         <Text style={[Styles.confirmtext, { top: '26%' }]}>Cancellation Not Available </Text>
                                     ) : (
                                         <Text style={[Styles.confirmtext, { top: '26%' }]}>Cancellation available until {formateTime(Checkin)} </Text>
                                     )
-                            }
+                            } */}
 
                         </View>
                         {/* <Confirm /> */}

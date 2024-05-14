@@ -1,4 +1,6 @@
 const getOffer = async (BookingDetails,setTotal,setNormalMessage,setOfferMessage,setBookingsts) => {
+
+    
     const bookingTime = new Date(BookingDetails.BookedAt);
     const checkoutTime = new Date(BookingDetails.CheckOut);
     const checkInTime = new Date(BookingDetails.CheckIn);

@@ -14,6 +14,7 @@ import Profile from "../Custom Components/Profile";
 import AddBussiness from "../HotelScreens/AddBusiness";
 import Viewbussiness from "../HotelScreens/ViewBussines";
 import BusinessBookings from "../HotelScreens/ViewBusinessBookings";
+import BusinesBookingConfirmation from "../HotelScreens/ViewBookingConfirmation";
 
 
 
@@ -30,6 +31,8 @@ const HotelNav = () => {
         <Stack.Screen name="UpdateProfile" component={UpdateProfile} options={{animation:'slide_from_right'}} />
         <Stack.Screen name="Search" component={Search} options={{animation:'slide_from_right'}} />
         <Stack.Screen name="Fav" component={Fav} options={{animation:'slide_from_right'}} />      
+        
+        <Stack.Screen name="BusinesBookingConfirmation" component={BusinesBookingConfirmation} options={{animation:'slide_from_right'}} />      
       </Stack.Navigator>
     )
   

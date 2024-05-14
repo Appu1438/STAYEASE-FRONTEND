@@ -7,6 +7,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import API_BASE_URL from "../Api";
 import Toast from "react-native-toast-message";
+import formatDate from "../Service/DetailviewService/FormatDate";
 
 export default function Upcoming({Bookings}){
 
@@ -23,18 +24,7 @@ export default function Upcoming({Bookings}){
     })
 
     
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        if (isNaN(date.getTime())) {
-            // Handle invalid date string
-            return 'Invalid Date';
-        }
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        const day = date.getDate().toString().padStart(2, '0');
-        const month = months[date.getMonth()];
-        const year = date.getFullYear();
-        return `${day} ${month} ${year}`;
-    };
+   
 
 
     const renderBookingCard = ({ item }) => {
@@ -42,8 +32,12 @@ export default function Upcoming({Bookings}){
             <View style={styles.card}>
                 <View style={styles.content}>
                     <View style={styles.header}>
-                        <Text style={styles.heading}>Hotel Name:</Text>
-                        <Text style={styles.value}>   {item.hotelName}</Text>
+                        <Text style={styles.heading}>Customer Name:</Text>
+                        <Text style={styles.value}>   {item.username}</Text>
+                    </View>
+                    <View style={styles.header}>
+                        <Text style={styles.heading}>Customer Number:</Text>
+                        <Text style={styles.value}>   {item.usernumber}</Text>
                     </View>
                     <View style={styles.header}>
                         <Text style={styles.heading}>Booking ID:</Text>
@@ -81,16 +75,16 @@ export default function Upcoming({Bookings}){
                         <Text style={styles.heading}>Amount Paid:</Text>
                         <Text style={styles.value}>{item.PaidAmount}</Text>
                     </View>):(null)}
-                    <TouchableOpacity style={styles.button} onPress={() => {
+                    {/* <TouchableOpacity style={styles.button} onPress={() => {
                         {
                             loading ? null : setLoading(true)
-                            navigation.navigate('Confirmation', { data: item._id })
+                            navigation.navigate('BusinesBookingConfirmation', { data: item._id })
                         }
                         setLoading(false)
                     }}>
                         {loading ? <ActivityIndicator color='white' /> :
                             (<Text style={styles.buttonText}>View Booking</Text>)}
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
             </View>
 
