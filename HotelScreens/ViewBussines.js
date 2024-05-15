@@ -22,6 +22,8 @@ import { faStar, faIndianRupeeSign } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 import * as DocumentPicker from 'expo-document-picker';
+import getdata from "../Service/UserServices.js/Getdata";
+import getAllBusiness from "../Service/BusinessService/getBusiness";
 
 
 
@@ -29,59 +31,24 @@ import * as DocumentPicker from 'expo-document-picker';
 export default function Viewbussiness() {
     const navigation = useNavigation()
 
-    const [HoteluserId, setHotelUserId] = useState('')
+    const [Hoteluser, setHotelUser] = useState('')
+    const [allHotels, setAllHotels] = useState([]);
     const [Loading, setLoading] = useState(true)
 
     const route = useRoute()
 
     useEffect(() => {
-        getdata()
+        getdata(setHotelUser)
     }, [])
 
-
-
-
-    async function getdata() {
-        const token = await AsyncStorage.getItem('token');
-        // console.log("Profile",token);
-        axios.post(`${API_BASE_URL}/user-data`, { token: token })
-            .then(res => {
-                // console.log(res.data);
-                setHotelUserId(res.data.data._id)
-                getAllHotels(res.data.data._id);
-
-            });
-    }
-
-    const [allHotels, setAllHotels] = useState([]);
-
-
-    const getAllHotels = async (id) => {
-        const hoteluserid = id
-        try {
-            const response = await axios.get(`${API_BASE_URL}/get-user-hotels/${hoteluserid}`);
-            console.log(response.data.data)
-            if (response.data.status == 'ok') {
-                setAllHotels(response.data.data)
-            } else {
-                Toast.show({
-                    type: "error",
-                    text1: JSON.stringify(response.data.data),
-                    visibilityTime: 3000,
-                    position: "bottom",
-                })
-            }
-        } catch (error) {
-            console.error("Error fetching business:", error);
-            Toast.show({
-                type: "error",
-                text1: "Error fetching Hotels",
-                visibilityTime: 3000,
-                position: "bottom",
-            });
+    useEffect(()=>{
+        if (Hoteluser && Hoteluser._id) {
+            getAllBusiness(Hoteluser._id,setAllHotels,setLoading)
         }
-        setLoading(false)
-    };
+    },[Hoteluser])
+
+
+
 
     const renderHotelCard = ({ item }) => (
         <Pressable

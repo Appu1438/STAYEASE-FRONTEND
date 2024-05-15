@@ -23,7 +23,8 @@ import Feather from 'react-native-vector-icons/Feather';
 import Upcoming from "../BusinessBookingComponent/Upcoming";
 import Expired from "../BusinessBookingComponent/Expired";
 import Cancelled from "../BusinessBookingComponent/Cancelled";
-
+import getdata from "../Service/UserServices.js/Getdata";
+import getBusinessBookings from "../Service/BusinessService/getBusinessBooking";
 
 export default function BusinessBookings() {
     const navigation = useNavigation()
@@ -40,76 +41,19 @@ export default function BusinessBookings() {
 
 
 
-
+    useEffect(() => {
+        // Fetch user data and set UserData
+        getdata(setUserData);
+    }, []);
 
     useEffect(() => {
-        getdata()      
-
-        // console.log(BookingDetails)
-    }, [])
-
-    async function getdata() {
-        const token = await AsyncStorage.getItem('token');
-        // console.log("Profile",token);
-        axios.post(`${API_BASE_URL}/user-data`, { token: token })
-            .then(res => {
-                // console.log(res.data);
-                setUserData(res.data.data)
-                getBookings(res.data.data._id)
-
-            });
-    }
-
-
-
-
-    async function getBookings(_id) {
-        try {
-            // console.log("getbookings")
-            const hoteluserId = _id;
-            const response = await axios.get(`${API_BASE_URL}/get-business-bookings/${hoteluserId}`);
-            if (response.data.status == 'ok') {
-                // console.log(response.data.data)
-                setBookingDetails(response.data.data);
-                console.log(response.data.data)
-                separateBookings(response.data.data)
-              
-            } else {
-                Toast.show({
-                    type: 'error',
-                    text1: JSON.stringify(response.data.data),
-                    visibilityTime: 3000,
-                    position: 'bottom'
-                });
-            }
-        } catch (error) {
-            console.error('Error fetching booking details:', error);
+        // Fetch bookings only when UserData._id is available
+        if (UserData && UserData._id) {
+            getBusinessBookings(UserData._id, setBookingDetails, setUpcomingBookings, setCancelledBookings, setExpiredBookings);
         }
-    }
+    }, [UserData]); // Run this effect whenever UserData changes
 
-    const separateBookings = (bookingDetails) => {
-        const upcoming = [];
-        const cancelled = [];
-        const expired = [];
-
-        const currentDate = new Date();
-
-        bookingDetails.forEach(booking => {
-            if (booking.BookingStatus === 'Cancelled') {
-                cancelled.push(booking);
-            } else if (booking.BookingStatus === 'Confirmed' && new Date(booking.CheckOut) > currentDate) {
-                upcoming.push(booking);
-            } else {
-                expired.push(booking);
-            }
-        });
-
-        setUpcomingBookings(upcoming);
-        setCancelledBookings(cancelled);
-        setExpiredBookings(expired);
-    };
-
-
+  
 
     return (
 

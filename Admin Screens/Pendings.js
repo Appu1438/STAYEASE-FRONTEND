@@ -6,38 +6,16 @@ import axios, { all } from "axios";
 import API_BASE_URL from "../Api";
 import Toast from "react-native-toast-message";
 import { Styles } from "../Common Component/Styles";
+import getallPendingHotels from "../Service/AdminServices/getAllPendingReq";
 
 export default function PendingRequests({ navigation }) {
     const [allHotels, setAllHotels] = useState([]);
 
     useEffect(() => {
-        getAllHotels();
+        getallPendingHotels(setAllHotels);
     }, []);
 
-    const getAllHotels = async () => {
-        try {
-            const response = await axios.get(`${API_BASE_URL}/get-pending-hotels`);
-            if (response.data.status === "ok") {
-                setAllHotels(response.data.data);
-            } else {
-                Toast.show({
-                    type: "error",
-                    text1: JSON.stringify(response.data.data),
-                    visibilityTime: 3000,
-                    position: "bottom",
-                });
-            }
-        } catch (error) {
-            console.error("Error fetching Hotels:", error);
-            Toast.show({
-                type: "error",
-                text1: "Error fetching Hotels",
-                visibilityTime: 3000,
-                position: "bottom",
-            });
-        }
-    };
-
+   
     const renderHotelCard = ({ item }) => (
         <Pressable
             onPress={() => {

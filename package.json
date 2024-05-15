@@ -26,8 +26,9 @@
     "@stripe/stripe-react-native": "0.37.2",
     "axios": "^1.6.8",
     "base-64": "^1.0.0",
+    "cross-spawn": "^7.0.3",
     "dotenv": "^16.4.5",
-    "expo": "^50.0.0",
+    "expo": "^51.0.0",
     "expo-document-picker": "~12.0.1",
     "expo-file-system": "~17.0.1",
     "expo-image-manipulator": "~12.0.3",
@@ -59,7 +60,8 @@
     "react-native-toast-message": "^2.2.0",
     "react-native-vector-icons": "^10.0.3",
     "react-native-web": "~0.19.10",
-    "rn-credit-card": "^0.1.1"
+    "rn-credit-card": "^0.1.1",
+    "string-hash-64": "^1.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0"

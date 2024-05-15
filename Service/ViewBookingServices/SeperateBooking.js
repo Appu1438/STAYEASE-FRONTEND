@@ -1,3 +1,5 @@
+
+
 const separateBookings = (bookingDetails,setUpcomingBookings,setCancelledBookings,setExpiredBookings) => {
     const upcoming = [];
     const cancelled = [];

@@ -19,6 +19,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as DocumentPicker from 'expo-document-picker';
+import uploadImageToCloudinary from "../Service/ImageServices/UploadCloudinary";
 
 
 
@@ -109,33 +110,7 @@ export default function AddBussiness() {
         }
     };
 
-    const uploadImageToCloudinary = async (base64Image) => {
-        try {
-            const cloudName = 'stayease'; // Your Cloudinary cloud name
-            const uploadPreset = 'stayease'; // Name of your Cloudinary upload preset
-
-            const cloudinaryUploadEndpoint = `https://api.cloudinary.com/v1_1/${cloudName}/upload`;
-
-            const response = await fetch(cloudinaryUploadEndpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    file: `data:image/jpeg;base64,${base64Image}`,
-                    upload_preset: uploadPreset // Specify the upload preset name
-                }),
-            });
-
-            const data = await response.json();
-            console.log('data', data)
-            return data.secure_url; // URL of the uploaded image
-        } catch (error) {
-            console.error('Error uploading image to Cloudinary:', error);
-            return null;
-        }
-    };
-
+   
     async function handleSubmit() {
         if (!Hotelname || !Hotelnumber || !Location || !LocationLink || !ActualRate || !DiscountRate || !DiscountPercentage || !TaxandFee || !Rating || !FacilityOne || !AvailableRooms || !PersonsPerRoom || !ExtraRateperhead || !ExtraRateperRoom || !ExtraRateperDay || !imageone || !imagetwo || !imageThree || !imagefour) {
             Toast.show({

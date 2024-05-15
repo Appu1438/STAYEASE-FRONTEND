@@ -20,6 +20,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { err } from "react-native-svg";
+import AddHotel from "../Service/AdminServices/addHotel";
 
 
 
@@ -122,30 +123,7 @@ export default function PendingDetailview({ }) {
         }
         setloadingAccept(true)
 
-        try {
-            await axios.post(`${API_BASE_URL}/add-hotel`, HotelData).then(res => {
-                console.log(res.data)
-                if (res.data.status == 'ok') {
-                    Toast.show({
-                        type: 'success',
-                        text1: JSON.stringify(res.data.data),
-                        visibilityTime: 3000,
-                        position: 'bottom'
-                    })
-                    removeFromPendings()
-                } else {
-                    Toast.show({
-                        type: 'error',
-                        text1: JSON.stringify(res.data.data),
-                        visibilityTime: 3000,
-                        position: 'bottom'
-                    })
-                }
-            })
-
-        } catch (error) {
-            console.log(error)
-        }
+       await AddHotel(HotelData)
 
         setloadingAccept(false)
 

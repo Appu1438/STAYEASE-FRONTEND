@@ -8,6 +8,8 @@ import axios from "axios";
 import API_BASE_URL from "../Api";
 import Toast from "react-native-toast-message";
 import formatDate from "../Service/DetailviewService/FormatDate";
+import formateTime from "../Service/DetailviewService/FormateTime";
+
 
 export default function Upcoming({Bookings}){
 
@@ -49,11 +51,11 @@ export default function Upcoming({Bookings}){
                     </View>
                     <View style={styles.header}>
                         <Text style={styles.heading}>Check-In:</Text>
-                        <Text style={styles.value}>{formatDate(item.CheckIn)}</Text>
+                        <Text style={styles.value}>{formateTime(item.CheckIn)}</Text>
                     </View>
                     <View style={styles.header}>
                         <Text style={styles.heading}>Check-Out:</Text>
-                        <Text style={styles.value}>{formatDate(item.CheckOut)}</Text>
+                        <Text style={styles.value}>{formateTime(item.CheckOut)}</Text>
                     </View>
                     <View style={styles.header}>
                         <Text style={styles.heading}>Rooms:</Text>
