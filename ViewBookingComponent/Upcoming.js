@@ -125,7 +125,7 @@ export default function Upcoming({Bookings}){
 const styles = StyleSheet.create({
     card: {
         backgroundColor: '#fff',
-        width: 350,
+        width: 330,
         borderRadius: 10,
         padding: 10,
         marginBottom: 10,

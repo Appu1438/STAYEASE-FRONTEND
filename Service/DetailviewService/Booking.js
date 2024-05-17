@@ -8,31 +8,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
     
-export default async function submitBooking  ({navigation,userData,Hoteldata,unformatedselectedFromDate,unformatedselectedToDate,Rooms,Guests,Total,setloading})  {
-    console.log(Rooms)
-    if (Rooms <= Guests) {
+export default async function HotelBooking  (bookingData,navigation,token,setloading)  {
         console.log('book')
-        try {
-            const token = await AsyncStorage.getItem('token');
-            const bookingData = {
-                userId: userData._id,
-                username: userData.name,
-                usernumber: userData.number,
-                hotelId: Hoteldata._id,
-                hoteluserId: Hoteldata.hoteluserid,
-                hotelName: Hoteldata.hotelname,
-                BookedAt: new Date(),
-                CheckIn: unformatedselectedFromDate,
-                CheckOut: unformatedselectedToDate,
-                Rooms: Rooms,
-                Guests: Guests,
-                BookingId: generateBookingId(6),
-                TotalAmount: parseInt(Total) + parseInt(Hoteldata.taxandfee),
-                BookingStatus: "Confirmed",
-                PaymentStatus: 'Not paid'
-                // Add other booking details as needed
-            };
-            const response = await axios.post(`${API_BASE_URL}/submit-booking`, bookingData, {
+
+        const response = await axios.post(`${API_BASE_URL}/submit-booking`, bookingData, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -57,37 +36,8 @@ export default async function submitBooking  ({navigation,userData,Hoteldata,unf
                     position: 'bottom'
                 });
             }
-        } catch (error) {
-            // Handle network errors or other exceptions
-            console.error('Error submitting booking:', error);
-            Toast.show({
-                type: 'error',
-                text1: 'Error submitting booking',
-                visibilityTime: 3000,
-                position: 'bottom'
-            });
-        }
+    } 
 
-    } else {
-        setloading(false)
-        Toast.show({
-            type: 'error',
-            text1: 'Please fill Rooms and Guests Correctly',
-            visibilityTime: 3000,
-            position: 'bottom'
-        });
-    }
-};
-
-function generateBookingId(length) {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let bookingId = '';
-    for (let i = 0; i < length; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        bookingId += characters[randomIndex];
-    }
-    return bookingId;
-}
 
 
 

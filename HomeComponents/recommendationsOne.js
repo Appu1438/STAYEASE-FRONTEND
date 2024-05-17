@@ -9,7 +9,7 @@ import axios from "axios";
 import API_BASE_URL from "../Api";
 import { useFocusEffect } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react"
 import * as Location from 'expo-location';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import addToFavorites from '../Service/FavServices/AddFavourites';
@@ -31,7 +31,12 @@ export default function RecommendationsOne({userLocation, user }) {
 
     useEffect(() => {
         getAllHotels(setAllHotels,setRandomHotels);
-    }, []);
+    }, [setAllHotels,setRandomHotels]);
+
+      
+
+  
+
 
     useEffect(() => {
         getUserFavorites(user,setFavorites)

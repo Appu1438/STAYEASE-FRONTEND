@@ -9,6 +9,7 @@ import UserNav from "./Navigation/User";
 import HotelNav from "./Navigation/Hotel";
 import LoginNav from "./Navigation/Login";
 import getUsertype from "./Service/UserServices.js/Usertype";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 
 export default function App() {
@@ -27,6 +28,7 @@ export default function App() {
 
 
   return (
+    <GestureHandlerRootView style={{flex:1}} >
     <StripeProvider publishableKey="pk_test_51NtRBkSEmsfUtDI2xbYoEzVmCHkf7UlwgqRxbpKJSSPWugQXbowVpDiMXHhgg7bibtqWxP2GzEjuZieYQ4ns2fIC00kIt633nm">
       <NavigationContainer>
 
@@ -39,6 +41,7 @@ export default function App() {
 
       </NavigationContainer>
     </StripeProvider>
+    </GestureHandlerRootView>
 
 
   )

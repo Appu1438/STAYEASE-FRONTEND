@@ -3,27 +3,16 @@
 import { View, Text, SafeAreaView, Pressable, Alert, StyleSheet, Image, TouchableOpacity, TextInput, ScrollView, ActivityIndicator, StatusBar, FlatList } from "react-native"
 import { Styles } from "../Common Component/Styles"
 import { useEffect, useState } from "react"
-import Loading from "../Common Component/loading"
-import EvilIcon from 'react-native-vector-icons/EvilIcons';
-import Fontisto from 'react-native-vector-icons/Fontisto';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import Feather from 'react-native-vector-icons/Feather';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
 import { useNavigation, useRoute } from "@react-navigation/native";
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import API_BASE_URL from "../Api";
-import Toast from "react-native-toast-message";
-import { Avatar } from "react-native-paper";
-import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
-import * as ImageManipulator from 'expo-image-manipulator';
-import { faStar, faIndianRupeeSign } from "@fortawesome/free-solid-svg-icons";
+
+import { faStar, faIndianRupeeSign, faEdit, faTrash, faUnderline } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 import * as DocumentPicker from 'expo-document-picker';
 import getdata from "../Service/UserServices.js/Getdata";
 import getAllBusiness from "../Service/BusinessService/getBusiness";
+import handleDelete from "../Service/BusinessService/DeleteBusiness";
 
 
 
@@ -41,11 +30,26 @@ export default function Viewbussiness() {
         getdata(setHotelUser)
     }, [])
 
-    useEffect(()=>{
+    useEffect(() => {
         if (Hoteluser && Hoteluser._id) {
-            getAllBusiness(Hoteluser._id,setAllHotels,setLoading)
+            getAllBusiness(Hoteluser._id, setAllHotels, setLoading)
         }
-    },[Hoteluser])
+    }, [Hoteluser])
+
+    async function onDelete(_id){
+        Alert.alert('Delete Business', 'Do you want to delete Business',
+        [{
+            text: 'Cancel',
+            onPress: () => null,
+            style: 'cancel'
+        }, {
+            text: 'Delete',
+            onPress: () => handleDelete(_id,navigation),
+            style: 'cancel'
+        }
+        ])
+    return true;
+    }
 
 
 
@@ -74,24 +78,35 @@ export default function Viewbussiness() {
                     <Text style={[Styles.pricetext, { color: "green", fontSize: 12, top: 3, left: 15 }]}>{item.discountpercentage}% Off</Text>
                 </View>
                 <Text style={[Styles.pricetext, { color: "grey", fontSize: 12, top: 15, left: 15 }]}>+{item.taxandfee} taxes and fees</Text>
+
+                <View style={{ flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end", marginTop: 0 }}>
+                    <TouchableOpacity onPress={() => navigation.navigate('EditBusiness',{data:item})}>
+                        <FontAwesomeIcon style={{ marginHorizontal: 8 }} size={20} icon={faEdit} color="#0b84db" />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => onDelete(item._id)}>
+                        <FontAwesomeIcon style={{ marginHorizontal: 8 }} size={20} icon={faTrash} color="red" />
+                    </TouchableOpacity>
+                </View>
             </View>
+
         </Pressable>
     );
 
     return (
-        <View style={{ flex: 1,backgroundColor:'white'}}>
+        <View style={{ flex: 1, backgroundColor: 'white' }}>
             <StatusBar backgroundColor="white" barStyle="dark-content" />
 
             <View style={{ left: '5%', top: '5%', alignSelf: 'flex-start' }}>
                 <Text style={Styles.profile}>Your Bussiness</Text>
             </View>
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center", top: '5%' }}>
-                <>{Loading ? (<ActivityIndicator size={30} color='black' />) 
-                : (
-                     allHotels.length > 0 ? (<FlatList data={allHotels} keyExtractor={(item) => item._id} renderItem={renderHotelCard} />
-                    ) : (<Text style={{ fontSize: 20 }}>No Business Found</Text>)
+                <>{Loading ? (<ActivityIndicator size={30} color='black' />)
+                    : (
+                        allHotels.length > 0 ? (<FlatList data={allHotels} keyExtractor={(item) => item._id} renderItem={renderHotelCard} />
+                        ) : (<Text style={{ fontSize: 20 }}>No Business Found</Text>)
 
-                )}
+                    )}
                 </>
             </View>
         </View>

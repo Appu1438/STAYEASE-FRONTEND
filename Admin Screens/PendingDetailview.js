@@ -102,28 +102,34 @@ export default function PendingDetailview({ }) {
     }
 
     async function AcceptRequest() {
-        const HotelData = {
-            hoteluserid: Hoteldata.hoteluserid,
-            hotelname: Hoteldata.hotelname,
-            hotelnumber: Hoteldata.hotelnumber,
-            location: Hoteldata.location,
-            locationlink: Hoteldata.locationlink,
-            actualrate: Hoteldata.actualrate,
-            discountedrate: Hoteldata.discountedrate,
-            discountpercentage: Hoteldata.discountpercentage,
-            taxandfee: Hoteldata.taxandfee,
-            availablerooms: Hoteldata.availablerooms,
-            personsperroom: Hoteldata.personsperroom,
-            extraperhead: Hoteldata.extraperhead,
-            extraperroom: Hoteldata.extraperroom,
-            extraperday: Hoteldata.extraperday,
-            rating: Hoteldata.rating,
-            facilities: Hoteldata.facilities,
-            images: Hoteldata.images
-        }
+        // const HotelData = {
+        //     hoteluserid: Hoteldata.hoteluserid,
+        //     hotelname: Hoteldata.hotelname,
+        //     hotelnumber: Hoteldata.hotelnumber,
+        //     location: Hoteldata.location,
+        //     locationlink: Hoteldata.locationlink,
+        //     actualrate: Hoteldata.actualrate,
+        //     discountedrate: Hoteldata.discountedrate,
+        //     discountpercentage: Hoteldata.discountpercentage,
+        //     taxandfee: Hoteldata.taxandfee,
+        //     availablerooms: Hoteldata.availablerooms,
+        //     personsperroom: Hoteldata.personsperroom,
+        //     extraperhead: Hoteldata.extraperhead,
+        //     extraperroom: Hoteldata.extraperroom,
+        //     extraperday: Hoteldata.extraperday,
+        //     rating: Hoteldata.rating,
+        //     facilities: Hoteldata.facilities,
+        //     images: Hoteldata.images
+        // }
         setloadingAccept(true)
 
-       await AddHotel(HotelData)
+        try {
+            await AddHotel(Hoteldata, navigation)
+
+        } catch (error) {
+            console.log(err)
+        }
+
 
         setloadingAccept(false)
 
@@ -136,12 +142,6 @@ export default function PendingDetailview({ }) {
             await axios.post(`${API_BASE_URL}/remove-pending-hotels`, { _id: Hoteldata._id }).then(res => {
                 console.log(res.data)
                 if (res.data.status == 'ok') {
-                    // Toast.show({
-                    //     type: 'success',
-                    //     text1: JSON.stringify(res.data.data),
-                    //     visibilityTime: 3000,
-                    //     position: 'bottom'
-                    // })
                     navigation.navigate('Admin')
                 } else {
                     Toast.show({

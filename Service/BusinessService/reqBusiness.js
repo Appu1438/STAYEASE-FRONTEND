@@ -1,9 +1,10 @@
-import axios from "axios";
-import API_BASE_URL from "../../Api";
-import Toast from "react-native-toast-message";
+import axios from "axios"
+import API_BASE_URL from "../../Api"
+import Toast from "react-native-toast-message"
 
-const AddHotel=async(Hoteldata,navigation)=>{
-    await axios.post(`${API_BASE_URL}/add-hotel`, Hoteldata).then(res => {
+const ReqHotel=async(Hoteldata,navigation)=>{
+
+    await axios.post(`${API_BASE_URL}/req-hotel`, Hoteldata).then(res => {
         console.log(res.data)
         if (res.data.status == 'ok') {
             Toast.show({
@@ -31,4 +32,4 @@ const AddHotel=async(Hoteldata,navigation)=>{
     })
 }
 
-export default AddHotel
+export default ReqHotel

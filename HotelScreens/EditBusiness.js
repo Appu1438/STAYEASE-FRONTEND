@@ -22,18 +22,21 @@ import * as DocumentPicker from 'expo-document-picker';
 import uploadImageToCloudinary from "../Service/ImageServices/UploadCloudinary";
 import ReqHotel from "../Service/BusinessService/reqBusiness";
 import getdata from "../Service/UserServices.js/Getdata";
+import Updatebusiness from "../Service/BusinessService/UpdateBusines";
 
 
 
 
-export default function AddBussiness() {
+export default function EditBussiness() {
     const navigation = useNavigation()
+    const route = useRoute()
+
 
     const [Hoteluser, setHotelUser] = useState('')
-    const [Hotelname, setHotelName] = useState("")
-    const [Hotelnumber, setHotelNumber] = useState("")
-    const [Location, setLocation] = useState('')
-    const [LocationLink, setLocationLink] = useState('')
+    const [Hotelname, setHotelName] = useState(route.params.data.hotelname)
+    const [Hotelnumber, setHotelNumber] = useState(route.params.data.hotelnumber)
+    const [Location, setLocation] = useState(route.params.data.location)
+    const [LocationLink, setLocationLink] = useState(route.params.data.locationlink)
     const [DiscountRate, setDiscountRate] = useState("")
     const [ActualRate, setActualRate] = useState('')
     const [DiscountPercentage, setDiscountPercentage] = useState("")
@@ -48,10 +51,10 @@ export default function AddBussiness() {
     const [ExtraRateperhead, setExtraRateperhead] = useState("")
     const [ExtraRateperRoom, setExtraRateperRoom] = useState("")
     const [ExtraRateperDay, setExtraRateperDay] = useState("")
-    const [imageone, setimageOne] = useState("")
-    const [imagetwo, setimageTwo] = useState("")
-    const [imageThree, setimageThree] = useState("")
-    const [imagefour, setimageFour] = useState("")
+    const [imageone, setimageOne] = useState(route.params.data.images[0])
+    const [imagetwo, setimageTwo] = useState(route.params.data.images[1])
+    const [imageThree, setimageThree] = useState(route.params.data.images[2])
+    const [imagefour, setimageFour] = useState(route.params.data.images[3])
 
     const [loadingOne, setLoadingOne] = useState(false)
     const [loadingTwo, setLoadingTwo] = useState(false)
@@ -59,14 +62,10 @@ export default function AddBussiness() {
     const [loadingFour, setLoadingFour] = useState(false)
     const [Loading, SetLoading] = useState(false)
 
-    const route = useRoute()
 
     useEffect(() => {
         getdata(setHotelUser)
     }), []
-
-
-
 
 
     const selectImage = async (State, loading) => {
@@ -117,6 +116,7 @@ export default function AddBussiness() {
 
         try {
             const Hoteldata = {
+                hotelid:route.params.data._id,
                 hoteluserid: Hoteluser._id,
                 hotelname: Hotelname,
                 hotelnumber: Hotelnumber,
@@ -136,7 +136,7 @@ export default function AddBussiness() {
                 images: [imageone, imagetwo, imageThree, imagefour]
             }
 
-            await ReqHotel(Hoteldata, navigation)
+            await Updatebusiness(Hoteldata, navigation)
         } catch (err) {
             console.log(err)
         }
@@ -152,18 +152,19 @@ export default function AddBussiness() {
                 <View style={[Styles.container, styles.container]}>
 
                     <Image style={{ width: 170, height: 150, top: -10 }} source={require("../assets/hotels.png")} />
-                    <Text style={styles.message}>Grow Up Your Business With Us</Text>
-                    <Text style={styles.requestMessage}>Interested in adding your business? Let us know!</Text>
+                    <Text style={styles.message}>Update Your Business </Text>
+                    <Text style={styles.requestMessage}>Want to update your business? </Text>
+
 
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder=" Hotel Name Inculde Stay Ease" onChange={(e) => setHotelName(e.nativeEvent.text)} />
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder=" Hotel Contact Number" onChange={(e) => setHotelNumber(e.nativeEvent.text)} />
+                        <TextInput style={[Styles.input, { width: '45%' }]} value={Hotelname} placeholder=" Hotel Name Inculde Stay Ease" onChange={(e) => setHotelName(e.nativeEvent.text)} />
+                        <TextInput style={[Styles.input, { width: '45%' }]} value={Hotelnumber} placeholder=" Hotel Contact Number" onChange={(e) => setHotelNumber(e.nativeEvent.text)} />
                     </View>
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Location" onChange={(e) => setLocation(e.nativeEvent.text)} />
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Location Google Map Link" onChange={(e) => setLocationLink(e.nativeEvent.text)} />
+                        <TextInput style={[Styles.input, { width: '45%' }]} value={Location} placeholder="Location" onChange={(e) => setLocation(e.nativeEvent.text)} />
+                        <TextInput style={[Styles.input, { width: '45%' }]} value={LocationLink} placeholder="Location Google Map Link" onChange={(e) => setLocationLink(e.nativeEvent.text)} />
                     </View>
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
@@ -227,7 +228,7 @@ export default function AddBussiness() {
                         Loading ? null :
                             handleSubmit()
                     }} >
-                        <Text style={Styles.btntext}>{Loading ? <ActivityIndicator color='white' /> : 'Request'}</Text>
+                        <Text style={Styles.btntext}>{Loading ? <ActivityIndicator color='white' /> : 'Update'}</Text>
                     </Pressable>
                 </View>
             </ScrollView>

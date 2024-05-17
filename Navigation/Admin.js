@@ -16,6 +16,7 @@ import Fav from "../Custom Components/Favourites";
 import Viewbussiness from "../HotelScreens/ViewBussines";
 import BusinessBookings from "../HotelScreens/ViewBusinessBookings";
 import AdminBusiness from "../Admin Screens/AddHotel";
+import EditBussiness from "../HotelScreens/EditBusiness";
 
 
 
@@ -35,6 +36,7 @@ export default function AdminNav  ()  {
         <Stack.Screen name="Fav" component={Fav } options={{animation:'slide_from_right'}}  />      
 
         <Stack.Screen name="PendingsDetails" component={PendingDetailview} />
+        <Stack.Screen name="EditBusiness" component={EditBussiness} options={{animation:'slide_from_right'}} />
       </Stack.Navigator>
 
 

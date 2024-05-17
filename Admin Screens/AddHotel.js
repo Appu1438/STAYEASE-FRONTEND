@@ -100,7 +100,7 @@ export default function AdminBussiness() {
         }
     };
 
-  
+
     async function handleSubmit() {
         if (!Hotelname || !Hotelnumber || !Location || !LocationLink || !ActualRate || !DiscountRate || !DiscountPercentage || !TaxandFee || !Rating || !FacilityOne || !AvailableRooms || !PersonsPerRoom || !ExtraRateperhead || !ExtraRateperRoom || !ExtraRateperDay || !imageone || !imagetwo || !imageThree || !imagefour) {
             Toast.show({
@@ -111,28 +111,38 @@ export default function AdminBussiness() {
             });
             return;
         }
+
         SetLoading(true)
-        const Hoteldata = {
-            hoteluserid: Hoteluser._id,
-            hotelname: Hotelname,
-            hotelnumber: Hotelnumber,
-            location: Location,
-            locationlink: LocationLink,
-            actualrate: ActualRate,
-            discountedrate: DiscountRate,
-            discountpercentage: DiscountPercentage,
-            taxandfee: TaxandFee,
-            availablerooms: AvailableRooms,
-            personsperroom: PersonsPerRoom,
-            extraperhead: ExtraRateperhead,
-            extraperroom: ExtraRateperRoom,
-            extraperday: ExtraRateperDay,
-            rating: Rating,
-            facilities: [FacilityOne, FacilityTwo, FacilityThree],
-            images: [imageone, imagetwo, imageThree, imagefour]
+
+        try {
+            const Hoteldata = {
+                hoteluserid: Hoteluser._id,
+                hotelname: Hotelname,
+                hotelnumber: Hotelnumber,
+                location: Location,
+                locationlink: LocationLink,
+                actualrate: ActualRate,
+                discountedrate: DiscountRate,
+                discountpercentage: DiscountPercentage,
+                taxandfee: TaxandFee,
+                availablerooms: AvailableRooms,
+                personsperroom: PersonsPerRoom,
+                extraperhead: ExtraRateperhead,
+                extraperroom: ExtraRateperRoom,
+                extraperday: ExtraRateperDay,
+                rating: Rating,
+                facilities: [FacilityOne, FacilityTwo, FacilityThree],
+                images: [imageone, imagetwo, imageThree, imagefour]
+            }
+
+            await AddHotel(Hoteldata, navigation)
+
+        } catch (err) {
+            console.log(err)
         }
-        await AddHotel(Hoteldata)
-    
+
+
+
         SetLoading(false)
 
     }

@@ -35,7 +35,7 @@ import handleDecGuests from "../Service/DetailviewService/DecreaseGuests";
 import { TextPath } from "react-native-svg";
 import calculateTotalAmount from "../Service/DetailviewService/CalculateAmount";
 import OpenMaps from "../Service/Map and Dial/OpenMaps";
-import submitBooking from "../Service/DetailviewService/Booking";
+import HotelBooking from "../Service/DetailviewService/Booking";
 
 
 
@@ -84,7 +84,7 @@ export default function Detailview({ }) {
 
     useEffect(()=>{
         getUserFavorites(userData._id, setFavorites)
-    })
+    },[userData])
 
     useEffect(() => {
         calculateTotalAmount(unformatedselectedFromDate,unformatedselectedToDate,BaseAmount,Hoteldata,ExtraAmount,setTotal);
@@ -186,90 +186,69 @@ export default function Detailview({ }) {
             style: 'cancel'
         }, {
             text: 'Book',
-            onPress: () => submitBooking({navigation,userData,Hoteldata,unformatedselectedFromDate,unformatedselectedToDate,Rooms,Guests,Total,setloading}),
+            onPress: () => submitBooking(),
             style: 'cancel'
         }
         ])
     }
 
 
-    // const submitBooking = async () => {
-    //     if (Rooms <= Guests) {
-    //         try {
-    //             const token = await AsyncStorage.getItem('token');
-    //             const bookingData = {
-    //                 userId: userData._id,
-    //                 username: userData.name,
-    //                 hotelId: Hoteldata._id,
-    //                 hoteluserId: Hoteldata.hoteluserid,
-    //                 hotelName: Hoteldata.hotelname,
-    //                 BookedAt: new Date(),
-    //                 CheckIn: unformatedselectedFromDate,
-    //                 CheckOut: unformatedselectedToDate,
-    //                 Rooms: Rooms,
-    //                 Guests: Guests,
-    //                 BookingId: generateBookingId(6),
-    //                 TotalAmount: parseInt(Total) + parseInt(Hoteldata.taxandfee),
-    //                 BookingStatus: "Confirmed",
-    //                 PaymentStatus: 'Not paid'
-    //                 // Add other booking details as needed
-    //             };
-    //             const response = await axios.post(`${API_BASE_URL}/submit-booking`, bookingData, {
-    //                 headers: {
-    //                     Authorization: `Bearer ${token}`
-    //                 }
-    //             });
-    //             setloading(false)
-    //             if (response.data.status === 'ok') {
-    //                 // Handle success, e.g., show a success message to the user
-    //                 // console.log(response.data.data)
-    //                 navigation.navigate('Confirmation', { data: response.data.data._id })
-    //                 Toast.show({
-    //                     type: 'success',
-    //                     text1: 'Booking  successfull',
-    //                     visibilityTime: 3000,
-    //                     position: 'bottom'
-    //                 });
-    //             } else {
-    //                 // Handle error from the backend, e.g., display an error message to the user
-    //                 Toast.show({
-    //                     type: 'error',
-    //                     text1: 'Failed to book',
-    //                     visibilityTime: 3000,
-    //                     position: 'bottom'
-    //                 });
-    //             }
-    //         } catch (error) {
-    //             // Handle network errors or other exceptions
-    //             console.error('Error submitting booking:', error);
-    //             Toast.show({
-    //                 type: 'error',
-    //                 text1: 'Error submitting booking',
-    //                 visibilityTime: 3000,
-    //                 position: 'bottom'
-    //             });
-    //         }
+    const submitBooking = async () => {
+        if (Rooms <= Guests) {
+            try {
+                const token = await AsyncStorage.getItem('token');
+                const bookingData = {
+                    userId: userData._id,
+                    username: userData.name,
+                    usernumber: userData.number,
+                    hotelId: Hoteldata._id,
+                    hoteluserId: Hoteldata.hoteluserid,
+                    hotelName: Hoteldata.hotelname,
+                    BookedAt: new Date(),
+                    CheckIn: unformatedselectedFromDate,
+                    CheckOut: unformatedselectedToDate,
+                    Rooms: Rooms,
+                    Guests: Guests,
+                    BookingId: await generateBookingId(6),
+                    TotalAmount: parseInt(Total) + parseInt(Hoteldata.taxandfee),
+                    BookingStatus: "Confirmed",
+                    PaymentStatus: 'Not paid'
+                    // Add other booking details as needed
+                };
 
-    //     } else {
-    //         setloading(false)
-    //         Toast.show({
-    //             type: 'error',
-    //             text1: 'Please fill Rooms and Guests Correctly',
-    //             visibilityTime: 3000,
-    //             position: 'bottom'
-    //         });
-    //     }
-    // };
+                await HotelBooking(bookingData,navigation,token,setloading)
 
-    // function generateBookingId(length) {
-    //     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    //     let bookingId = '';
-    //     for (let i = 0; i < length; i++) {
-    //         const randomIndex = Math.floor(Math.random() * characters.length);
-    //         bookingId += characters[randomIndex];
-    //     }
-    //     return bookingId;
-    // }
+            } catch (error) {
+                // Handle network errors or other exceptions
+                console.error('Error submitting booking:', error);
+                Toast.show({
+                    type: 'error',
+                    text1: 'Error submitting booking',
+                    visibilityTime: 3000,
+                    position: 'bottom'
+                });
+            }
+
+        } else {
+            setloading(false)
+            Toast.show({
+                type: 'error',
+                text1: 'Please fill Rooms and Guests Correctly',
+                visibilityTime: 3000,
+                position: 'bottom'
+            });
+        }
+    };
+
+    function generateBookingId(length) {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let bookingId = '';
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            bookingId += characters[randomIndex];
+        }
+        return bookingId;
+    }
 
 
     const handleImageChange = (index) => {
