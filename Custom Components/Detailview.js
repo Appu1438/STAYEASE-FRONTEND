@@ -32,16 +32,23 @@ import handleIncRoom from "../Service/DetailviewService/Increaseroom";
 import handleDecRoom from "../Service/DetailviewService/DecreaseRoom";
 import handleIncGuests from "../Service/DetailviewService/IncreaseGuests";
 import handleDecGuests from "../Service/DetailviewService/DecreaseGuests";
-import { TextPath } from "react-native-svg";
 import calculateTotalAmount from "../Service/DetailviewService/CalculateAmount";
 import OpenMaps from "../Service/Map and Dial/OpenMaps";
 import HotelBooking from "../Service/DetailviewService/Booking";
+import { useDispatch, useSelector } from "react-redux";
 
 
 
 export default function Detailview({ }) {
     let windowwidth = useWindowDimensions().width
+    const dispatch=useDispatch()
 
+    const {roomCount} = useSelector((state) => state.room)
+    const {guestCount}=useSelector((state)=>state.guest)
+
+    console.log(guestCount)
+    console.log(roomCount)
+    
     const scrollViewRef = useRef(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const windowWidth = Dimensions.get('window').width;
@@ -62,8 +69,8 @@ export default function Detailview({ }) {
     const [selectedFromDate, setSelectedFromDate] = useState('');
     const [selectedToDate, setSelectedToDate] = useState('');
 
-    const [Rooms, setRooms] = useState(1);
-    const [Guests, setGuests] = useState(1);
+    // const [Rooms, setRooms] = useState(1);
+    // const [Guests, setGuests] = useState(1);
 
     const [BaseAmount, setBaseAmount] = useState(0);
     const [ExtraAmount, setExtraAmount] = useState(0);
@@ -82,20 +89,20 @@ export default function Detailview({ }) {
         setDates(setUnformatedSelectedFromDate, setUnformatedSelectedToDate, setSelectedFromDate, setSelectedToDate)
     }, [])
 
-    useEffect(()=>{
+    useEffect(() => {
         getUserFavorites(userData._id, setFavorites)
-    },[userData])
+    }, [userData])
 
     useEffect(() => {
-        calculateTotalAmount(unformatedselectedFromDate,unformatedselectedToDate,BaseAmount,Hoteldata,ExtraAmount,setTotal);
+        calculateTotalAmount(unformatedselectedFromDate, unformatedselectedToDate, BaseAmount, Hoteldata, ExtraAmount, setTotal);
     }, [selectedFromDate, selectedToDate]);
 
     useEffect(() => {
         console.log('decr')
-        if (Guests > Rooms * parseInt(Hoteldata.personsperroom)) {
-            setGuests(Rooms * parseInt(Hoteldata.personsperroom))
+        if (guestCount > roomCount * parseInt(Hoteldata.personsperroom)) {
+            setGuests(roomCount * parseInt(Hoteldata.personsperroom))
         }
-    }, [Rooms, Guests])
+    }, [roomCount, guestCount])
 
 
 
@@ -194,7 +201,7 @@ export default function Detailview({ }) {
 
 
     const submitBooking = async () => {
-        if (Rooms <= Guests) {
+        if (roomCount <= guestCount) {
             try {
                 const token = await AsyncStorage.getItem('token');
                 const bookingData = {
@@ -207,8 +214,8 @@ export default function Detailview({ }) {
                     BookedAt: new Date(),
                     CheckIn: unformatedselectedFromDate,
                     CheckOut: unformatedselectedToDate,
-                    Rooms: Rooms,
-                    Guests: Guests,
+                    Rooms: roomCount,
+                    Guests: guestCount,
                     BookingId: await generateBookingId(6),
                     TotalAmount: parseInt(Total) + parseInt(Hoteldata.taxandfee),
                     BookingStatus: "Confirmed",
@@ -216,7 +223,7 @@ export default function Detailview({ }) {
                     // Add other booking details as needed
                 };
 
-                await HotelBooking(bookingData,navigation,token,setloading)
+                await HotelBooking(bookingData, navigation, token, setloading)
 
             } catch (error) {
                 // Handle network errors or other exceptions
@@ -363,16 +370,16 @@ export default function Detailview({ }) {
                                     <TouchableOpacity style={{ flexDirection: 'row', alignSelf: 'flex-end', right: '15%' }}>
 
                                         <TouchableOpacity onPress={() => {
-                                            handleDecRoom(Rooms, Hoteldata, setRooms, setExtraAmount, setTotal, ExtraAmount, Total)
+                                            handleDecRoom(roomCount, Hoteldata, setExtraAmount, setTotal, ExtraAmount, Total,dispatch)
                                         }
                                         }>
                                             <AntDesign name="minussquareo" size={20} color='black' />
                                         </TouchableOpacity>
 
-                                        <Text style={[Styles.bookingLasttext, { alignSelf: 'center' }]}>{Rooms}</Text>
+                                        <Text style={[Styles.bookingLasttext, { alignSelf: 'center' }]}>{roomCount}</Text>
 
                                         <TouchableOpacity onPress={() => {
-                                            handleIncRoom(Rooms, Hoteldata, setRooms, setExtraAmount, setTotal, ExtraAmount, Total)
+                                            handleIncRoom(roomCount, Hoteldata, setExtraAmount, setTotal, ExtraAmount, Total,dispatch)
                                         }
                                         } >
                                             <AntDesign name="plussquareo" size={20} color='black' />
@@ -383,17 +390,17 @@ export default function Detailview({ }) {
                                     <TouchableOpacity style={{ flexDirection: 'row', alignSelf: 'flex-end', right: '15%' }}>
 
                                         <TouchableOpacity onPress={() => {
-                                            handleDecGuests(Hoteldata, Guests, setGuests, ExtraAmount, setExtraAmount, Total, setTotal)
+                                            handleDecGuests(Hoteldata, guestCount, ExtraAmount, setExtraAmount, Total, setTotal,dispatch)
                                         }
 
                                         }>
                                             <AntDesign name="minussquareo" size={20} color='black' />
                                         </TouchableOpacity>
 
-                                        <Text style={[Styles.bookingLasttext, { alignSelf: 'center' }]}>{Guests}</Text>
+                                        <Text style={[Styles.bookingLasttext, { alignSelf: 'center' }]}>{guestCount}</Text>
 
                                         <TouchableOpacity onPress={() => {
-                                            handleIncGuests(Hoteldata, Guests, setGuests, Rooms, ExtraAmount, setExtraAmount, Total, setTotal)
+                                            handleIncGuests(Hoteldata, guestCount, roomCount, ExtraAmount, setExtraAmount, Total, setTotal,dispatch)
                                         }
                                         } >
                                             <AntDesign name="plussquareo" size={20} color='black' />

@@ -172,7 +172,7 @@ export default function AddBussiness() {
                     </View>
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Discount in Percentage" onChange={(e) => setDiscountPercentage(e.nativeEvent.text)} />
+                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Discount Percentage in No:" onChange={(e) => setDiscountPercentage(e.nativeEvent.text)} />
                         <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Tax and Fee in Rs" onChange={(e) => setTaxandFee(e.nativeEvent.text)} />
                     </View>
 

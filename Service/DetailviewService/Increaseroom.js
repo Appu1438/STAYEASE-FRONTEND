@@ -1,9 +1,13 @@
 import Toast from "react-native-toast-message";
+import { incrementRooms } from "../../Redux/Rooms";
 
-const handleIncRoom = (Rooms,Hoteldata,setRooms,setExtraAmount,setTotal,ExtraAmount,Total) => {
+
+
+const handleIncRoom = (Rooms,Hoteldata,setExtraAmount,setTotal,ExtraAmount,Total,dispatch) => {
+
     console.log('plus')
     if (Rooms != parseInt(Hoteldata.availablerooms)) {
-        setRooms(Rooms + 1)
+        dispatch(incrementRooms())
         setExtraAmount(ExtraAmount + parseInt(Hoteldata.extraperroom))
         setTotal(Total + parseInt(Hoteldata.extraperroom))
     } else {

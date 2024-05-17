@@ -1,14 +1,12 @@
 import Toast from "react-native-toast-message";
+import { decrementRooms } from "../../Redux/Rooms";
 
-const handleDecRoom = (Rooms,Hoteldata,setRooms,setExtraAmount,setTotal,ExtraAmount,Total) => {
+const handleDecRoom = (Rooms, Hoteldata, setExtraAmount, setTotal, ExtraAmount, Total,dispatch) => {
     console.log('minus')
     if (Rooms != 1) {
-        setRooms(Rooms - 1)
+        dispatch(decrementRooms())     
         setExtraAmount(ExtraAmount - parseInt(Hoteldata.extraperroom))
         setTotal(Total - parseInt(Hoteldata.extraperroom))
-        // setGuests(parseInt(Hoteldata.personsperroom) * Rooms)
-
-
     } else {
         Toast.show({
             type: 'error',

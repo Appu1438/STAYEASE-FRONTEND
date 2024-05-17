@@ -9,18 +9,18 @@ import UserNav from "./Navigation/User";
 import HotelNav from "./Navigation/Hotel";
 import LoginNav from "./Navigation/Login";
 import getUsertype from "./Service/UserServices.js/Usertype";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-
+import { Provider } from "react-redux";
+import { store } from "./Redux/Store";
 
 export default function App() {
 
   const [isLogedIn, setIsLogedIn] = useState(false)
   const [userType, setUserType] = useState('')
 
- 
+
 
   useEffect(() => {
-    getUsertype(isLogedIn,setIsLogedIn,userType,setUserType)
+    getUsertype(isLogedIn, setIsLogedIn, userType, setUserType)
     console.log("State Updated")
   }, [AsyncStorage])
 
@@ -28,37 +28,22 @@ export default function App() {
 
 
   return (
-    <GestureHandlerRootView style={{flex:1}} >
-    <StripeProvider publishableKey="pk_test_51NtRBkSEmsfUtDI2xbYoEzVmCHkf7UlwgqRxbpKJSSPWugQXbowVpDiMXHhgg7bibtqWxP2GzEjuZieYQ4ns2fIC00kIt633nm">
-      <NavigationContainer>
+    <Provider store={store}>
+      <StripeProvider publishableKey="pk_test_51NtRBkSEmsfUtDI2xbYoEzVmCHkf7UlwgqRxbpKJSSPWugQXbowVpDiMXHhgg7bibtqWxP2GzEjuZieYQ4ns2fIC00kIt633nm">
+        <NavigationContainer>
 
-        {isLogedIn && userType == 'Admin' ? <AdminNav /> 
-        : isLogedIn && userType == 'Business' ? <HotelNav/>
-         :isLogedIn?  <UserNav /> 
-         : <LoginNav />}
+          {isLogedIn && userType == 'Admin' ? <AdminNav />
+            : isLogedIn && userType == 'Business' ? <HotelNav />
+              : isLogedIn ? <UserNav />
+                : <LoginNav />}
 
-        <Toast />
+          <Toast />
 
-      </NavigationContainer>
-    </StripeProvider>
-    </GestureHandlerRootView>
+        </NavigationContainer>
+      </StripeProvider>
+    </Provider>
+
 
 
   )
 }
-
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 50, // Adjust as needed
-    paddingHorizontal: 20, // Adjust as needed
-  },
-  itemContainer: {
-    marginBottom: 20, // Adjust as needed
-  },
-  itemText: {
-    fontSize: 18, // Adjust as needed
-  },
-});
