@@ -15,7 +15,7 @@ async function handleDelete(_id,navigation) {
                 visibilityTime: 3000,
                 position: 'bottom'
             })
-            navigation.navigate('Home')
+            navigation.navigate('Homepage')
         } else {
             Toast.show({
                 type: 'error',

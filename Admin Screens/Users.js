@@ -13,6 +13,7 @@ import API_BASE_URL from "../Api";
 import Toast from "react-native-toast-message";
 import { Avatar } from "react-native-paper";
 import getAllUsers from "../Service/UserServices.js/GetAllUsers";
+import { useSelector } from "react-redux";
 
 // import { FlatList } from "react-native-gesture-handler";
 
@@ -20,14 +21,14 @@ import getAllUsers from "../Service/UserServices.js/GetAllUsers";
 
 export default function ShowUsers({ }) {
     const navigation = useNavigation()
-    const [allUsers, setAllUsers] = useState('');
+    const allUsers=useSelector(state=>state.user.AllUsersData)
+    console.log(allUsers)
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedUserImage, setSelectedUserImage] = useState('');
 
     
 
     useEffect(() => {
-        getAllUsers(setAllUsers)
     }, [])
 
     const Usercard = ({ userdata }) => (

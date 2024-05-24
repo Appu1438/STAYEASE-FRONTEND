@@ -40,7 +40,7 @@ const UserNav = () => {
 
     }}
      > 
-        <Drawer.Screen name="HomeScreen" component={Home} />
+        <Drawer.Screen name="Homepage" component={Home} />
         <Drawer.Screen name="Profile" component={Profile}/>
       </Drawer.Navigator>
     )

@@ -2,16 +2,19 @@ import axios from "axios";
 import API_BASE_URL from "../../Api";
 import Toast from "react-native-toast-message";
 import shuffleArray from "./Shuffle";
+import { store } from "../../Redux/Store";
+import { setAllHotels } from "../../Redux/Hotels";
 
 
-const getAllHotels = async (setAllHotels,setRandomHotels) => {
+const getAllHotels = async () => {
     try {
         const response = await axios.get(`${API_BASE_URL}/get-all-hotels`);
         if (response.data.status === 'ok') {
-            setAllHotels(response.data.data);
+            // setallHotels(response.data.data);
+            store.dispatch(setAllHotels(response.data.data))
             // Select random 4 hotels to show
-            const shuffledHotels = shuffleArray(response.data.data);
-            setRandomHotels(shuffledHotels.slice(0, 4));
+            // const shuffledHotels = shuffleArray(response.data.data);
+            // setRandomHotels(shuffledHotels.slice(0, 4));
         } else {
             Toast.show({
                 type: 'error',

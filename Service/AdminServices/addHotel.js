@@ -12,7 +12,7 @@ const AddHotel=async(Hoteldata,navigation)=>{
                 visibilityTime: 3000,
                 position: 'bottom'
             })
-            navigation.navigate('Homepage')
+            navigation.navigate('Home')
         } else {
             Toast.show({
                 type: 'error',

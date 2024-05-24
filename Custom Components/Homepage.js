@@ -17,6 +17,8 @@ import Locations from "../HomeComponents/location";
 import getdata from "../Service/UserServices.js/Getdata";
 import getUserLocation from "../Service/UserServices.js/GetUserLocation";
 import { useSelector } from "react-redux";
+import getAllUsers from "../Service/UserServices.js/GetAllUsers";
+import getAllHotels from "../Service/GetHotelServices/GetHotels";
 
 
 
@@ -26,12 +28,14 @@ export default function Home() {
     const userData = useSelector(state => state.user.userData)
 
     const [isLoading, setloading] = useState(true)
-    // const [userData, setUserData] = useState('')
     const [userLocation, setUserLocation] = useState();
     const [nearbycities, setnearbyCities] = useState();
 
    
     useEffect(() => {
+        getdata()
+        getAllUsers()
+        getAllHotels()
         getUserLocation(setUserLocation,setnearbyCities)
     },[])
 

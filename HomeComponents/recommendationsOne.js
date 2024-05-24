@@ -16,6 +16,8 @@ import addToFavorites from '../Service/FavServices/AddFavourites';
 import removeFromFavorites from '../Service/FavServices/RemoveFavourite';
 import getUserFavorites from '../Service/FavServices/GetFavourites';
 import getAllHotels from '../Service/GetHotelServices/GetHotels';
+import { useSelector } from 'react-redux';
+import shuffleArray from '../Service/GetHotelServices/Shuffle';
 
 
 
@@ -23,15 +25,16 @@ import getAllHotels from '../Service/GetHotelServices/GetHotels';
 export default function RecommendationsOne({userLocation, user }) {
 
     const navigation = useNavigation()
-    const [allHotels, setAllHotels] = useState([]);
+    const allHotels=useSelector(state=>state.hotel.AllHotelsData)
     const [randomHotels, setRandomHotels] = useState([]);
     const [favorites, setFavorites] = useState([]);
 
 
 
     useEffect(() => {
-        getAllHotels(setAllHotels,setRandomHotels);
-    }, [setAllHotels,setRandomHotels]);
+        let random=shuffleArray(allHotels);
+        setRandomHotels(random)
+    }, [setRandomHotels]);
 
       
 

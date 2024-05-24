@@ -142,7 +142,7 @@ export default function PendingDetailview({ }) {
             await axios.post(`${API_BASE_URL}/remove-pending-hotels`, { _id: Hoteldata._id }).then(res => {
                 console.log(res.data)
                 if (res.data.status == 'ok') {
-                    navigation.navigate('Admin')
+                    navigation.navigate('Home')
                 } else {
                     Toast.show({
                         type: 'error',

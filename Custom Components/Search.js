@@ -30,7 +30,8 @@ export default function Search() {
     const [isLoading, setLoading] = useState(true);
     const [show, setShow] = useState(true)
 
-    const [allHotels, setAllHotels] = useState([]);
+    const allHotels=useSelector(state=>state.hotel.AllHotelsData)
+    
     const [randomHotels, setRandomHotels] = useState([]);
 
     const [searchedLocation, setSearchedLocation] = useState(route.params?.data || '');
@@ -44,7 +45,7 @@ export default function Search() {
 
     useEffect(() => {
 
-        getRandomHotels(setRandomHotels,setAllHotels,setShow,searchedLocation);
+        getRandomHotels(setRandomHotels,allHotels,setShow,searchedLocation);
 
     }, []);
 
@@ -65,7 +66,7 @@ export default function Search() {
     const handleSearch = async () => {
         setShow(false)
         setLoading(true);
-        getRandomHotels(setRandomHotels,setAllHotels,setShow,searchedLocation);
+        getRandomHotels(setRandomHotels,allHotels,setShow,searchedLocation);
         setLoading(false);
     };
     

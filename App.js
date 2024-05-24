@@ -11,7 +11,6 @@ import LoginNav from "./Navigation/Login";
 import getUsertype from "./Service/UserServices.js/Usertype";
 import { Provider } from "react-redux";
 import { store } from "./Redux/Store";
-import getdata from "./Service/UserServices.js/Getdata";
 
 export default function App() {
 
@@ -19,9 +18,7 @@ export default function App() {
   const [userType, setUserType] = useState('')
 
 
-  useEffect(() => {
-    getdata()
-  }, [])
+  
   
   useEffect(() => {
     getUsertype(isLogedIn, setIsLogedIn, userType, setUserType)
