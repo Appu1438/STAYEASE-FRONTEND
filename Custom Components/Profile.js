@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, Pressable, Alert, StyleSheet, Image, TouchableOpacity,Modal } from "react-native"
+import { View, Text, SafeAreaView, Pressable, Alert, StyleSheet, Image, TouchableOpacity, Modal } from "react-native"
 import { Styles } from "../Common Component/Styles"
 import React, { useEffect, useState } from "react"
 import Loading from "../Common Component/loading"
@@ -13,7 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import API_BASE_URL from "../Api";
 import Toast from "react-native-toast-message";
 import { Avatar } from "react-native-paper";
-import getdata from "../Service/UserServices.js/Getdata";
+import { useSelector } from "react-redux";
 
 
 
@@ -24,23 +24,16 @@ import getdata from "../Service/UserServices.js/Getdata";
 export default function Profile() {
 
     const navigation = useNavigation()
-
-    const [userData, setUserData] = useState('')
+    const userData = useSelector(state => state.user.userData)
+    console.log(userData);
+    // const [userData, setUserData] = useState('')
     const [modalVisible, setModalVisible] = useState(false);
 
 
-  
 
-   useFocusEffect(
-    React.useCallback(()=>{
-        getdata(setUserData)
-    })
-   )
 
-   useEffect(() => {
-  },[])
 
-  
+
 
     function SignOut() {
         AsyncStorage.setItem('isLoggedIn', '')
@@ -66,10 +59,10 @@ export default function Profile() {
 
     async function handleDelete() {
         const UserEmail = userData.email
-        const userID=userData._id
+        const userID = userData._id
         console.log(userID)
         console.log('Dlt')
-        axios.post(`${API_BASE_URL}/delete-user`, { email: UserEmail ,userId:userID}).then(res => {
+        axios.post(`${API_BASE_URL}/delete-user`, { email: UserEmail, userId: userID }).then(res => {
             console.log(res.data.data)
             if (res.data.status == 'ok') {
                 SignOut()
@@ -91,8 +84,8 @@ export default function Profile() {
             console.log(err)
         })
     }
- 
-  
+
+
 
     if (!userData) {
         return (
@@ -108,54 +101,55 @@ export default function Profile() {
                     <Avatar.Image
                         size={179}
                         source={{
-                             uri:userData?userData.image:null}} />
+                            uri: userData ? userData.image : null
+                        }} />
                 </TouchableOpacity>
 
                 <Modal
-                animationType="fade"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => setModalVisible(false)}
+                    animationType="fade"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => setModalVisible(false)}
                 >
-                <View style={styles.modalContainer}>
-                    <TouchableOpacity onPress={() => setModalVisible(false)}>
-                        <Image source={{ uri:userData?userData.image:null}} style={styles.modalImage} />
-                    </TouchableOpacity>
-                </View>
-              </Modal>
+                    <View style={styles.modalContainer}>
+                        <TouchableOpacity onPress={() => setModalVisible(false)}>
+                            <Image source={{ uri: userData ? userData.image : null }} style={styles.modalImage} />
+                        </TouchableOpacity>
+                    </View>
+                </Modal>
 
-                <Pressable onPress={() =>navigation.navigate('UpdateProfile',{data:userData})}style={styles.button}>
-                    <FontAwesome name="edit" size={24} color="white" style={styles.icon} /> 
+                <Pressable onPress={() => navigation.navigate('UpdateProfile', { data: userData })} style={styles.button}>
+                    <FontAwesome name="edit" size={24} color="white" style={styles.icon} />
                     <Text style={styles.text}>Edit Profile</Text>
                 </Pressable>
 
                 <View style={{ height: '40%', backgroundColor: 'yelow' }}>
 
                     <View style={Styles.profilebox}>
-                        
-                        <Text style={[Styles.navtextone,{left:0}]}>Username</Text>
-                        <Text style={[Styles.navtextone,{left:0}]}> {userData?userData.name:'Name'}</Text>
+
+                        <Text style={[Styles.navtextone, { left: 0 }]}>Username</Text>
+                        <Text style={[Styles.navtextone, { left: 0 }]}> {userData ? userData.name : 'Name'}</Text>
                     </View>
 
                     <View style={Styles.profilebox}>
-                        <Text style={[Styles.navtextone,{left:0}]}>Mobile No:</Text>
+                        <Text style={[Styles.navtextone, { left: 0 }]}>Mobile No:</Text>
 
-                        <Text style={[Styles.navtextone,{left:0}]}>{userData?userData.number:'Number'}</Text>
+                        <Text style={[Styles.navtextone, { left: 0 }]}>{userData ? userData.number : 'Number'}</Text>
                     </View>
 
                     <View style={Styles.profilebox}>
-                        <Text style={[Styles.navtextone,{left:0}]}>Email</Text>
+                        <Text style={[Styles.navtextone, { left: 0 }]}>Email</Text>
 
-                        <Text style={[Styles.navtextone,{left:0}]}>{userData?userData.email:'Email'}</Text>
+                        <Text style={[Styles.navtextone, { left: 0 }]}>{userData ? userData.email : 'Email'}</Text>
                     </View>
 
-                  
+
 
 
                 </View>
 
                 <Pressable style={Styles.btn} onPress={() => {
-                   alertDlt()
+                    alertDlt()
                 }}>
                     <Text style={Styles.btntext}>Delete Account</Text>
                 </Pressable>
@@ -205,16 +199,16 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         paddingVertical: 10,
         borderRadius: 20,
-      },
-      icon: {
+    },
+    icon: {
         marginRight: 10,
-        color:'#0b84db'
-      },
-      text: {
+        color: '#0b84db'
+    },
+    text: {
         color: 'white',
         fontSize: 16,
-        color:'#0b84db'
-      },
+        color: '#0b84db'
+    },
     modalContainer: {
         flex: 1,
         alignItems: "center",

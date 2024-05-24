@@ -21,15 +21,16 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import * as DocumentPicker from 'expo-document-picker';
 import uploadImageToCloudinary from "../Service/ImageServices/UploadCloudinary";
 import ReqHotel from "../Service/BusinessService/reqBusiness";
-import getdata from "../Service/UserServices.js/Getdata";
+import { useSelector } from "react-redux";
 
 
 
 
 export default function AddBussiness() {
     const navigation = useNavigation()
+    const Hoteluser = useSelector(state => state.user.userData)
 
-    const [Hoteluser, setHotelUser] = useState('')
+    // const [Hoteluser, setHotelUser] = useState('')
     const [Hotelname, setHotelName] = useState("")
     const [Hotelnumber, setHotelNumber] = useState("")
     const [Location, setLocation] = useState('')
@@ -61,11 +62,7 @@ export default function AddBussiness() {
 
     const route = useRoute()
 
-    useEffect(() => {
-        getdata(setHotelUser)
-    }), []
-
-
+   
 
 
 

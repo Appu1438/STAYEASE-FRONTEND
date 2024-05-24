@@ -4,7 +4,6 @@ import RecommendationsText from "../HomeComponents/recommendationText";
 import RecommendationsOne from "../HomeComponents/recommendationsOne";
 import Footer from "../Common Component/footer";
 import { Styles } from "../Common Component/Styles";
-import Navbar from "../HomeComponents/navbar";
 import React, { useEffect, useState } from "react";
 
 import Loading from "../Common Component/loading";
@@ -17,21 +16,22 @@ import * as Location from 'expo-location';
 import Locations from "../HomeComponents/location";
 import getdata from "../Service/UserServices.js/Getdata";
 import getUserLocation from "../Service/UserServices.js/GetUserLocation";
+import { useSelector } from "react-redux";
 
 
 
 
 
 export default function Home() {
+    const userData = useSelector(state => state.user.userData)
 
     const [isLoading, setloading] = useState(true)
-    const [userData, setUserData] = useState('')
+    // const [userData, setUserData] = useState('')
     const [userLocation, setUserLocation] = useState();
     const [nearbycities, setnearbyCities] = useState();
 
    
     useEffect(() => {
-        getdata(setUserData),
         getUserLocation(setUserLocation,setnearbyCities)
     },[])
 

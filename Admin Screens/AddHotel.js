@@ -22,6 +22,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import getdata from "../Service/UserServices.js/Getdata";
 import uploadImageToCloudinary from "../Service/ImageServices/UploadCloudinary";
 import AddHotel from "../Service/AdminServices/addHotel";
+import { useSelector } from "react-redux";
 
 
 
@@ -29,7 +30,7 @@ import AddHotel from "../Service/AdminServices/addHotel";
 export default function AdminBussiness() {
     const navigation = useNavigation()
 
-    const [Hoteluser, setHotelUser] = useState('')
+    const Hoteluser=useSelector(state=>state.user.userData)
     const [Hotelname, setHotelName] = useState("")
     const [Hotelnumber, setHotelNumber] = useState("")
     const [Location, setLocation] = useState('')
@@ -61,9 +62,6 @@ export default function AdminBussiness() {
 
     const route = useRoute()
 
-    useEffect(() => {
-        getdata(setHotelUser)
-    }), []
 
 
 
@@ -78,14 +76,16 @@ export default function AdminBussiness() {
 
             if (!result.canceled) {
                 // Get the local URI of the selected image
+                console.log(result)
                 const localURI = result.assets[0].uri;
 
                 // Read the file from local storage
                 const base64Image = await FileSystem.readAsStringAsync(localURI, { encoding: FileSystem.EncodingType.Base64 });
-
+                console.log(base64Image)
                 // Store the base64 representation in State
                 const CloudinaryLink = await uploadImageToCloudinary(base64Image)
                 State(CloudinaryLink)
+                console.log(CloudinaryLink)
 
                 // If you need to trigger a re-render due to state change, update State accordingly
                 // setState({ ...State });

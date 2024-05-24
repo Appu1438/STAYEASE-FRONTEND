@@ -19,25 +19,18 @@ import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as DocumentPicker from 'expo-document-picker';
-import uploadImageToCloudinary from "../Service/ImageServices/UploadCloudinary";
-import ReqHotel from "../Service/BusinessService/reqBusiness";
-import Updatebusiness from "../Service/BusinessService/UpdateBusines";
-import { useSelector } from "react-redux";
 
 
 
 
-export default function EditBussiness() {
+export default function Addbussiness() {
     const navigation = useNavigation()
-    const route = useRoute()
 
-    const Hoteluser = useSelector(state => state.user.userData)
-
-    // const [Hoteluser, setHotelUser] = useState('')
-    const [Hotelname, setHotelName] = useState(route.params.data.hotelname)
-    const [Hotelnumber, setHotelNumber] = useState(route.params.data.hotelnumber)
-    const [Location, setLocation] = useState(route.params.data.location)
-    const [LocationLink, setLocationLink] = useState(route.params.data.locationlink)
+    const [HoteluserId, setHotelUserId] = useState('')
+    const [Hotelname, setHotelName] = useState("")
+    const [Hotelnumber, setHotelNumber] = useState("")
+    const [Location, setLocation] = useState('')
+    const [LocationLink, setLocationLink] = useState('')
     const [DiscountRate, setDiscountRate] = useState("")
     const [ActualRate, setActualRate] = useState('')
     const [DiscountPercentage, setDiscountPercentage] = useState("")
@@ -52,16 +45,36 @@ export default function EditBussiness() {
     const [ExtraRateperhead, setExtraRateperhead] = useState("")
     const [ExtraRateperRoom, setExtraRateperRoom] = useState("")
     const [ExtraRateperDay, setExtraRateperDay] = useState("")
-    const [imageone, setimageOne] = useState(route.params.data.images[0])
-    const [imagetwo, setimageTwo] = useState(route.params.data.images[1])
-    const [imageThree, setimageThree] = useState(route.params.data.images[2])
-    const [imagefour, setimageFour] = useState(route.params.data.images[3])
+    const [imageone, setimageOne] = useState("")
+    const [imagetwo, setimageTwo] = useState("")
+    const [imageThree, setimageThree] = useState("")
+    const [imagefour, setimageFour] = useState("")
 
     const [loadingOne, setLoadingOne] = useState(false)
     const [loadingTwo, setLoadingTwo] = useState(false)
     const [loadingThree, setLoadingThree] = useState(false)
     const [loadingFour, setLoadingFour] = useState(false)
     const [Loading, SetLoading] = useState(false)
+
+    const route = useRoute()
+
+    useEffect(() => {
+        getdata()
+    }), []
+
+
+
+
+    async function getdata() {
+        const token = await AsyncStorage.getItem('token');
+        // console.log("Profile",token);
+        axios.post(`${API_BASE_URL}/user-data`, { token: token })
+            .then(res => {
+                // console.log(res.data);
+                setHotelUserId(res.data.data._id)
+
+            });
+    }
 
     const selectImage = async (State, loading) => {
         loading(true)
@@ -96,6 +109,32 @@ export default function EditBussiness() {
         }
     };
 
+    const uploadImageToCloudinary = async (base64Image) => {
+        try {
+            const cloudName = 'stayease'; // Your Cloudinary cloud name
+            const uploadPreset = 'stayease'; // Name of your Cloudinary upload preset
+
+            const cloudinaryUploadEndpoint = `https://api.cloudinary.com/v1_1/${cloudName}/upload`;
+
+            const response = await fetch(cloudinaryUploadEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    file: `data:image/jpeg;base64,${base64Image}`,
+                    upload_preset: uploadPreset // Specify the upload preset name
+                }),
+            });
+
+            const data = await response.json();
+            console.log('data', data)
+            return data.secure_url; // URL of the uploaded image
+        } catch (error) {
+            console.error('Error uploading image to Cloudinary:', error);
+            return null;
+        }
+    };
 
     async function handleSubmit() {
         if (!Hotelname || !Hotelnumber || !Location || !LocationLink || !ActualRate || !DiscountRate || !DiscountPercentage || !TaxandFee || !Rating || !FacilityOne || !AvailableRooms || !PersonsPerRoom || !ExtraRateperhead || !ExtraRateperRoom || !ExtraRateperDay || !imageone || !imagetwo || !imageThree || !imagefour) {
@@ -109,34 +148,52 @@ export default function EditBussiness() {
         }
         SetLoading(true)
 
-        try {
-            const Hoteldata = {
-                hotelid:route.params.data._id,
-                hoteluserid: Hoteluser._id,
-                hotelname: Hotelname,
-                hotelnumber: Hotelnumber,
-                location: Location,
-                locationlink: LocationLink,
-                actualrate: ActualRate,
-                discountedrate: DiscountRate,
-                discountpercentage: DiscountPercentage,
-                taxandfee: TaxandFee,
-                availablerooms: AvailableRooms,
-                personsperroom: PersonsPerRoom,
-                extraperhead: ExtraRateperhead,
-                extraperroom: ExtraRateperRoom,
-                extraperday: ExtraRateperDay,
-                rating: Rating,
-                facilities: [FacilityOne, FacilityTwo, FacilityThree],
-                images: [imageone, imagetwo, imageThree, imagefour]
-            }
-
-            await Updatebusiness(Hoteldata, navigation)
-        } catch (err) {
-            console.log(err)
+        const Hoteldata = {
+            hoteluserid: HoteluserId,
+            hotelname: Hotelname,
+            hotelnumber: Hotelnumber,
+            location: Location,
+            locationlink: LocationLink,
+            actualrate: ActualRate,
+            discountedrate: DiscountRate,
+            discountpercentage: DiscountPercentage,
+            taxandfee: TaxandFee,
+            availablerooms: AvailableRooms,
+            personsperroom: PersonsPerRoom,
+            extraperhead: ExtraRateperhead,
+            extraperroom: ExtraRateperRoom,
+            extraperday: ExtraRateperDay,
+            rating: Rating,
+            facilities: [FacilityOne, FacilityTwo, FacilityThree],
+            images: [imageone, imagetwo, imageThree, imagefour]
         }
 
-
+        await axios.post(`${API_BASE_URL}/req-hotel`, Hoteldata).then(res => {
+            console.log(res.data)
+            if (res.data.status == 'ok') {
+                Toast.show({
+                    type: 'success',
+                    text1: JSON.stringify(res.data.data),
+                    visibilityTime: 3000,
+                    position: 'bottom'
+                })
+                navigation.navigate('Homepage')
+            } else {
+                Toast.show({
+                    type: 'error',
+                    text1: JSON.stringify(res.data.data),
+                    visibilityTime: 3000,
+                    position: 'bottom'
+                })
+            }
+        }).catch(err => {
+            Toast.show({
+                type: 'error',
+                text1: 'Unknown Error Occured',
+                visibilityTime: 3000,
+                position: 'bottom'
+            })
+        })
         SetLoading(false)
 
     }
@@ -147,19 +204,18 @@ export default function EditBussiness() {
                 <View style={[Styles.container, styles.container]}>
 
                     <Image style={{ width: 170, height: 150, top: -10 }} source={require("../assets/hotels.png")} />
-                    <Text style={styles.message}>Update Your Business </Text>
-                    <Text style={styles.requestMessage}>Want to update your business? </Text>
-
+                    <Text style={styles.message}>Grow Up Your Business With Us</Text>
+                    <Text style={styles.requestMessage}>Interested in adding your business? Let us know!</Text>
 
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
-                        <TextInput style={[Styles.input, { width: '45%' }]} value={Hotelname} placeholder=" Hotel Name Inculde Stay Ease" onChange={(e) => setHotelName(e.nativeEvent.text)} />
-                        <TextInput style={[Styles.input, { width: '45%' }]} value={Hotelnumber} placeholder=" Hotel Contact Number" onChange={(e) => setHotelNumber(e.nativeEvent.text)} />
+                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder=" Hotel Name Inculde Stay Ease" onChange={(e) => setHotelName(e.nativeEvent.text)} />
+                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder=" Hotel Contact Number" onChange={(e) => setHotelNumber(e.nativeEvent.text)} />
                     </View>
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
-                        <TextInput style={[Styles.input, { width: '45%' }]} value={Location} placeholder="Location" onChange={(e) => setLocation(e.nativeEvent.text)} />
-                        <TextInput style={[Styles.input, { width: '45%' }]} value={LocationLink} placeholder="Location Google Map Link" onChange={(e) => setLocationLink(e.nativeEvent.text)} />
+                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Location" onChange={(e) => setLocation(e.nativeEvent.text)} />
+                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Location Google Map Link" onChange={(e) => setLocationLink(e.nativeEvent.text)} />
                     </View>
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
@@ -168,7 +224,7 @@ export default function EditBussiness() {
                     </View>
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Discount Percentage in No:" onChange={(e) => setDiscountPercentage(e.nativeEvent.text)} />
+                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Discount in Percentage" onChange={(e) => setDiscountPercentage(e.nativeEvent.text)} />
                         <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Tax and Fee in Rs" onChange={(e) => setTaxandFee(e.nativeEvent.text)} />
                     </View>
 
@@ -223,7 +279,7 @@ export default function EditBussiness() {
                         Loading ? null :
                             handleSubmit()
                     }} >
-                        <Text style={Styles.btntext}>{Loading ? <ActivityIndicator color='white' /> : 'Update'}</Text>
+                        <Text style={Styles.btntext}>{Loading ? <ActivityIndicator color='white' /> : 'Request'}</Text>
                     </Pressable>
                 </View>
             </ScrollView>

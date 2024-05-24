@@ -110,7 +110,7 @@ export let Styles = StyleSheet.create({
         marginTop: 0,
         width: '100%',
         height: 120,
-        paddingRight:10
+        paddingRight: 10
 
     },
 
@@ -153,12 +153,12 @@ export let Styles = StyleSheet.create({
         flexDirection: 'row',
         overflow: 'scroll',
         width: '100%',
-        height: 500,                     
+        height: 500,
         //  backgroundColor:'red',
         paddingBottom: 15,
         paddingLeft: 10,
         paddingRight: 10,
-        
+
 
     },
     recomendationContentBox: {
@@ -170,7 +170,7 @@ export let Styles = StyleSheet.create({
         borderWidth: 0.9,
         borderColor: '#000000',
         overflow: 'hidden',
-        
+
     },
     recomendationimage: {
         width: '100%',
@@ -290,6 +290,18 @@ export let Styles = StyleSheet.create({
         borderRadius: 15,
         flexDirection: 'row'
 
+    },
+    selectionbox:
+    {
+        flexDirection: 'row',
+        height: 25,
+        alignSelf: 'flex-end',
+        right: '15%',
+        borderWidth: 1,
+        borderRadius: 5,
+        width: 65,
+        alignItems: 'center',
+        justifyContent: 'space-around'
     },
     bookingtext: {
         fontSize: 13,
@@ -655,7 +667,7 @@ export let Styles = StyleSheet.create({
     },
     SearchContentBox: {
         // backgroundColor: '#F1ECEC',
-        borderWidth:0.5,
+        borderWidth: 0.5,
         width: 330,
         height: 330,
         marginLeft: 10,

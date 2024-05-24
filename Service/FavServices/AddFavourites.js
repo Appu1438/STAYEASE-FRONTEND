@@ -18,6 +18,7 @@ const addToFavorites = async (hotelId,userId) => {
                 visibilityTime: 3000,
                 position: 'bottom'
             });
+            setfav(fav)
         } else {
             Toast.show({
                 type: 'error',
@@ -30,7 +31,7 @@ const addToFavorites = async (hotelId,userId) => {
             // // Display error message to the user if needed
         }
     } catch (error) {
-        console.error('Error adding hotel to favorites:');
+        // console.error('Error adding hotel to favorites:');
         // Display error message to the user if needed
     }
 };

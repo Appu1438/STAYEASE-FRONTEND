@@ -23,14 +23,16 @@ import Feather from 'react-native-vector-icons/Feather';
 import Upcoming from "../BusinessBookingComponent/Upcoming";
 import Expired from "../BusinessBookingComponent/Expired";
 import Cancelled from "../BusinessBookingComponent/Cancelled";
-import getdata from "../Service/UserServices.js/Getdata";
 import getBusinessBookings from "../Service/BusinessService/getBusinessBooking";
+import { useSelector } from "react-redux";
 
 export default function BusinessBookings() {
     const navigation = useNavigation()
     const route = useRoute()
 
-    const [UserData, setUserData] = useState()
+    // const [UserData, setUserData] = useState()
+    const UserData = useSelector(state => state.user.userData)
+
 
     const [BookingDetails, setBookingDetails] = useState([])
     const [UpcomingBookings, setUpcomingBookings] = useState([])
@@ -41,10 +43,7 @@ export default function BusinessBookings() {
 
 
 
-    useEffect(() => {
-        // Fetch user data and set UserData
-        getdata(setUserData);
-    }, []);
+
 
     useEffect(() => {
         // Fetch bookings only when UserData._id is available

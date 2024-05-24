@@ -13,22 +13,21 @@ import * as DocumentPicker from 'expo-document-picker';
 import getdata from "../Service/UserServices.js/Getdata";
 import getAllBusiness from "../Service/BusinessService/getBusiness";
 import handleDelete from "../Service/BusinessService/DeleteBusiness";
-
+import { useSelector } from "react-redux";
 
 
 
 export default function Viewbussiness() {
     const navigation = useNavigation()
+    const Hoteluser = useSelector(state => state.user.userData)
 
-    const [Hoteluser, setHotelUser] = useState('')
+    // const [Hoteluser, setHotelUser] = useState('')
     const [allHotels, setAllHotels] = useState([]);
     const [Loading, setLoading] = useState(true)
 
     const route = useRoute()
 
-    useEffect(() => {
-        getdata(setHotelUser)
-    }, [])
+    
 
     useEffect(() => {
         if (Hoteluser && Hoteluser._id) {

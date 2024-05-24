@@ -6,12 +6,12 @@ const getUserFavorites = async (userId,Favourites) => {
     // console.log('Service get')
     try {
         const response = await axios.get(`${API_BASE_URL}/get-favorites/${userId}`);
-        if (response.data.status === 'ok') {
+        if (response.data.status == 'ok') {
             // Return the list of favorites
             // console.log(response.data.data)
             Favourites(response.data.data)
         } else {
-            console.error('Failed to fetch user favorites:', response.data.message);
+            // console.error('Failed to fetch user favorites:', response.data.message);
             Favourites( []); // Return an empty array if there's an error
         }
     } catch (error) {

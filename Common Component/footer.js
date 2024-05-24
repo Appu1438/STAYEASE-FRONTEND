@@ -11,17 +11,18 @@ import API_BASE_URL from "../Api";
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import getdata from "../Service/UserServices.js/Getdata";
+import { useSelector } from "react-redux";
 
 
 
 export default function Footer({}) {
 
-    const [userData, setUserData] = useState('')
+    // const [userData, setUserData] = useState('')
+    const userData = useSelector(state => state.user.userData)
 
-    useEffect(()=>{
-        getdata(setUserData)
-    })
+    // useEffect(()=>{
+    //     // getdata(setUserData)
+    // })
    
 
     

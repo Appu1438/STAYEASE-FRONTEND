@@ -22,6 +22,7 @@ import getDateDifference from "../Service/ConfirmationServices/GetdateDifference
 import getBookingdetails from "../Service/ConfirmationServices/GetBookingDetails";
 import calculaterefund from "../Service/ConfirmationServices/CalculateRefund";
 import CancelBooking from "../Service/ConfirmationServices/Cancel";
+import { useSelector } from "react-redux";
 
 
 
@@ -29,10 +30,11 @@ import CancelBooking from "../Service/ConfirmationServices/Cancel";
 export default function Confirmation() {
     const route = useRoute();
     const navigation = useNavigation();
+    const UserData = useSelector(state => state.user.userData)
 
 
     const [BookingID, setBookingID] = useState(route.params.data);
-    const [UserData, setUserData] = useState('');
+    // const [UserData, setUserData] = useState('');
     const [BookingDetails, setBookingDetails] = useState(null); // Initialize as null to indicate loading state
     const [HotelData, setHotelData] = useState(null); // Initialize as null to indicate loading state
 
@@ -53,7 +55,7 @@ export default function Confirmation() {
 
 
     useEffect(() => {
-        getdata(setUserData);
+        // getdata(setUserData);
         getBookingdetails(BookingID, setBookingDetails, setHotelData, setTotal, setNormalMessage, setOfferMessage, setBookingsts, setCheckin);
 
     }, []);

@@ -9,6 +9,7 @@ import API_BASE_URL from "../Api";
 import Toast from "react-native-toast-message";
 import formatDate from "../Service/DetailviewService/FormatDate";
 import formateTime from "../Service/DetailviewService/FormateTime";
+import OpenDial from "../Service/Map and Dial/Dial";
 
 
 export default function Upcoming({Bookings}){
@@ -37,10 +38,10 @@ export default function Upcoming({Bookings}){
                         <Text style={styles.heading}>Customer Name:</Text>
                         <Text style={styles.value}>   {item.username}</Text>
                     </View>
-                    <View style={styles.header}>
+                    <TouchableOpacity style={styles.header} onPress={()=>OpenDial(item.usernumber)}>
                         <Text style={styles.heading}>Customer Number:</Text>
                         <Text style={styles.value}>   {item.usernumber}</Text>
-                    </View>
+                    </TouchableOpacity>
                     <View style={styles.header}>
                         <Text style={styles.heading}>Booking ID:</Text>
                         <Text style={styles.value}>{item.BookingId}</Text>
@@ -70,7 +71,7 @@ export default function Upcoming({Bookings}){
                         <Text style={styles.value}>{item.TotalAmount}</Text>
                     </View>
                     <View style={styles.header}>
-                        <Text style={styles.heading}>Payment Status:</Text>
+                        <Text style={styles.heading}>Online Payment Status:</Text>
                         <Text style={styles.value}>{item.PaymentStatus}</Text>
                     </View>
                     {item.PaymentStatus=='paid'?(<View style={styles.header}>

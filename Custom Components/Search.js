@@ -18,11 +18,14 @@ import getUserFavorites from "../Service/FavServices/GetFavourites";
 import getdata from "../Service/UserServices.js/Getdata";
 import getUserLocation from "../Service/UserServices.js/GetUserLocation";
 import getRandomHotels from "../Service/GetHotelServices/SearchHotel";
+import { useSelector } from "react-redux";
 
 
 export default function Search() {
     const navigation = useNavigation();
     const route = useRoute();
+
+    const userData=useSelector(state=>state.user.userData)
 
     const [isLoading, setLoading] = useState(true);
     const [show, setShow] = useState(true)
@@ -34,14 +37,12 @@ export default function Search() {
     const [currentLocation, setCurrentLocation] = useState();
     const [nearbyCities, setnearbyCities] = useState();
 
-    const [userData, setUserData] = useState('')
     const [favorites, setFavorites] = useState([]);
     const userId = userData._id;
 
    
 
     useEffect(() => {
-        getdata(setUserData)
 
         getRandomHotels(setRandomHotels,setAllHotels,setShow,searchedLocation);
 

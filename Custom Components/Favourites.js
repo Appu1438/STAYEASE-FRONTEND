@@ -41,7 +41,6 @@ export default function Fav() {
                     getHotelDetails(favorite);
                 });
             } else {
-                console.error('Failed to fetch user favorites:', response.data.message);
                 setFavorites([]);
             }
         } catch (error) {

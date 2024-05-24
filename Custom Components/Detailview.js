@@ -1,64 +1,53 @@
-import { View, StatusBar, Text, ScrollView, SafeAreaView, Pressable, Image, Modal, Dimensions, TouchableOpacity, useWindowDimensions, ActivityIndicator, Linking, PanResponder, Alert } from "react-native";
-import { Styles } from "../Common Component/Styles";
-
-import RecommendationsText from "../HomeComponents/recommendationText";
-import RecommendationsOne from "../HomeComponents/recommendationsOne";
-import { useEffect, useState, useRef } from "react";
-import Loading from "../Common Component/loading";
-
-import { useNavigation, useRoute } from "@react-navigation/native";
-import axios from "axios";
-import API_BASE_URL from "../Api";
-import Toast from "react-native-toast-message";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome"
-import { faHeart } from "@fortawesome/free-regular-svg-icons"
-import { faStar } from "@fortawesome/free-regular-svg-icons"
-import { faUserGroup, faSquareParking, } from "@fortawesome/free-solid-svg-icons"
-import { faCalendarDays, faUser, faBed } from "@fortawesome/free-solid-svg-icons"
-import { faIndianRupeeSign } from "@fortawesome/free-solid-svg-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import Entypo from 'react-native-vector-icons/Entypo';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, StatusBar, Text, ScrollView, SafeAreaView, Pressable, Image, Dimensions, TouchableOpacity, ActivityIndicator, Alert, useWindowDimensions } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { decrementGuest } from "../Redux/Guests";
 import getUserFavorites from "../Service/FavServices/GetFavourites";
 import addToFavorites from "../Service/FavServices/AddFavourites";
 import removeFromFavorites from "../Service/FavServices/RemoveFavourite";
 import gethotelDetails from "../Service/GetHotelServices/HotelbyId";
-import getdata from "../Service/UserServices.js/Getdata";
+import calculateTotalAmount from "../Service/DetailviewService/CalculateAmount";
+import { Styles } from "../Common Component/Styles";
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import Toast from "react-native-toast-message";
+import axios from "axios";
+import API_BASE_URL from "../Api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome"
+import { faHeart, faStar, faUserGroup, faSquareParking, faCalendarDays, faUser, faBed, faIndianRupeeSign } from "@fortawesome/free-solid-svg-icons"
+import Entypo from 'react-native-vector-icons/Entypo';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { useNavigation, useRoute } from "@react-navigation/native";
+import Loading from "../Common Component/loading";
+import RecommendationsText from "../HomeComponents/recommendationText";
+import RecommendationsOne from "../HomeComponents/recommendationsOne";
 import setDates from "../Service/DetailviewService/Setdates";
 import formatDate from "../Service/DetailviewService/FormatDate";
 import handleIncRoom from "../Service/DetailviewService/Increaseroom";
 import handleDecRoom from "../Service/DetailviewService/DecreaseRoom";
 import handleIncGuests from "../Service/DetailviewService/IncreaseGuests";
 import handleDecGuests from "../Service/DetailviewService/DecreaseGuests";
-import calculateTotalAmount from "../Service/DetailviewService/CalculateAmount";
 import OpenMaps from "../Service/Map and Dial/OpenMaps";
 import HotelBooking from "../Service/DetailviewService/Booking";
-import { useDispatch, useSelector } from "react-redux";
 
+export default function Detailview() {
+    const windowwidth = useWindowDimensions().width;
+    const dispatch = useDispatch();
+    const navigation = useNavigation();
+    const route = useRoute();
 
+    const { roomCount } = useSelector((state) => state.room);
+    const { guestCount } = useSelector((state) => state.guest);
+    const userData = useSelector(state => state.user.userData);
 
-export default function Detailview({ }) {
-    let windowwidth = useWindowDimensions().width
-    const dispatch=useDispatch()
-
-    const {roomCount} = useSelector((state) => state.room)
-    const {guestCount}=useSelector((state)=>state.guest)
-
-    console.log(guestCount)
-    console.log(roomCount)
-    
     const scrollViewRef = useRef(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const windowWidth = Dimensions.get('window').width;
 
-    const navigation = useNavigation()
-
-    const [userData, setUserData] = useState('')
-    const [Hoteldata, setHotelData] = useState('')
+    const [Hoteldata, setHotelData] = useState('');
     const [favorites, setFavorites] = useState([]);
-
+    const [favchanged, setfavchanged] = useState(false);
 
     const [isFromDatePickerVisible, setIsFromDatePickerVisible] = useState(false);
     const [isToDatePickerVisible, setIsToDatePickerVisible] = useState(false);
@@ -69,41 +58,42 @@ export default function Detailview({ }) {
     const [selectedFromDate, setSelectedFromDate] = useState('');
     const [selectedToDate, setSelectedToDate] = useState('');
 
-    // const [Rooms, setRooms] = useState(1);
-    // const [Guests, setGuests] = useState(1);
-
     const [BaseAmount, setBaseAmount] = useState(0);
     const [ExtraAmount, setExtraAmount] = useState(0);
     const [Total, setTotal] = useState(0);
 
     const [loading, setloading] = useState(false);
 
-
-
-
-    const route = useRoute()
+    useEffect(() => {
+        gethotelDetails(route.params.data, setHotelData, setBaseAmount, setTotal);
+        setDates(setUnformatedSelectedFromDate, setUnformatedSelectedToDate, setSelectedFromDate, setSelectedToDate);
+    }, []);
 
     useEffect(() => {
-        getdata(setUserData)
-        gethotelDetails(route.params.data, setHotelData, setBaseAmount, setTotal)
-        setDates(setUnformatedSelectedFromDate, setUnformatedSelectedToDate, setSelectedFromDate, setSelectedToDate)
-    }, [])
-
-    useEffect(() => {
-        getUserFavorites(userData._id, setFavorites)
-    }, [userData])
-
-    useEffect(() => {
-        calculateTotalAmount(unformatedselectedFromDate, unformatedselectedToDate, BaseAmount, Hoteldata, ExtraAmount, setTotal);
-    }, [selectedFromDate, selectedToDate]);
-
-    useEffect(() => {
-        console.log('decr')
-        if (guestCount > roomCount * parseInt(Hoteldata.personsperroom)) {
-            setGuests(roomCount * parseInt(Hoteldata.personsperroom))
+        if (userData._id) {
+            getUserFavorites(userData._id, setFavorites);
         }
-    }, [roomCount, guestCount])
+    }, [userData]);
 
+    useEffect(() => {
+        let total = calculateTotalAmount(unformatedselectedFromDate, unformatedselectedToDate, BaseAmount, Hoteldata, roomCount, guestCount);
+        setTotal(total);
+    }, [selectedFromDate, selectedToDate, Hoteldata, BaseAmount, roomCount, guestCount]);
+
+    useEffect(() => {
+        if (guestCount > roomCount * parseInt(Hoteldata.personsperroom)) {
+            adjustGuestCount();
+        }
+    }, [roomCount, guestCount]);
+
+    const adjustGuestCount = () => {
+        const maxGuests = roomCount * parseInt(Hoteldata.personsperroom);
+        if (guestCount > maxGuests) {
+            for (let i = guestCount; i > maxGuests; i--) {
+                dispatch(decrementGuest());
+            }
+        }
+    };
 
 
     const showFromDatePicker = () => {
@@ -281,10 +271,27 @@ export default function Detailview({ }) {
 
                     <ScrollView>
                         <View>
-                            <Pressable style={[Styles.favourite, { top: 40 }]} onPress={() => { isFav ? removeFromFavorites(userData._id, Hoteldata._id, favorites, setFavorites) : addToFavorites(Hoteldata._id, userData._id) }}>
-                                <FontAwesome size={25} name={isFav ? 'heart' : 'heart-o'} color={isFav ? 'red' : 'black'} />
-                            </Pressable>
-                        </View>
+    <Pressable 
+        style={[Styles.favourite, { top: 40 }]} 
+        onPress={async () => {
+            if (isFav) {
+                 removeFromFavorites(userData._id, Hoteldata._id, favorites, setFavorites);
+            } else {
+              addToFavorites(Hoteldata._id, userData._id);
+            }
+            setFavorites(prevFavorites => {
+                if (isFav) {
+                    return prevFavorites.filter(fav => fav !== Hoteldata._id);
+                } else {
+                    return [...prevFavorites, Hoteldata._id];
+                }
+            });
+        }}
+    >
+        <FontAwesome size={25} name={isFav ? 'heart' : 'heart-o'} color={isFav ? 'red' : 'black'} />
+    </Pressable>
+</View>
+
 
                         <ScrollView
                             ref={scrollViewRef}
@@ -367,43 +374,43 @@ export default function Detailview({ }) {
 
                                     </TouchableOpacity>
 
-                                    <TouchableOpacity style={{ flexDirection: 'row', alignSelf: 'flex-end', right: '15%' }}>
+                                    <TouchableOpacity style={Styles.selectionbox}>
 
                                         <TouchableOpacity onPress={() => {
-                                            handleDecRoom(roomCount, Hoteldata, setExtraAmount, setTotal, ExtraAmount, Total,dispatch)
+                                            handleDecRoom(roomCount, Hoteldata, setExtraAmount, setTotal, ExtraAmount, Total, dispatch)
                                         }
                                         }>
-                                            <AntDesign name="minussquareo" size={20} color='black' />
+                                            <AntDesign name="minus" size={15} color='black' />
                                         </TouchableOpacity>
 
                                         <Text style={[Styles.bookingLasttext, { alignSelf: 'center' }]}>{roomCount}</Text>
 
                                         <TouchableOpacity onPress={() => {
-                                            handleIncRoom(roomCount, Hoteldata, setExtraAmount, setTotal, ExtraAmount, Total,dispatch)
+                                            handleIncRoom(roomCount, Hoteldata, setExtraAmount, setTotal, ExtraAmount, Total, dispatch)
                                         }
                                         } >
-                                            <AntDesign name="plussquareo" size={20} color='black' />
+                                            <AntDesign name="plus" size={15} color='black' />
                                         </TouchableOpacity>
 
                                     </TouchableOpacity>
 
-                                    <TouchableOpacity style={{ flexDirection: 'row', alignSelf: 'flex-end', right: '15%' }}>
+                                    <TouchableOpacity style={Styles.selectionbox}>
 
                                         <TouchableOpacity onPress={() => {
-                                            handleDecGuests(Hoteldata, guestCount, ExtraAmount, setExtraAmount, Total, setTotal,dispatch)
+                                            handleDecGuests(Hoteldata, guestCount, ExtraAmount, setExtraAmount, Total, setTotal, dispatch)
                                         }
 
                                         }>
-                                            <AntDesign name="minussquareo" size={20} color='black' />
+                                            <AntDesign name="minus" size={15} color='black' />
                                         </TouchableOpacity>
 
                                         <Text style={[Styles.bookingLasttext, { alignSelf: 'center' }]}>{guestCount}</Text>
 
                                         <TouchableOpacity onPress={() => {
-                                            handleIncGuests(Hoteldata, guestCount, roomCount, ExtraAmount, setExtraAmount, Total, setTotal,dispatch)
+                                            handleIncGuests(Hoteldata, guestCount, roomCount, ExtraAmount, setExtraAmount, Total, setTotal, dispatch)
                                         }
                                         } >
-                                            <AntDesign name="plussquareo" size={20} color='black' />
+                                            <AntDesign name="plus" size={15} color='black' />
                                         </TouchableOpacity>
 
                                     </TouchableOpacity>
@@ -464,8 +471,8 @@ export default function Detailview({ }) {
                         </TouchableOpacity>
                     </View>
                 </View>
-                {/* <Bookingfooter payment={setmodalVisible} /> */}
-            </SafeAreaView>
+                {/* <Bookingfooter payment={setmodalVisible} /> */ }
+            </SafeAreaView >
         );
 
     }
