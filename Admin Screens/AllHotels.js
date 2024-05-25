@@ -1,27 +1,36 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Pressable, ScrollView, Image, FlatList, StatusBar } from "react-native";
+import { View, Text, Pressable, TouchableOpacity, Image, FlatList, StatusBar,Alert} from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faStar, faIndianRupeeSign } from "@fortawesome/free-solid-svg-icons";
-import axios, { all } from "axios";
-import API_BASE_URL from "../Api";
-import Toast from "react-native-toast-message";
+import { faStar, faIndianRupeeSign, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Styles } from "../Common Component/Styles";
-import getallPendingHotels from "../Service/AdminServices/getAllPendingReq";
+import { useSelector } from "react-redux";
+import handleDelete from "../Service/BusinessService/DeleteBusiness";
 
-export default function PendingRequests({ navigation }) {
-    const [allHotels, setAllHotels] = useState([]);
+export default function AllHotels({ navigation }) {
+    // const [allHotels, setAllHotels] = useState([]);
+    const allHotels = useSelector(state => state.hotel.AllHotelsData.hotels)
 
-    useEffect(() => {
-        getallPendingHotels(setAllHotels);
-    }, []);
 
-   
+    async function onDelete(_id) {
+        Alert.alert('Delete Business', 'Do you want to delete Business',
+            [{
+                text: 'Cancel',
+                onPress: () => null,
+                style: 'cancel'
+            }, {
+                text: 'Delete',
+                onPress: () => handleDelete(_id, navigation),
+                style: 'cancel'
+            }
+            ])
+        return true;
+    }
     const renderHotelCard = ({ item }) => (
         <Pressable
             onPress={() => {
                 console.log("Hotel Card Pressed");
                 console.log(item._id);
-                navigation.navigate('PendingsDetails', { data: item })
+                navigation.navigate('Detailview', { data: item._id })
             }}
         >
             <View style={Styles.recomendationContentBox}>
@@ -40,18 +49,25 @@ export default function PendingRequests({ navigation }) {
                     <Text style={[Styles.pricetext, { color: "green", fontSize: 12, top: 3, left: 15 }]}>{item.discountpercentage}% Off</Text>
                 </View>
                 <Text style={[Styles.pricetext, { color: "grey", fontSize: 12, top: 15, left: 15 }]}>+{item.taxandfee} taxes and fees</Text>
+
+                <View style={{ flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end", marginTop: 0 }}>
+                    <TouchableOpacity onPress={() => onDelete(item._id)}>
+                        <FontAwesomeIcon style={{ marginHorizontal: 8 }} size={20} icon={faTrash} color="red" />
+                    </TouchableOpacity>
+                </View>
             </View>
+
         </Pressable>
     );
 
     return (
-        <View style={[Styles.Userscontainer,{ flex: 1 }]}>
+        <View style={[Styles.Userscontainer, { flex: 1 }]}>
             <StatusBar backgroundColor="white" barStyle="dark-content" />
-            <Text style={Styles.Usersheading}>All Pendings</Text>
+            <Text style={Styles.Usersheading}>All Hotels</Text>
 
             <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
                 {allHotels.length > 0 ? (<FlatList data={allHotels} keyExtractor={(item) => item._id} renderItem={renderHotelCard} />
-                ) : (<Text style={{fontSize:20}}>No Pending Request Found</Text>)}
+                ) : (<Text style={{ fontSize: 20 }}>No Hotels Found</Text>)}
             </View>
         </View>
     );

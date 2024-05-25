@@ -15,8 +15,9 @@ import AddBussiness from "../HotelScreens/AddBusiness";
 import Viewbussiness from "../HotelScreens/ViewBussines";
 import BusinessBookings from "../HotelScreens/ViewBusinessBookings";
 import EditBussiness from "../HotelScreens/EditBusiness";
+import NeedHelp from "../Custom Components/Needhelp";
 
-
+NeedHelp
 
 const HotelNav = () => {
     const Stack = createNativeStackNavigator();
@@ -31,6 +32,7 @@ const HotelNav = () => {
         <Stack.Screen name="UpdateProfile" component={UpdateProfile} options={{animation:'slide_from_right'}} />
         <Stack.Screen name="Search" component={Search} options={{animation:'slide_from_right'}} />
         <Stack.Screen name="Fav" component={Fav} options={{animation:'slide_from_right'}} />  
+        <Stack.Screen name="Needhelp" component={NeedHelp } options={{animation:'slide_from_right'}}  />      
 
         <Stack.Screen name="EditBusiness" component={EditBussiness} options={{animation:'slide_from_right'}} />      
         

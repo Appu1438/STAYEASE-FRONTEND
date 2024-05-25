@@ -2,15 +2,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const HotelSlice = createSlice({
-    name: 'user',
+    name: 'hotel',
     initialState: {
-        AllHotelsData:{} // initial state for fetched details
+        AllHotelsData: {
+            hotels: [], // array to hold hotels
+        }
     },
     reducers: {
         setAllHotels: (state, action) => {
-            state.AllHotelsData = action.payload;
+            state.AllHotelsData.hotels = action.payload;
         },
-       
     },
 });
 

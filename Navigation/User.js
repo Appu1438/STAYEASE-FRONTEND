@@ -10,6 +10,7 @@ import UpdateProfile from "../Custom Components/UpdateProfile";
 import Search from "../Custom Components/Search";
 import Fav from "../Custom Components/Favourites";
 import Profile from "../Custom Components/Profile";
+import NeedHelp from "../Custom Components/Needhelp";
 
 
 
@@ -25,7 +26,9 @@ const UserNav = () => {
         <Stack.Screen name="UserLogout" component={LoginNav} />
         <Stack.Screen name="UpdateProfile" component={UpdateProfile} options={{animation:'slide_from_right'}} />
         <Stack.Screen name="Search" component={Search} options={{animation:'slide_from_right'}} />
-        <Stack.Screen name="Fav" component={Fav } options={{animation:'slide_from_right'}}  />      
+        <Stack.Screen name="Fav" component={Fav } options={{animation:'slide_from_right'}}  />     
+        <Stack.Screen name="Needhelp" component={NeedHelp } options={{animation:'slide_from_right'}}  />      
+ 
       </Stack.Navigator>
     )
   

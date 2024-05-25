@@ -25,16 +25,17 @@ import shuffleArray from '../Service/GetHotelServices/Shuffle';
 export default function RecommendationsOne({userLocation, user }) {
 
     const navigation = useNavigation()
+    // const [allHotels, setAllHotels] = useState([]);
     const allHotels=useSelector(state=>state.hotel.AllHotelsData)
+    // console.log(allHotels)
     const [randomHotels, setRandomHotels] = useState([]);
     const [favorites, setFavorites] = useState([]);
 
 
 
     useEffect(() => {
-        let random=shuffleArray(allHotels);
-        setRandomHotels(random)
-    }, [setRandomHotels]);
+        shuffleArray(allHotels.hotels,setRandomHotels);
+    }, [allHotels,setRandomHotels]);
 
       
 
@@ -51,7 +52,7 @@ export default function RecommendationsOne({userLocation, user }) {
             return randomHotels;
         } else {
             // Filter hotels based on location match
-            const filteredHotels = allHotels.filter(hotel => hotel.location == userLocation);
+            const filteredHotels = allHotels.hotels.filter(hotel => hotel.location == userLocation);
             return filteredHotels.length > 0 ? filteredHotels : randomHotels;
         }
     };

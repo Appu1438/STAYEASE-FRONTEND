@@ -3,21 +3,18 @@ import API_BASE_URL from "../../Api";
 import Toast from "react-native-toast-message";
 import shuffleArray from "./Shuffle";
 
-
-const getRandomHotels = async (setRandomHotels,allHotelsData,setShow,searchedLocation) => {
-    console.log('search')
+const getRandomHotels = async (setRandomHotels, allHotelsData, setShow, searchedLocation) => {
+    console.log('search');
     try {
-            let shuffledHotels;
-            if (searchedLocation) {
-                const filteredHotels = allHotelsData.filter(hotel => hotel.location.toLowerCase().includes(searchedLocation.toLowerCase()));
-                shuffledHotels = filteredHotels;
-                setRandomHotels(shuffledHotels)
-            } else {
-                setShow(true)
-                shuffledHotels = shuffleArray(allHotelsData);
-                setRandomHotels(shuffledHotels)
-            }
-    
+        let shuffledHotels;
+        if (searchedLocation) {
+            const filteredHotels = allHotelsData.filter(hotel => hotel.location.toLowerCase().includes(searchedLocation.toLowerCase()));
+            shuffledHotels = filteredHotels;
+            setRandomHotels(shuffledHotels);
+        } else {
+            setShow(true);
+             shuffleArray(allHotelsData,setRandomHotels);
+        }
     } catch (error) {
         console.error('Error searching Hotels:', error);
         Toast.show({
@@ -29,5 +26,4 @@ const getRandomHotels = async (setRandomHotels,allHotelsData,setShow,searchedLoc
     }
 };
 
-
-export default getRandomHotels
+export default getRandomHotels;

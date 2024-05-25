@@ -31,7 +31,7 @@ export default function Search() {
     const [show, setShow] = useState(true)
 
     const allHotels=useSelector(state=>state.hotel.AllHotelsData)
-    
+
     const [randomHotels, setRandomHotels] = useState([]);
 
     const [searchedLocation, setSearchedLocation] = useState(route.params?.data || '');
@@ -40,12 +40,11 @@ export default function Search() {
 
     const [favorites, setFavorites] = useState([]);
     const userId = userData._id;
-
    
 
     useEffect(() => {
 
-        getRandomHotels(setRandomHotels,allHotels,setShow,searchedLocation);
+        getRandomHotels(setRandomHotels,allHotels.hotels,setShow,searchedLocation);
 
     }, []);
 
@@ -66,7 +65,7 @@ export default function Search() {
     const handleSearch = async () => {
         setShow(false)
         setLoading(true);
-        getRandomHotels(setRandomHotels,allHotels,setShow,searchedLocation);
+        getRandomHotels(setRandomHotels,allHotels.hotels,setShow,searchedLocation);
         setLoading(false);
     };
     
@@ -154,7 +153,7 @@ export default function Search() {
                 </View>
 
                 <View style={{ flex: 1, marginTop: 10, alignItems: 'center',paddingBottom:20 }}>
-                    {isLoading ? <Loading /> : randomHotels.length == 0 ? (
+                    {isLoading || !randomHotels ? <Loading /> : randomHotels.length == 0 ? (
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                             <Text style={{ fontSize: 20 }}>No hotels found</Text>
                         </View>

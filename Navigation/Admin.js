@@ -17,7 +17,9 @@ import Viewbussiness from "../HotelScreens/ViewBussines";
 import BusinessBookings from "../HotelScreens/ViewBusinessBookings";
 import AdminBusiness from "../Admin Screens/AddHotel";
 import EditBussiness from "../HotelScreens/EditBusiness";
-
+import NeedHelp from "../Custom Components/Needhelp";
+import AllHotels from "../Admin Screens/AllHotels";
+import AllBookings from "../Admin Screens/AllBookings";
 
 
 
@@ -34,6 +36,7 @@ export default function AdminNav  ()  {
         <Stack.Screen name="UpdateProfile" component={UpdateProfile} options={{animation:'slide_from_right'}} />
         <Stack.Screen name="Search" component={Search} options={{animation:'slide_from_right'}} />
         <Stack.Screen name="Fav" component={Fav } options={{animation:'slide_from_right'}}  />      
+        <Stack.Screen name="Needhelp" component={NeedHelp } options={{animation:'slide_from_right'}}  />      
 
         <Stack.Screen name="PendingsDetails" component={PendingDetailview} />
         <Stack.Screen name="EditBusiness" component={EditBussiness} options={{animation:'slide_from_right'}} />
@@ -54,8 +57,10 @@ export default function AdminNav  ()  {
      > 
         <Drawer.Screen name="Homepage" component={Home} />
         <Drawer.Screen name="Admin Profile" component={Profile} />
-        <Drawer.Screen name="Users" component={ShowUsers} />
-        <Drawer.Screen name="Pendings" component={PendingRequests} />
+        <Drawer.Screen name="All Users" component={ShowUsers} />
+        <Drawer.Screen name="All Hotels" component={AllHotels} />
+        <Drawer.Screen name="All Bookings" component={AllBookings} />
+        <Drawer.Screen name="All Pendings" component={PendingRequests} />
         <Drawer.Screen name="Add Your Business" component={AdminBusiness} />
         <Drawer.Screen name="Manage Your Business" component={Viewbussiness} />
         <Drawer.Screen name="Your Business Bookings" component={BusinessBookings} />     

@@ -63,7 +63,7 @@ export default function Footer({}) {
 
             </Pressable>
 
-            <Pressable>
+            <Pressable onPress={()=>navigation.navigate('Needhelp')}>
                 <View style={Styles.footerbox}>
                 <Ionicons size={25} name="headset-outline"/>
                     <Text style={Styles.footertext}>NeedHelp</Text>
