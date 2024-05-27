@@ -1,4 +1,4 @@
-import { View, Text, Image, TextInput, KeyboardAvoidingView, Pressable, Platform, ScrollView, Alert, ActivityIndicator } from "react-native";
+import { View, Text, Image, TextInput, KeyboardAvoidingView, Pressable, Platform, ScrollView, Alert, ActivityIndicator, StatusBar } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Styles } from "../Common Component/Styles";
 import { useState } from "react";
@@ -193,13 +193,15 @@ export default function Signup() {
     return (
 
         <ScrollView contentContainerStyle={{ flex: 1 }}>
+            <StatusBar barStyle='dark-content' backgroundColor={'white'} />
             <View style={[Styles.container, { alignItems: "center", justifyContent: 'center' }]}>
 
-                <Image style={Styles.signinimg} source={require("../assets/signupimg.png")}></Image>
-                <Text style={[Styles.text, { fontSize: 18, marginTop: -10 }]}>Sign Up with STAYEASE </Text>
-                <Text style={[{ marginTop: 5, fontSize: 17 }]}>Book Hotels, Starting 599 only</Text>
 
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+                <Image style={Styles.signinimg} source={require("../assets/signupimg.png")}></Image>
+                <Text style={[Styles.text, { fontSize: 18, marginTop: 0 }]}>Sign Up with STAYEASE </Text>
+                <Text style={[{ marginTop: 15, fontSize: 17 }]}>Book Hotels, Starting 599 only</Text>
+
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
 
                     <Text style={{ marginRight: 20, fontSize: 15 }}>Register as:</Text>
                     <Pressable onPress={() => handleUserTypeChange('User')} style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -219,65 +221,69 @@ export default function Signup() {
                         <Text style={{ marginLeft: 5 }}>Business</Text>
                     </Pressable>
                 </View>
+                {/* <View style={[Styles.container, { alignItems: 'center', justifyContent: 'space' }]}> */}
 
-
-                <TextInput
-                    style={Styles.input}
-                    placeholder="Enter Your Name"
-                    onChange={name => handlename(name)}>
-                </TextInput>
-                {name.length < 1 ? null : nameVerify ? (null) : (<Text style={Styles.ralert}>Username Must Contains Atleast 4 Characters</Text>)}
-
-                <TextInput
-                    style={Styles.input}
-                    maxLength={10}
-                    placeholder="Enter Your Mobile Number"
-                    onChange={e => handlenumber(e)}>
-                </TextInput>
-                {number.length < 1 ? null : numberVerify ? (null) : (<Text style={Styles.ralert}>Please Enter a vaild Phone Number</Text>)}
-
-                <TextInput
-                    style={Styles.input}
-                    placeholder="Enter Your Email"
-                    onChange={e => handleemail(e)}></TextInput>
-                {email.length < 1 ? null : emailVerify ? (null) : (<Text style={Styles.ralert}>Please Enter a vaild Email Address</Text>)}
-
-                <View style={[Styles.input,]}>
 
                     <TextInput
-                        style={{ fontSize: 12, fontWeight: 'bold', textAlign: 'center' }}
-                        placeholder="Enter Your Password"
-                        onChange={e => handlepassword(e)}
-                        secureTextEntry={showpassword}>
+                        style={Styles.input}
+                        placeholder="Enter Your Name"
+                        onChange={name => handlename(name)}>
                     </TextInput>
+                    {name.length < 1 ? null : nameVerify ? (null) : (<Text style={Styles.ralert}>Username Must Contains Atleast 4 Characters</Text>)}
 
-                    <Pressable style={{ position: 'absolute', alignSelf: 'flex-end', right: '5%' }}
-                        onPress={() => setShowpassword(!showpassword)}>
-                        <Feather name={showpassword ? 'eye' : 'eye-off'} size={20} color={'black'} />
+                    <TextInput
+                        style={Styles.input}
+                        maxLength={10}
+                        placeholder="Enter Your Mobile Number"
+                        onChange={e => handlenumber(e)}>
+                    </TextInput>
+                    {number.length < 1 ? null : numberVerify ? (null) : (<Text style={Styles.ralert}>Please Enter a vaild Phone Number</Text>)}
+
+                    <TextInput
+                        style={Styles.input}
+                        placeholder="Enter Your Email"
+                        onChange={e => handleemail(e)}></TextInput>
+                    {email.length < 1 ? null : emailVerify ? (null) : (<Text style={Styles.ralert}>Please Enter a vaild Email Address</Text>)}
+
+                    <View style={[Styles.input,]}>
+
+                        <TextInput
+                            style={{ fontSize: 12, fontWeight: 'bold', textAlign: 'center' }}
+                            placeholder="Enter Your Password"
+                            onChange={e => handlepassword(e)}
+                            secureTextEntry={showpassword}>
+                        </TextInput>
+
+                        <Pressable style={{ position: 'absolute', alignSelf: 'flex-end', right: '5%' }}
+                            onPress={() => setShowpassword(!showpassword)}>
+                            <Feather name={showpassword ? 'eye' : 'eye-off'} size={20} color={'black'} />
+                        </Pressable>
+
+                    </View>
+                    {password.length < 1 ? null : passwordVerify ? (null) : (<Text style={Styles.ralert}>Password Must Contains Atleast 8 Characters , 1 Uppercase, 3 Lowercase, 1 Special Character and 2 Numbers </Text>)}
+
+                    {showOTPField
+                        ? (<TextInput
+                            style={Styles.input}
+                            placeholder="Enter OTP Sent to Your Email"
+                            onChange={e => setOTP(e.nativeEvent.text)}></TextInput>)
+                        : (null)}
+
+                    <Pressable
+                        style={Styles.btn}
+                        onPress={() => { loading ? (null) : (showOTPField && OTPAttempt <= 2 ? handleOTPVerification() : generateOTP()) }}
+                    >
+                        {loading ? (<ActivityIndicator color='white' />) : (
+                            <Text style={Styles.btntext} >{showOTPField && OTPAttempt <= 2 ? 'Register' : OTPAttempt > 2 ? 'Resend OTP' : 'Get OTP'}</Text>
+                        )}
+                    </Pressable>
+                    <Pressable onPress={() => navigation.navigate("Login")}>
+                        <Text style={[{ marginTop: 10, fontSize: 15 }]}>Already have an account? Login</Text>
+
                     </Pressable>
 
-                </View>
-                {password.length < 1 ? null : passwordVerify ? (null) : (<Text style={Styles.ralert}>Password Must Contains Atleast 8 Characters , 1 Uppercase, 3 Lowercase, 1 Special Character and 2 Numbers </Text>)}
+                {/* </View> */}
 
-                {showOTPField
-                    ? (<TextInput
-                        style={Styles.input}
-                        placeholder="Enter OTP Sent to Your Email"
-                        onChange={e => setOTP(e.nativeEvent.text)}></TextInput>)
-                    : (null)}
-
-                <Pressable
-                    style={Styles.btn}
-                    onPress={() => {loading?(null):( showOTPField && OTPAttempt <= 2 ? handleOTPVerification() : generateOTP() )}}
-                    >
-                    {loading ? (<ActivityIndicator color='white' />) : (
-                        <Text style={Styles.btntext} >{showOTPField && OTPAttempt <= 2 ? 'Register' : OTPAttempt > 2 ? 'Resend OTP' : 'Get OTP'}</Text>
-                    )}
-                </Pressable>
-                <Pressable onPress={() => navigation.navigate("Login")}>
-                    <Text style={[{ marginTop: 10, fontSize: 15 }]}>Already have an account? Login</Text>
-
-                </Pressable>
 
             </View>
         </ScrollView>

@@ -3,7 +3,7 @@ import { Styles } from "../Common Component/Styles";
 
 import React, { useEffect, useState } from "react";
 import Loading from "../Common Component/loading";
-import { useNavigation, useRoute,useFocusEffect } from "@react-navigation/native";
+import { useNavigation, useRoute, useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import API_BASE_URL from "../Api";
 import Toast from "react-native-toast-message";
@@ -24,14 +24,19 @@ import Upcoming from "../ViewBookingComponent/Upcoming";
 import Cancelled from "../ViewBookingComponent/Cancelled";
 import Expired from "../ViewBookingComponent/Expired";
 import getBookings from "../Service/ViewBookingServices/GetBookings";
+import { useSelector } from "react-redux";
+import separateBookings from "../Service/ViewBookingServices/SeperateBooking";
+import getAllBookings from "../Service/ViewBookingServices/GetAllBookings";
 
 export default function Bookings() {
     const navigation = useNavigation()
     const route = useRoute()
 
     const [UserData, setUserData] = useState(route.params.data)
+    const allBookings = useSelector(state => state.booking.Bookings.AllBookings)
 
-    const [BookingDetails, setBookingDetails] = useState([])
+    const BookingDetails = allBookings.filter(booking => booking.userId == UserData._id)
+    // const [BookingDetails,setBookingDetails]=useState([])
     const [UpcomingBookings, setUpcomingBookings] = useState([])
     const [CancelledBookings, setCancelledBookings] = useState([])
     const [ExpiredBookings, setExpiredBookings] = useState([])
@@ -44,7 +49,9 @@ export default function Bookings() {
 
     useEffect(() => {
         console.log(UserData)
-        getBookings(UserData,setBookingDetails,setUpcomingBookings,setCancelledBookings,setExpiredBookings)
+        getAllBookings()
+      // getBookings(UserData,setBookingDetails,setUpcomingBookings,setCancelledBookings,setExpiredBookings)
+        separateBookings(BookingDetails, setUpcomingBookings, setCancelledBookings, setExpiredBookings)
 
     }, [])
 
@@ -75,8 +82,8 @@ export default function Bookings() {
             <View style={{ flex: 1, marginTop: 65, alignItems: 'center', justifyContent: 'center' }}>
 
                 {selectedBooking === 'Upcoming' ? <Upcoming Bookings={UpcomingBookings} />
-                : selectedBooking === 'Cancelled' ? <Cancelled Bookings={CancelledBookings} />
-                 : <Expired Bookings={ExpiredBookings} />}
+                    : selectedBooking === 'Cancelled' ? <Cancelled Bookings={CancelledBookings} />
+                        : <Expired Bookings={ExpiredBookings} />}
 
             </View>
         </View>

@@ -33,7 +33,7 @@ export let Styles = StyleSheet.create({
     signinimg: {
         width: 180,
         height: 180,
-        marginTop: -20
+        marginTop: 0
     },
     input: {
         width: 300,
@@ -43,10 +43,11 @@ export let Styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 12,
         fontWeight: 'bold',
-        borderRadius: 10,
+        borderRadius: 5,
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        // elevation:5
 
 
     },
@@ -658,6 +659,7 @@ export let Styles = StyleSheet.create({
         flex: 1,
         padding: 20,
         backgroundColor: '#fff',
+        
     },
     Usersheading: {
         fontSize: 24,

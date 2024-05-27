@@ -3,78 +3,70 @@ import { View, Text, TextInput, KeyboardAvoidingView, Pressable, ScrollView } fr
 import axios from 'axios';
 import API_BASE_URL from '../Api';
 import { faL } from '@fortawesome/free-solid-svg-icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { addMessage, setWaitingFalse, setWaitingTrue } from '../Redux/Chat'
 
 const NeedHelp = () => {
-  const [chatHistory, setChatHistory] = useState([]);
+  const dispatch = useDispatch()
+  const chatHistory = useSelector(state => state.chat.chatHistory)
   const [message, setMessage] = useState('');
-  const [waitingForBookingId, setWaitingForBookingId] = useState(false);
+  const waitingForBookingId = useSelector(state=>state.chat.waitingForId)
+  const allBookings = useSelector(state => state.booking.Bookings.AllBookings)
+
   const scrollViewRef = useRef();
 
   const handleSendMessage = async () => {
     if (message.trim() === '') return;
 
     // Add user's message to chat history
-    setChatHistory(prevChatHistory => [
-      ...prevChatHistory,
-      { text: message, fromUser: true }
-    ]);
+    dispatch(addMessage({ text: message, fromUser: true }));
 
     if (waitingForBookingId) {
       // User has sent the booking ID
       const bookingId = message.trim();
       try {
-        const response = await axios.get(`${API_BASE_URL}/get-booking-by-BookingId/${bookingId}`);
-        const bookingDetails = response.data;
+        const bookingDetails = allBookings.find(booking => booking.BookingId === bookingId);
 
-        // Format booking details
-        const formattedBookingDetails = `
+        if (bookingDetails) {
+          // Format booking details
+          const formattedBookingDetails = `
  Booking ID: ${bookingDetails.BookingId}
-
+         
  Hotel Name: ${bookingDetails.hotelName}
-
+         
  Booked At: ${new Date(bookingDetails.BookedAt).toLocaleString()}
-
+         
  Check In: ${new Date(bookingDetails.CheckIn).toLocaleString()}
-
+         
  Check Out: ${new Date(bookingDetails.CheckOut).toLocaleString()}
-
+         
  Rooms: ${bookingDetails.Rooms}
-
+         
  Guests: ${bookingDetails.Guests}
-
+         
  Total Amount: ${bookingDetails.TotalAmount}
-
+         
  Booking Status: ${new Date(bookingDetails.CheckOut) > new Date() ? 'Confirmed' : 'Expired'}
-
+         
  Online Payment Status: ${bookingDetails.PaymentStatus}
-        `;
+                 `;
+          // Add formatted booking details to chat history
+          dispatch(addMessage({ text: formattedBookingDetails, fromUser: false }));
 
-        // Add formatted booking details to chat history
-        setChatHistory(prevChatHistory => [
-          ...prevChatHistory,
-          { text: formattedBookingDetails, fromUser: false }
-        ]);
+          dispatch(addMessage({ text: 'Thank you for using our service!', fromUser: false }));
+          dispatch(setWaitingFalse());
 
-        // Add thank you message to chat history
-        setChatHistory(prevChatHistory => [
-          ...prevChatHistory,
-          { text: 'Thank you for using our service!', fromUser: false }
-        ]);
+        } else {
+          dispatch(addMessage({ text: 'Sorry, I could not find that booking ID. Please try again.', fromUser: false }));
+        }
 
-        setWaitingForBookingId(false);
       } catch (error) {
-        setChatHistory(prevChatHistory => [
-          ...prevChatHistory,
-          { text: 'Sorry, I could not find that booking ID. Please try again.', fromUser: false }
-        ]);
+        dispatch(addMessage({ text: 'Sorry, I could not find that booking ID. Please try again.', fromUser: false }));
       }
     } else {
       // Initial message from user
-      setChatHistory(prevChatHistory => [
-        ...prevChatHistory,
-        { text: 'Please provide your booking ID.', fromUser: false }
-      ]);
-      setWaitingForBookingId(true);
+      dispatch(addMessage({ text: 'Please provide your booking ID.', fromUser: false }));
+      dispatch(setWaitingTrue());
     }
 
     setMessage('');

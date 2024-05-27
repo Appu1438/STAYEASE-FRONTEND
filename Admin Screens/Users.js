@@ -1,8 +1,8 @@
-import { SafeAreaView } from "react-native";
+import { SafeAreaView, TextInput } from "react-native";
 import { Text, View, Image, Pressable, Modal, FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { Styles } from "../Common Component/Styles";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import { faLocationDot, faSearch } from "@fortawesome/free-solid-svg-icons";
 import Feather from 'react-native-vector-icons/Feather';
 import { useNavigation } from "@react-navigation/native";
 // import Payment from "./payment";
@@ -14,6 +14,7 @@ import Toast from "react-native-toast-message";
 import { Avatar } from "react-native-paper";
 import getAllUsers from "../Service/UserServices.js/GetAllUsers";
 import { useSelector } from "react-redux";
+import OpenDial from "../Service/Map and Dial/Dial";
 
 // import { FlatList } from "react-native-gesture-handler";
 
@@ -25,12 +26,20 @@ export default function ShowUsers({ }) {
     console.log(allUsers)
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedUserImage, setSelectedUserImage] = useState('');
-
-    
+    const [searchedUser, setsearchedUser] = useState('');
+    const [filteredUsers, setFilteredUsers] = useState(allUsers);
 
     useEffect(() => {
-    }, [])
+        setFilteredUsers(
+            allUsers.filter(user => 
+                user.email.toLowerCase().includes(searchedUser.toLowerCase()) ||
+                user.name.toLowerCase().includes(searchedUser.toLowerCase()) ||
+                user.number.toLowerCase().includes(searchedUser.toLowerCase())        
+                )
+        );
+    }, [searchedUser, allUsers]);
 
+    
     const Usercard = ({ userdata }) => (
         <View style={Styles.cardBox}>
             <Pressable>
@@ -48,7 +57,10 @@ export default function ShowUsers({ }) {
                                 }} />
                         </TouchableOpacity>
                         <Text style={Styles.CardText}>Name: {userdata.name}</Text>
+                        <TouchableOpacity onPress={()=>OpenDial(userdata.number)}>
                         <Text style={Styles.CardText}>Number: {userdata.number}</Text>
+
+                        </TouchableOpacity>
                         <Text style={Styles.CardText}>Email: {userdata.email}</Text>
                         <Text style={Styles.CardText}>UserType: {userdata.userType}</Text>
                     </View>
@@ -60,8 +72,20 @@ export default function ShowUsers({ }) {
     return (
         <View style={Styles.Userscontainer}>
             <Text style={Styles.Usersheading}>All Users</Text>
+            <Pressable style={[Styles.search, { marginTop: 0,alignSelf:'center' }]}>
+                    <Pressable style={{ position: 'absolute', alignSelf: 'flex-end', left: '5%', color: 'black' }}>
+                        <FontAwesomeIcon size={15} icon={faSearch} />
+                    </Pressable>
+                    <TextInput
+                        style={Styles.searchinput}
+                        textAlign="center"
+                        defaultValue={searchedUser}
+                        placeholder="Search User by Name or Email"
+                        onChange={(e) => setsearchedUser(e.nativeEvent.text)}
+                    />
+                </Pressable>
             <FlatList
-                data={allUsers}
+                data={filteredUsers}
                 keyExtractor={(item) => item._id}
                 renderItem={({ item }) => <Usercard userdata={item} />} />
 

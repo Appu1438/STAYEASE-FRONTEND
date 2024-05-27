@@ -14,12 +14,7 @@ async function getBookings(UserData,setBookingDetails,setUpcomingBookings,setCan
             // console.log(response.data.data)
             setBookingDetails(response.data.data);
             separateBookings(response.data.data,setUpcomingBookings,setCancelledBookings,setExpiredBookings)
-            // Toast.show({
-            //     type: 'success',
-            //     text1: 'Your Bookings',
-            //     visibilityTime: 3000,
-            //     position: 'bottom'
-            // });
+           
         } else {
             Toast.show({
                 type: 'error',

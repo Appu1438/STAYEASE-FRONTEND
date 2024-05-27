@@ -2,29 +2,16 @@ import { View, StatusBar, Text, ScrollView, SafeAreaView, Pressable, Image, Moda
 import { Styles } from "../Common Component/Styles";
 
 import React, { useEffect, useState } from "react";
-import Loading from "../Common Component/loading";
 import { useNavigation, useRoute, useFocusEffect } from "@react-navigation/native";
-import axios from "axios";
-import API_BASE_URL from "../Api";
-import Toast from "react-native-toast-message";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome"
-import { faHeart } from "@fortawesome/free-regular-svg-icons"
-import { faStar } from "@fortawesome/free-regular-svg-icons"
-import { faUserGroup, faSquareParking, } from "@fortawesome/free-solid-svg-icons"
-import { faCalendarDays, faUser, faBed } from "@fortawesome/free-solid-svg-icons"
-import { faIndianRupeeSign } from "@fortawesome/free-solid-svg-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import Entypo from 'react-native-vector-icons/Entypo';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import Feather from 'react-native-vector-icons/Feather';
+
 import Upcoming from "../BusinessBookingComponent/Upcoming";
 import Expired from "../BusinessBookingComponent/Expired";
 import Cancelled from "../BusinessBookingComponent/Cancelled";
-import getBusinessBookings from "../Service/BusinessService/getBusinessBooking";
 import { useSelector } from "react-redux";
+import separateBookings from "../Service/ViewBookingServices/SeperateBooking";
+import getBusinessBookings from "../Service/BusinessService/getBusinessBooking";
+import getAllBookings from "../Service/ViewBookingServices/GetAllBookings";
+
 
 export default function BusinessBookings() {
     const navigation = useNavigation()
@@ -34,7 +21,11 @@ export default function BusinessBookings() {
     const UserData = useSelector(state => state.user.userData)
 
 
-    const [BookingDetails, setBookingDetails] = useState([])
+    const allBookings = useSelector(state => state.booking.Bookings.AllBookings)
+
+    const BookingDetails = allBookings.filter(booking => booking.hoteluserId == UserData._id)
+        // const [BookingDetails,setBookingDetails]=useState([])
+
     const [UpcomingBookings, setUpcomingBookings] = useState([])
     const [CancelledBookings, setCancelledBookings] = useState([])
     const [ExpiredBookings, setExpiredBookings] = useState([])
@@ -46,15 +37,19 @@ export default function BusinessBookings() {
 
 
     useEffect(() => {
+        getAllBookings()
+
         // Fetch bookings only when UserData._id is available
         if (UserData && UserData._id) {
-            getBusinessBookings(UserData._id, setBookingDetails, setUpcomingBookings, setCancelledBookings, setExpiredBookings);
+
+            // getBusinessBookings(UserData._id,setBookingDetails,setUpcomingBookings,setCancelledBookings,setExpiredBookings)
+            separateBookings(BookingDetails, setUpcomingBookings, setCancelledBookings, setExpiredBookings)
         }
     }, [UserData]); // Run this effect whenever UserData changes
 
-  
-    
-  
+
+
+
 
     return (
 

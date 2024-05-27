@@ -9,6 +9,7 @@ import getAllBookings from "../Service/ViewBookingServices/GetAllBookings";
 import AllUpcoming from "../ViewAllBookingComponent/Upcoming";
 import AllCancelled from "../ViewAllBookingComponent/Cancelled";
 import AllExpired from "../ViewAllBookingComponent/Expired";
+import separateBookings from "../Service/ViewBookingServices/SeperateBooking";
 
 export default function AllBookings() {
     const navigation = useNavigation()
@@ -17,7 +18,9 @@ export default function AllBookings() {
     // const [UserData, setUserData] = useState()
 
 
-    const [BookingDetails, setBookingDetails] = useState([])
+    // const [BookingDetails, setBookingDetails] = useState([])4
+    const BookingDetails=useSelector(state=>state.booking.Bookings.AllBookings)
+
     const [UpcomingBookings, setUpcomingBookings] = useState([])
     const [CancelledBookings, setCancelledBookings] = useState([])
     const [ExpiredBookings, setExpiredBookings] = useState([])
@@ -30,8 +33,7 @@ export default function AllBookings() {
 
     useEffect(() => {
         // Fetch bookings only when UserData._id is available
-            getAllBookings(setBookingDetails, setUpcomingBookings, setCancelledBookings, setExpiredBookings);
-        
+        separateBookings(BookingDetails,setUpcomingBookings,setCancelledBookings,setExpiredBookings)
     }, []); // Run this effect whenever UserData changes
 
   

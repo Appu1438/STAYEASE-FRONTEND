@@ -44,9 +44,9 @@ export default function EditBussiness() {
     const [TaxandFee, setTaxandFee] = useState("")
     const [Rating, setRating] = useState("")
     const [ReviewCount, setReviewCount] = useState("")
-    const [FacilityOne, setFacilityOne] = useState("")
-    const [FacilityTwo, setFacilityTwo] = useState("")
-    const [FacilityThree, setFacilityThree] = useState("")
+    const [FacilityOne, setFacilityOne] = useState(route.params.data.facilities[0])
+    const [FacilityTwo, setFacilityTwo] = useState(route.params.data.facilities[1])
+    const [FacilityThree, setFacilityThree] = useState(route.params.data.facilities[2])
     const [AvailableRooms, setAvailableRooms] = useState("")
     const [PersonsPerRoom, setPersonsPerRoom] = useState("")
     const [ExtraRateperhead, setExtraRateperhead] = useState("")
@@ -174,13 +174,13 @@ export default function EditBussiness() {
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
                         <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Rating" onChange={(e) => setRating(e.nativeEvent.text)} />
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Facility One" onChange={(e) => setFacilityOne(e.nativeEvent.text)} />
+                        <TextInput style={[Styles.input, { width: '45%' }]} value={FacilityOne} placeholder="Facility One" onChange={(e) => setFacilityOne(e.nativeEvent.text)} />
                         {/* <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Review Count" onChange={(e) => setReviewCount(e.nativeEvent.text)} /> */}
                     </View>
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Facility Two" onChange={(e) => setFacilityTwo(e.nativeEvent.text)} />
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Facility Three" onChange={(e) => setFacilityThree(e.nativeEvent.text)} />
+                        <TextInput style={[Styles.input, { width: '45%' }]}  value={FacilityTwo} placeholder="Facility Two" onChange={(e) => setFacilityTwo(e.nativeEvent.text)} />
+                        <TextInput style={[Styles.input, { width: '45%' }]} value={FacilityThree} placeholder="Facility Three" onChange={(e) => setFacilityThree(e.nativeEvent.text)} />
 
                     </View>
 

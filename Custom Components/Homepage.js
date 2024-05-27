@@ -19,6 +19,7 @@ import getUserLocation from "../Service/UserServices.js/GetUserLocation";
 import { useSelector } from "react-redux";
 import getAllUsers from "../Service/UserServices.js/GetAllUsers";
 import getAllHotels from "../Service/GetHotelServices/GetHotels";
+import getAllBookings from "../Service/ViewBookingServices/GetAllBookings";
 
 
 
@@ -33,10 +34,14 @@ export default function Home() {
 
    
     useEffect(() => {
-        getdata()
-        getAllUsers()
-        getAllHotels()
-        getUserLocation(setUserLocation,setnearbyCities)
+        // setInterval(() => {
+            getdata()
+            getAllUsers()
+            getAllHotels()
+            getAllBookings()
+            getUserLocation(setUserLocation,setnearbyCities)
+        // }, 10000);
+       
     },[])
 
     

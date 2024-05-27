@@ -1,4 +1,4 @@
-import { View, Text, Image, TextInput, KeyboardAvoidingView, Pressable, Platform, Alert, BackHandler } from "react-native";
+import { View, Text, Image, TextInput, KeyboardAvoidingView, Pressable, Platform, Alert, BackHandler, StatusBar } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { Styles } from "../Common Component/Styles";
 import React, { useState } from "react";
@@ -128,6 +128,8 @@ export default function Login() {
     return (
 
         <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={0} style={[Styles.container]}>
+                        <StatusBar barStyle='dark-content' backgroundColor={'white'} />
+
             <View style={{ alignItems: "center", justifyContent: 'center' }} >
                 <Image style={Styles.loginimg} source={require("../assets/loginimg.png")}></Image>
                 <Text style={[Styles.text, { fontSize: 18 }]}>Sign to View Your Profile </Text>

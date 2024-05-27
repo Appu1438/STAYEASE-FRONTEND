@@ -45,7 +45,10 @@ export default function Detailview() {
     const [currentIndex, setCurrentIndex] = useState(0);
     const windowWidth = Dimensions.get('window').width;
 
-    const [Hoteldata, setHotelData] = useState('');
+    // const [Hoteldata, setHotelData] = useState('');
+    const allHotels = useSelector(state => state.hotel.AllHotelsData.hotels)
+    const Hoteldata = allHotels.find(hotel => hotel._id == route.params.data)
+
     const [favorites, setFavorites] = useState([]);
     const [favchanged, setfavchanged] = useState(false);
 
@@ -65,7 +68,9 @@ export default function Detailview() {
     const [loading, setloading] = useState(false);
 
     useEffect(() => {
-        gethotelDetails(route.params.data, setHotelData, setBaseAmount, setTotal);
+        // gethotelDetails(route.params.data, setHotelData, setBaseAmount, setTotal);
+        setBaseAmount(parseInt(Hoteldata.discountedrate))
+        setTotal(parseInt(Hoteldata.discountedrate))
         setDates(setUnformatedSelectedFromDate, setUnformatedSelectedToDate, setSelectedFromDate, setSelectedToDate);
     }, []);
 
@@ -271,26 +276,26 @@ export default function Detailview() {
 
                     <ScrollView>
                         <View>
-    <Pressable 
-        style={[Styles.favourite, { top: 40 }]} 
-        onPress={async () => {
-            if (isFav) {
-                 removeFromFavorites(userData._id, Hoteldata._id, favorites, setFavorites);
-            } else {
-              addToFavorites(Hoteldata._id, userData._id);
-            }
-            setFavorites(prevFavorites => {
-                if (isFav) {
-                    return prevFavorites.filter(fav => fav !== Hoteldata._id);
-                } else {
-                    return [...prevFavorites, Hoteldata._id];
-                }
-            });
-        }}
-    >
-        <FontAwesome size={25} name={isFav ? 'heart' : 'heart-o'} color={isFav ? 'red' : 'black'} />
-    </Pressable>
-</View>
+                            <Pressable
+                                style={[Styles.favourite, { top: 40 }]}
+                                onPress={async () => {
+                                    if (isFav) {
+                                        removeFromFavorites(userData._id, Hoteldata._id, favorites, setFavorites);
+                                    } else {
+                                        addToFavorites(Hoteldata._id, userData._id);
+                                    }
+                                    setFavorites(prevFavorites => {
+                                        if (isFav) {
+                                            return prevFavorites.filter(fav => fav !== Hoteldata._id);
+                                        } else {
+                                            return [...prevFavorites, Hoteldata._id];
+                                        }
+                                    });
+                                }}
+                            >
+                                <FontAwesome size={25} name={isFav ? 'heart' : 'heart-o'} color={isFav ? 'red' : 'black'} />
+                            </Pressable>
+                        </View>
 
 
                         <ScrollView
@@ -471,7 +476,7 @@ export default function Detailview() {
                         </TouchableOpacity>
                     </View>
                 </View>
-                {/* <Bookingfooter payment={setmodalVisible} /> */ }
+                {/* <Bookingfooter payment={setmodalVisible} /> */}
             </SafeAreaView >
         );
 
