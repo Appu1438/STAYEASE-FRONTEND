@@ -59,7 +59,7 @@ export default function Locations({ userLocation, User }) {
 
     const locations = [
         { name: 'Nearby', value: userLocation, iconColor: '#0d0d0c', icon: faLocationDot },
-        { name: 'Alappuzha', value: 'Alappuzha', image: require("../assets/licensed-image.jpg") },
+        { name: 'Banglore', value: 'Banglore', image: require("../assets/licensed-image.jpg") },
         { name: 'Agra', value: 'Agra', image: require("../assets/agra2.jpg") },
         { name: 'Hyderabad', value: 'Hyderabad', image: require("../assets/hyderbad.jpg") },
         { name: 'Madgaon', value: 'Madgaon', image: require("../assets/madgaon.jpg") },

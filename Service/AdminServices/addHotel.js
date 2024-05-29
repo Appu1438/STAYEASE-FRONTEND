@@ -2,7 +2,7 @@ import axios from "axios";
 import API_BASE_URL from "../../Api";
 import Toast from "react-native-toast-message";
 
-const AddHotel=async(Hoteldata,navigation)=>{
+const AddHotel = async (Hoteldata, navigation) => {
     await axios.post(`${API_BASE_URL}/add-hotel`, Hoteldata).then(res => {
         console.log(res.data)
         if (res.data.status == 'ok') {
@@ -12,7 +12,7 @@ const AddHotel=async(Hoteldata,navigation)=>{
                 visibilityTime: 3000,
                 position: 'bottom'
             })
-            navigation.navigate('Home')
+            navigation.navigate('Homepage')
         } else {
             Toast.show({
                 type: 'error',

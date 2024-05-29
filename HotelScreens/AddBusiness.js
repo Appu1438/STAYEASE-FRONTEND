@@ -1,6 +1,6 @@
 
 
-import { View, Text, SafeAreaView, Pressable, Alert, StyleSheet, Image, TouchableOpacity, TextInput, ScrollView, ActivityIndicator } from "react-native"
+import { View, Text, SafeAreaView, Pressable, Alert, StyleSheet, Image, TouchableOpacity, TextInput, ScrollView, ActivityIndicator, KeyboardAvoidingView } from "react-native"
 import { Styles } from "../Common Component/Styles"
 import { useEffect, useState } from "react"
 import Loading from "../Common Component/loading"
@@ -19,18 +19,18 @@ import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as DocumentPicker from 'expo-document-picker';
+import getdata from "../Service/UserServices.js/Getdata";
 import uploadImageToCloudinary from "../Service/ImageServices/UploadCloudinary";
-import ReqHotel from "../Service/BusinessService/reqBusiness";
+import AddHotel from "../Service/AdminServices/addHotel";
 import { useSelector } from "react-redux";
+import ReqHotel from '../Service/BusinessService/reqBusiness'
 
 
 
-
-export default function AddBussiness() {
+export default function AdminBussiness() {
     const navigation = useNavigation()
-    const Hoteluser = useSelector(state => state.user.userData)
 
-    // const [Hoteluser, setHotelUser] = useState('')
+    const Hoteluser = useSelector(state => state.user.userData)
     const [Hotelname, setHotelName] = useState("")
     const [Hotelnumber, setHotelNumber] = useState("")
     const [Location, setLocation] = useState('')
@@ -62,7 +62,6 @@ export default function AddBussiness() {
 
     const route = useRoute()
 
-   
 
 
 
@@ -77,14 +76,16 @@ export default function AddBussiness() {
 
             if (!result.canceled) {
                 // Get the local URI of the selected image
+                console.log(result)
                 const localURI = result.assets[0].uri;
 
                 // Read the file from local storage
                 const base64Image = await FileSystem.readAsStringAsync(localURI, { encoding: FileSystem.EncodingType.Base64 });
-
+                console.log(base64Image)
                 // Store the base64 representation in State
                 const CloudinaryLink = await uploadImageToCloudinary(base64Image)
                 State(CloudinaryLink)
+                console.log(CloudinaryLink)
 
                 // If you need to trigger a re-render due to state change, update State accordingly
                 // setState({ ...State });
@@ -110,6 +111,7 @@ export default function AddBussiness() {
             });
             return;
         }
+
         SetLoading(true)
 
         try {
@@ -134,9 +136,11 @@ export default function AddBussiness() {
             }
 
             await ReqHotel(Hoteldata, navigation)
+
         } catch (err) {
             console.log(err)
         }
+
 
 
         SetLoading(false)
@@ -144,104 +148,111 @@ export default function AddBussiness() {
     }
 
     return (
-        <SafeAreaView style={Styles.profilecontainer}>
+        <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={0} style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
-                <View style={[Styles.container, styles.container]}>
+                <View style={[styles.innerContainer]}>
 
-                    <Image style={{ width: 170, height: 150, top: -10 }} source={require("../assets/hotels.png")} />
+                    <Image style={styles.loginImg} source={require("../assets/hotels.png")} />
+                   
                     <Text style={styles.message}>Grow Up Your Business With Us</Text>
+                    
                     <Text style={styles.requestMessage}>Interested in adding your business? Let us know!</Text>
 
 
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder=" Hotel Name Inculde Stay Ease" onChange={(e) => setHotelName(e.nativeEvent.text)} />
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder=" Hotel Contact Number" onChange={(e) => setHotelNumber(e.nativeEvent.text)} />
-                    </View>
+                    <TextInput style={styles.input} placeholder=" Hotel Name Inculde Stay Ease" onChange={(e) => setHotelName(e.nativeEvent.text)} />
+                    
+                    <TextInput style={styles.input} placeholder=" Hotel Contact Number" onChange={(e) => setHotelNumber(e.nativeEvent.text)} />
 
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Location" onChange={(e) => setLocation(e.nativeEvent.text)} />
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Location Google Map Link" onChange={(e) => setLocationLink(e.nativeEvent.text)} />
-                    </View>
-
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Actual Rate" onChange={(e) => setActualRate(e.nativeEvent.text)} />
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Discounted Rate" onChange={(e) => setDiscountRate(e.nativeEvent.text)} />
-                    </View>
-
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Discount Percentage in No:" onChange={(e) => setDiscountPercentage(e.nativeEvent.text)} />
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Tax and Fee in Rs" onChange={(e) => setTaxandFee(e.nativeEvent.text)} />
-                    </View>
-
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Rating" onChange={(e) => setRating(e.nativeEvent.text)} />
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Facility One" onChange={(e) => setFacilityOne(e.nativeEvent.text)} />
-                        {/* <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Review Count" onChange={(e) => setReviewCount(e.nativeEvent.text)} /> */}
-                    </View>
-
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Facility Two" onChange={(e) => setFacilityTwo(e.nativeEvent.text)} />
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Facility Three" onChange={(e) => setFacilityThree(e.nativeEvent.text)} />
-
-                    </View>
-
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Extra Rate Per Head" onChange={(e) => setExtraRateperhead(e.nativeEvent.text)} />
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Extra Rate Per Room" onChange={(e) => setExtraRateperRoom(e.nativeEvent.text)} />
-
-                    </View>
-
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="Extra Rate Per Day" onChange={(e) => setExtraRateperDay(e.nativeEvent.text)} />
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="No: Of Rooms Currently Available" onChange={(e) => setAvailableRooms(e.nativeEvent.text)} />
-                    </View>
-
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
-                        <TextInput style={[Styles.input, { width: '45%' }]} placeholder="No: Of Persons Per Room" onChange={(e) => setPersonsPerRoom(e.nativeEvent.text)} />
-                        <Pressable style={[Styles.input, { width: '45%' }]} onPress={() => selectImage(setimageOne, setLoadingOne)} >
-                            <Text style={Styles}>{loadingOne ? 'Processing' : imageone ? "Selected" : "Select Image"}</Text>
-                        </Pressable>
-                    </View>
-
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
-
-                        <Pressable style={[Styles.input, { width: '45%' }]} onPress={() => selectImage(setimageTwo, setLoadingTwo)} >
-                            <Text style={Styles}>{loadingTwo ? 'Processing' : imagetwo ? "Selected" : "Select Image"}</Text>
-                        </Pressable>
-                        <Pressable style={[Styles.input, { width: '45%' }]} onPress={() => selectImage(setimageThree, setLoadingThree)} >
-                            <Text style={Styles}>{loadingThree ? 'Processing' : imageThree ? "Selected" : "Select Image"}</Text>
-                        </Pressable>
-                    </View>
-
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
-
-                        <Pressable style={[Styles.input, { width: '45%' }]} onPress={() => selectImage(setimageFour, setLoadingFour)} >
-                            <Text style={Styles}>{loadingFour ? 'Processing' : imagefour ? "Selected" : "Select Image"}</Text>
-                        </Pressable></View>
+                    <TextInput style={styles.input} placeholder="Location" onChange={(e) => setLocation(e.nativeEvent.text)} />
+                   
+                    <TextInput style={styles.input} placeholder="Location Google Map Link" onChange={(e) => setLocationLink(e.nativeEvent.text)} />
 
 
-                    <Pressable style={Styles.btn} onPress={() => {
+                    <TextInput style={styles.input} placeholder="Actual Rate" onChange={(e) => setActualRate(e.nativeEvent.text)} />
+                   
+                    <TextInput style={styles.input} placeholder="Discounted Rate" onChange={(e) => setDiscountRate(e.nativeEvent.text)} />
+
+
+                    <TextInput style={styles.input} placeholder="Discount Percentage in No:" onChange={(e) => setDiscountPercentage(e.nativeEvent.text)} />
+                    
+                    <TextInput style={styles.input} placeholder="Tax and Fee in Rs" onChange={(e) => setTaxandFee(e.nativeEvent.text)} />
+
+
+                    <TextInput style={styles.input} placeholder="Rating" onChange={(e) => setRating(e.nativeEvent.text)} />
+                   
+                    <TextInput style={styles.input} placeholder="Facility One" onChange={(e) => setFacilityOne(e.nativeEvent.text)} />
+
+
+                    <TextInput style={styles.input} placeholder="Facility Two" onChange={(e) => setFacilityTwo(e.nativeEvent.text)} />
+                   
+                    <TextInput style={styles.input} placeholder="Facility Three" onChange={(e) => setFacilityThree(e.nativeEvent.text)} />
+
+
+
+                    <TextInput style={styles.input} placeholder="Extra Rate Per Head" onChange={(e) => setExtraRateperhead(e.nativeEvent.text)} />
+                   
+                    <TextInput style={styles.input} placeholder="Extra Rate Per Room" onChange={(e) => setExtraRateperRoom(e.nativeEvent.text)} />
+
+
+
+                    <TextInput style={styles.input} placeholder="Extra Rate Per Day" onChange={(e) => setExtraRateperDay(e.nativeEvent.text)} />
+                   
+                    <TextInput style={styles.input} placeholder="No: Of Rooms Currently Available" onChange={(e) => setAvailableRooms(e.nativeEvent.text)} />
+
+
+                    <TextInput style={styles.input} placeholder="No: Of Persons Per Room" onChange={(e) => setPersonsPerRoom(e.nativeEvent.text)} />
+                   
+                    <Pressable style={styles.passwordContainer} onPress={() => selectImage(setimageOne, setLoadingOne)} >
+                    <FontAwesome name="camera" size={15} color="black" style={styles.cameraIcon} />
+                        <Text style={styles.passwordInput}>{loadingOne ? 'Processing' : imageone ? "Selected" : "Select Image"}</Text>
+                    </Pressable>
+
+
+
+                    <Pressable style={styles.passwordContainer} onPress={() => selectImage(setimageTwo, setLoadingTwo)} >
+                    <FontAwesome name="camera" size={15} color="black" style={styles.cameraIcon} />
+
+                        <Text style={styles.passwordInput}>{loadingTwo ? 'Processing' : imagetwo ? "Selected" : "Select Image"}</Text>
+                    </Pressable>
+
+                    <Pressable style={styles.passwordContainer} onPress={() => selectImage(setimageThree, setLoadingThree)} >
+                    <FontAwesome name="camera" size={15} color="black" style={styles.cameraIcon} />
+                        <Text style={styles.passwordInput}>{loadingThree ? 'Processing' : imageThree ? "Selected" : "Select Image"}</Text>
+                    </Pressable>
+
+
+
+                    <Pressable style={styles.passwordContainer} onPress={() => selectImage(setimageFour, setLoadingFour)} >
+                    <FontAwesome name="camera" size={15} color="black" style={styles.cameraIcon} />
+                        <Text style={styles.passwordInput}>{loadingFour ? 'Processing' : imagefour ? "Selected" : "Select Image"}</Text>
+                    </Pressable>
+
+
+                    <Pressable style={styles.btn} onPress={() => {
                         Loading ? null :
                             handleSubmit()
                     }} >
-                        <Text style={Styles.btntext}>{Loading ? <ActivityIndicator color='white' /> : 'Request'}</Text>
+                        <Text style={styles.btnText}>{Loading ? <ActivityIndicator color='white' /> : 'Request'}</Text>
                     </Pressable>
                 </View>
             </ScrollView>
-        </SafeAreaView>
+        </KeyboardAvoidingView>
     )
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
     scrollViewContent: {
         flexGrow: 1,
         justifyContent: 'center',
+
     },
-    container: {
-        alignItems: "center",
-        justifyContent: 'flex-start',
-        paddingTop: '0%',
-        paddingBottom: 20
+    innerContainer: {
+        alignItems: 'center',
+        paddingHorizontal: 20,
     },
     message: {
         fontSize: 20,
@@ -250,5 +261,65 @@ const styles = StyleSheet.create({
     },
     requestMessage: {
         fontSize: 15
-    }
+    },
+    input: {
+        width: '100%',
+        height: 50,
+        backgroundColor: '#fff',
+        borderRadius: 8,
+        paddingHorizontal: 15,
+        fontSize: 16,
+        color: '#333',
+        marginBottom: 15,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 5,
+        top: 10
+    },
+    loginImg: {
+        width: 150,
+        height: 150,
+        marginBottom: 20,
+    },
+    passwordContainer: {
+        width: '100%',
+        height: 50,
+        backgroundColor: '#fff',
+        borderRadius: 8,
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 15,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 5,
+        marginBottom:15,
+        top:5
+    },
+    passwordInput: {
+        flex: 1,
+        fontSize: 16,
+        color: '#888',
+    },
+    cameraIcon: {
+        marginRight: 10,
+    },
+    btn: {
+        width: '100%',
+        height: 50,
+        backgroundColor: '#f73939',
+        borderRadius: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20,
+        top: 15
+    },
+    btnText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
 })

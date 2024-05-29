@@ -14,6 +14,7 @@ import API_BASE_URL from "../Api";
 import Toast from "react-native-toast-message";
 import { Avatar } from "react-native-paper";
 import { useSelector } from "react-redux";
+import getdata from "../Service/UserServices.js/Getdata";
 
 
 
@@ -24,15 +25,18 @@ import { useSelector } from "react-redux";
 export default function Profile() {
 
     const navigation = useNavigation()
-    const userData = useSelector(state => state.user.userData)
     console.log(userData);
     // const [userData, setUserData] = useState('')
+    const userData = useSelector(state => state.user.userData)
     const [modalVisible, setModalVisible] = useState(false);
 
 
 
-
-
+    useFocusEffect(
+        React.useCallback(() => {
+            getdata()
+        })
+    )
 
 
     function SignOut() {

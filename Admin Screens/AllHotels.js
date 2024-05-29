@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     hotelLocation: {
         fontSize: 14,
         color: 'gray',
-        marginBottom: 5,
+        marginBottom: 0,
     },
     hotelOwner: {
         fontSize: 14,

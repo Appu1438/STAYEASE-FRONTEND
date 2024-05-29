@@ -192,85 +192,101 @@ export default function Signup() {
 
     return (
 
-        <ScrollView contentContainerStyle={{ flex: 1 }}>
+        <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={0} style={styles.container}>
             <StatusBar barStyle='dark-content' backgroundColor={'white'} />
-            <View style={[Styles.container, { alignItems: "center", justifyContent: 'center' }]}>
+            <ScrollView contentContainerStyle={styles.scrollViewContent} showsVerticalScrollIndicator={false}>
+
+                <View style={[styles.innerContainer, { alignItems: "center", justifyContent: 'center' }]}>
 
 
-                <Image style={Styles.signinimg} source={require("../assets/signupimg.png")}></Image>
-                <Text style={[Styles.text, { fontSize: 18, marginTop: 0 }]}>Sign Up with STAYEASE </Text>
-                <Text style={[{ marginTop: 15, fontSize: 17 }]}>Book Hotels, Starting 599 only</Text>
+                    <Image style={styles.loginImg} source={require("../assets/signupimg.png")}></Image>
+                    <Text style={styles.title}>Sign Up with STAYEASE </Text>
+                    <Text style={styles.subtitle}>Book Hotels, Starting 599 only</Text>
 
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
+                    <View style={styles.userTypeContainer}>
+                        <Text style={styles.registerAsText}>Register as:</Text>
+                        <View style={styles.userTypeButtons}>
+                            <Pressable
+                                style={[
+                                    styles.userTypeButton,
+                                    userType === 'User' && styles.selectedUserType,
+                                ]}
+                                onPress={() => handleUserTypeChange('User')}>
+                                <FontAwesome
+                                    name={userType === 'User' ? 'dot-circle-o' : 'circle-o'}
+                                    size={20}
+                                    color={'black'}
+                                />
+                                <Text style={styles.userTypeButtonText}>User</Text>
+                            </Pressable>
+                            <Pressable
+                                style={[
+                                    styles.userTypeButton,
+                                    userType === 'Business' && styles.selectedUserType,
+                                ]}
+                                onPress={() => handleUserTypeChange('Business')}>
+                                <FontAwesome
+                                    name={userType === 'Business' ? 'dot-circle-o' : 'circle-o'}
+                                    size={20}
+                                    color={'black'}
+                                />
+                                <Text style={styles.userTypeButtonText}>Business</Text>
+                            </Pressable>
+                        </View>
+                    </View>
 
-                    <Text style={{ marginRight: 20, fontSize: 15 }}>Register as:</Text>
-                    <Pressable onPress={() => handleUserTypeChange('User')} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <FontAwesome
-                            name={userType === 'User' ? 'dot-circle-o' : 'circle-o'}
-                            size={20}
-                            color={'black'}
-                        />
-                        <Text style={{ marginLeft: 5 }}>User</Text>
-                    </Pressable>
-                    <Pressable onPress={() => handleUserTypeChange('Business')} style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 20 }}>
-                        <FontAwesome
-                            name={userType === 'Business' ? 'dot-circle-o' : 'circle-o'}
-                            size={20}
-                            color={'black'}
-                        />
-                        <Text style={{ marginLeft: 5 }}>Business</Text>
-                    </Pressable>
-                </View>
-                {/* <View style={[Styles.container, { alignItems: 'center', justifyContent: 'space' }]}> */}
+
 
 
                     <TextInput
-                        style={Styles.input}
+                        style={[styles.input, { shadowColor: nameVerify ? '#006400' : '#f73939' }]}
                         placeholder="Enter Your Name"
                         onChange={name => handlename(name)}>
                     </TextInput>
-                    {name.length < 1 ? null : nameVerify ? (null) : (<Text style={Styles.ralert}>Username Must Contains Atleast 4 Characters</Text>)}
+                    {name.length < 1 ? null : nameVerify ? (null) : (<Text style={styles.errorText}>Username Must Contains Atleast 4 Characters</Text>)}
 
                     <TextInput
-                        style={Styles.input}
+                        style={[styles.input, { shadowColor: numberVerify ? '#006400' : '#f73939' }]}
                         maxLength={10}
                         placeholder="Enter Your Mobile Number"
                         onChange={e => handlenumber(e)}>
                     </TextInput>
-                    {number.length < 1 ? null : numberVerify ? (null) : (<Text style={Styles.ralert}>Please Enter a vaild Phone Number</Text>)}
+                    {number.length < 1 ? null : numberVerify ? (null) : (<Text style={styles.errorText}>Please Enter a vaild Phone Number</Text>)}
 
                     <TextInput
-                        style={Styles.input}
+                        style={[styles.input, { shadowColor: emailVerify ? '#006400' : '#f73939' }]}
                         placeholder="Enter Your Email"
                         onChange={e => handleemail(e)}></TextInput>
-                    {email.length < 1 ? null : emailVerify ? (null) : (<Text style={Styles.ralert}>Please Enter a vaild Email Address</Text>)}
+                    {email.length < 1 ? null : emailVerify ? (null) : (<Text style={styles.errorText}>Please Enter a vaild Email Address</Text>)}
 
-                    <View style={[Styles.input,]}>
+                    <View
+                        style={[styles.passwordContainer, { shadowColor: numberVerify ? '#006400' : '#f73939' }]}
+                    >
 
                         <TextInput
-                            style={{ fontSize: 12, fontWeight: 'bold', textAlign: 'center' }}
+                            style={styles.passwordInput}
                             placeholder="Enter Your Password"
                             onChange={e => handlepassword(e)}
                             secureTextEntry={showpassword}>
                         </TextInput>
 
-                        <Pressable style={{ position: 'absolute', alignSelf: 'flex-end', right: '5%' }}
+                        <Pressable style={styles.eyeIcon}
                             onPress={() => setShowpassword(!showpassword)}>
                             <Feather name={showpassword ? 'eye' : 'eye-off'} size={20} color={'black'} />
                         </Pressable>
 
                     </View>
-                    {password.length < 1 ? null : passwordVerify ? (null) : (<Text style={Styles.ralert}>Password Must Contains Atleast 8 Characters , 1 Uppercase, 3 Lowercase, 1 Special Character and 2 Numbers </Text>)}
+                    {password.length < 1 ? null : passwordVerify ? (null) : (<Text style={styles.errorText}>Password Must Contains Atleast 8 Characters , 1 Uppercase, 3 Lowercase, 1 Special Character and 2 Numbers </Text>)}
 
                     {showOTPField
                         ? (<TextInput
-                            style={Styles.input}
+                            style={[styles.input, { top: 15, shadowColor: 'black' }]}
                             placeholder="Enter OTP Sent to Your Email"
                             onChange={e => setOTP(e.nativeEvent.text)}></TextInput>)
                         : (null)}
 
                     <Pressable
-                        style={Styles.btn}
+                        style={styles.btn}
                         onPress={() => { loading ? (null) : (showOTPField && OTPAttempt <= 2 ? handleOTPVerification() : generateOTP()) }}
                     >
                         {loading ? (<ActivityIndicator color='white' />) : (
@@ -282,15 +298,148 @@ export default function Signup() {
 
                     </Pressable>
 
-                {/* </View> */}
+                    {/* </View> */}
 
 
-            </View>
-        </ScrollView>
+                </View>
+            </ScrollView>
+        </KeyboardAvoidingView>
 
 
     )
 
 
 }
+const styles = {
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+    scrollViewContent: {
+        flexGrow: 1,
+        justifyContent: 'center',
+
+    },
+    innerContainer: {
+        alignItems: 'center',
+        paddingHorizontal: 20,
+    },
+    loginImg: {
+        width: 200,
+        height: 200,
+        marginBottom: 20,
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#333',
+        marginBottom: 10,
+    },
+    subtitle: {
+        fontSize: 16,
+        color: '#666',
+        marginBottom: 30,
+        textAlign: 'center',
+    },
+    userTypeContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    registerAsText: {
+        fontSize: 15,
+        marginRight: 20,
+    },
+    userTypeButtons: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    userTypeButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginRight: 20,
+    },
+    selectedUserType: {
+        opacity: 0.8
+    },
+    userTypeButtonText: {
+        marginLeft: 5,
+        fontSize: 15,
+    },
+    input: {
+        width: '100%',
+        height: 50,
+        backgroundColor: '#fff',
+        borderRadius: 8,
+        paddingHorizontal: 15,
+        fontSize: 16,
+        color: '#333',
+        marginBottom: 15,
+        shadowColor: '#f73939',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 5,
+    },
+    passwordContainer: {
+        width: '100%',
+        height: 50,
+        backgroundColor: '#fff',
+        borderRadius: 8,
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 15,
+        shadowColor: '#f73939',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 5,
+    },
+    passwordInput: {
+        flex: 1,
+        fontSize: 16,
+        color: '#333',
+    },
+    eyeIcon: {
+        marginLeft: 10,
+    },
+    errorText: {
+        color: 'red',
+        fontSize: 14,
+        alignSelf: 'flex-start',
+        marginBottom: 10,
+    },
+    forgotPassword: {
+        alignSelf: 'flex-end',
+        marginTop: 10,
+        marginBottom: 20,
+    },
+    forgotPasswordText: {
+        fontSize: 15,
+        color: 'black',
+        right: 10
+    },
+    btn: {
+        width: '100%',
+        height: 50,
+        backgroundColor: '#f73939',
+        borderRadius: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20,
+        top: 15
+    },
+    btnText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    signupText: {
+        fontSize: 15,
+        color: '#666',
+    },
+};
+
+
+
 
