@@ -85,6 +85,7 @@ export default function ShowUsers({ }) {
                     />
                 </Pressable>
             <FlatList
+            showsVerticalScrollIndicator={false}
                 data={filteredUsers}
                 keyExtractor={(item) => item._id}
                 renderItem={({ item }) => <Usercard userdata={item} />} />

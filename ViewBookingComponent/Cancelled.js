@@ -7,11 +7,13 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import API_BASE_URL from "../Api";
 import Toast from "react-native-toast-message";
+import { Dimensions } from "react-native";
 
 export default function Cancelled({ Bookings }) {
 
 
     const navigation = useNavigation()
+    const screenWidth = Dimensions.get('window').width;
 
     const [loading, setLoading] = useState(false);
 
@@ -40,7 +42,7 @@ export default function Cancelled({ Bookings }) {
 
     const renderBookingCard = ({ item }) => {
         return (
-            <View style={styles.card}>
+            <View style={[styles.card,{width:screenWidth*0.90}]}>
                 <View style={styles.content}>
                     <View style={styles.header}>
                         <Text style={styles.heading}>Hotel Name:</Text>

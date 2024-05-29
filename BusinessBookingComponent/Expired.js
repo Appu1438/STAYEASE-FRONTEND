@@ -10,11 +10,13 @@ import Toast from "react-native-toast-message";
 import formatDate from "../Service/DetailviewService/FormatDate";
 import formateTime from "../Service/DetailviewService/FormateTime";
 import OpenDial from "../Service/Map and Dial/Dial";
+import { Dimensions } from "react-native";
 
 export default function Expired({Bookings}){
 
   
     const navigation = useNavigation()
+    const screenWidth = Dimensions.get('window').width;
 
     const [loading, setLoading] = useState(false);
 
@@ -30,7 +32,7 @@ export default function Expired({Bookings}){
 
     const renderBookingCard = ({ item }) => {
         return (
-            <View style={styles.card}>
+            <View style={[styles.card,{width:screenWidth*0.95}]}>
                 <View style={styles.content}>
                     <View style={styles.header}>
                         <Text style={styles.heading}>Customer Name:</Text>

@@ -27,7 +27,7 @@ export default function Viewbussiness() {
 
     const route = useRoute()
 
-    
+
 
     useEffect(() => {
         if (Hoteluser && Hoteluser._id) {
@@ -35,75 +35,79 @@ export default function Viewbussiness() {
         }
     }, [Hoteluser])
 
-    async function onDelete(_id){
+    async function onDelete(_id) {
         Alert.alert('Delete Business', 'Do you want to delete Business',
-        [{
-            text: 'Cancel',
-            onPress: () => null,
-            style: 'cancel'
-        }, {
-            text: 'Delete',
-            onPress: () => handleDelete(_id,navigation),
-            style: 'cancel'
-        }
-        ])
-    return true;
+            [{
+                text: 'Cancel',
+                onPress: () => null,
+                style: 'cancel'
+            }, {
+                text: 'Delete',
+                onPress: () => handleDelete(_id, navigation),
+                style: 'cancel'
+            }
+            ])
+        return true;
     }
 
 
 
 
     const renderHotelCard = ({ item }) => (
-        <Pressable
-            onPress={() => {
-                console.log("Hotel Card Pressed");
-                console.log(item._id);
-                // navigation.navigate('PendingsDetails', { data: item })
-            }}
-        >
-            <View style={Styles.recomendationContentBox}>
-
-                <Image style={Styles.recomendationimage} source={{ uri: item.images[0] }} />
-                <View style={Styles.rating}>
-                    <FontAwesomeIcon style={{ paddingTop: 28 }} color="red" icon={faStar} size={15} />
-                    <Text style={[Styles.ratingText, { top: 5, left: 2 }]}>{item.rating} ({item.reviewcount})</Text>
+        <Pressable onPress={() => navigation.navigate('Detailview', { data: item._id })}>
+            <View style={styles.cardContainer}>
+                <Image style={styles.hotelImage} source={{ uri: item.images[0] }} />
+                <View style={styles.cardContent}>
+                    <Text style={styles.hotelName}>{item.hotelname}</Text>
+                    <Text style={styles.hotelLocation}>{item.location}</Text>
+                    <View style={styles.ratingContainer}>
+                        <FontAwesomeIcon icon={faStar} size={15} color="red" />
+                        <Text style={styles.ratingText}>{item.rating} ({item.reviewcount})</Text>
+                    </View>
+                    <View style={styles.priceContainer}>
+                        <FontAwesomeIcon size={15} icon={faIndianRupeeSign} />
+                        <Text style={styles.discountedRate}>{item.discountedrate}</Text>
+                        <Text style={styles.actualRate}>{item.actualrate}</Text>
+                        <Text style={styles.discountPercentage}>{item.discountpercentage}% Off</Text>
+                    </View>
+                    <Text style={styles.taxesAndFees}>+{item.taxandfee} taxes and fees</Text>
                 </View>
-                <Text style={[Styles.ratingText, { left: "2%", top: 10 }]}>{item.hotelname}</Text>
-                <Text style={[Styles.ratingText, { left: "2%", top: 15, color: "grey", fontSize: 10 }]}>{item.location}</Text>
-                <View style={{ flexDirection: "row", top: 15 }}>
-                    <FontAwesomeIcon style={{ marginTop: 8, left: 5 }} size={15} icon={faIndianRupeeSign} />
-                    <Text style={Styles.pricetext}>{item.discountedrate}</Text>
-                    <Text style={[Styles.pricetext, { textDecorationLine: "line-through", fontSize: 12, top: 3, left: 10 }]}>{item.actualrate}</Text>
-                    <Text style={[Styles.pricetext, { color: "green", fontSize: 12, top: 3, left: 15 }]}>{item.discountpercentage}% Off</Text>
-                </View>
-                <Text style={[Styles.pricetext, { color: "grey", fontSize: 12, top: 15, left: 15 }]}>+{item.taxandfee} taxes and fees</Text>
-
-                <View style={{ flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end", marginTop: 0 }}>
-                    <TouchableOpacity onPress={() => navigation.navigate('EditBusiness',{data:item})}>
-                        <FontAwesomeIcon style={{ marginHorizontal: 8 }} size={20} icon={faEdit} color="#0b84db" />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() => onDelete(item._id)}>
-                        <FontAwesomeIcon style={{ marginHorizontal: 8 }} size={20} icon={faTrash} color="red" />
-                    </TouchableOpacity>
-                </View>
+                <TouchableOpacity style={styles.deleteButton} onPress={() => onDelete(item._id)}>
+                    <FontAwesomeIcon icon={faTrash} size={20} color="red" />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('EditBusiness',{data:item})}>
+                    <FontAwesomeIcon icon={faEdit} size={20} color="#0a84ff" />
+                </TouchableOpacity>
             </View>
-
         </Pressable>
     );
 
     return (
-        <View style={{ flex: 1, backgroundColor: 'white' }}>
+        <View style={styles.container}>
             <StatusBar backgroundColor="white" barStyle="dark-content" />
 
             <View style={{ left: '5%', top: '5%', alignSelf: 'flex-start' }}>
                 <Text style={Styles.profile}>Your Bussiness</Text>
             </View>
-            <View style={{ flex: 1, alignItems: "center", justifyContent: "center", top: '5%' }}>
-                <>{Loading ? (<ActivityIndicator size={30} color='black' />)
+            <View style={{ flex: 1, paddingHorizontal: 10, justifyContent: "center", top: '6%' }}>
+                <>{Loading ?
+                    (
+                        <ActivityIndicator size={30} color='black' />
+                    )
                     : (
-                        allHotels.length > 0 ? (<FlatList data={allHotels} keyExtractor={(item) => item._id} renderItem={renderHotelCard} />
-                        ) : (<Text style={{ fontSize: 20 }}>No Business Found</Text>)
+                        allHotels.length > 0 ?
+                            (
+                                <FlatList
+                                    data={allHotels}
+                                    keyExtractor={(item) => item._id}
+                                    renderItem={renderHotelCard}
+                                    contentContainerStyle={styles.listContent}
+                                />
+                            )
+                            :
+                            (
+                                <Text style={{ fontSize: 20, alignSelf: 'center' }}>No Business Found</Text>
+                            )
 
                     )}
                 </>
@@ -111,3 +115,96 @@ export default function Viewbussiness() {
         </View>
     );
 }
+
+
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#f8f8f8',
+    },
+    priceContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 5,
+    },
+    discountedRate: {
+        fontSize: 16,
+        marginLeft: 5,
+    },
+    actualRate: {
+        fontSize: 12,
+        textDecorationLine: 'line-through',
+        color: 'gray',
+        marginLeft: 10,
+    },
+    discountPercentage: {
+        fontSize: 12,
+        color: 'green',
+        marginLeft: 10,
+    },
+    taxesAndFees: {
+        fontSize: 12,
+        color: 'gray',
+        marginTop: 5,
+    },
+    listContent: {
+        paddingBottom: 20,
+    },
+    cardContainer: {
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        overflow: 'hidden',
+        marginBottom: 20,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    hotelImage: {
+        width: '100%',
+        height: 150,
+    },
+    cardContent: {
+        padding: 15,
+    },
+    hotelName: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    hotelLocation: {
+        fontSize: 14,
+        color: 'gray',
+        marginBottom: 5,
+    },
+    ratingContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 5,
+    },
+    ratingText: {
+        marginLeft: 5,
+        fontSize: 14,
+        color: 'gray',
+    },
+    favourite: {
+        position: 'absolute',
+        right: 10,
+        top: 10,
+        zIndex: 1,
+    },
+    deleteButton: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+    },
+    editButton: {
+        position: 'absolute',
+        top: 10,
+        right: 40,
+    },
+});

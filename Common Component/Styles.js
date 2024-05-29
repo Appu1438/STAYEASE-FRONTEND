@@ -258,7 +258,7 @@ export let Styles = StyleSheet.create({
     },
     detailText: {
         color: 'black',
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         fontSize: 17,
         marginTop: 10,
         fontStyle: 'normal',
@@ -266,7 +266,7 @@ export let Styles = StyleSheet.create({
     },
     features: { flexDirection: 'row', left: '5%', marginTop: 5 },
     featurestext: {
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         marginTop: 10,
         fontStyle: 'normal',
         left: '5%',
@@ -331,7 +331,7 @@ export let Styles = StyleSheet.create({
         paddingLeft: '5%',
         paddingTop: '2%',
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'space-evenly',
         elevation: 5,
     },
     bookingbtn: {
@@ -404,7 +404,7 @@ export let Styles = StyleSheet.create({
     },
     profile: {
         color: "black",
-        fontSize: 25,
+        fontSize: 20,
         fontWeight: 'bold',
 
     },

@@ -1,4 +1,4 @@
-import { View, StatusBar, Text, ScrollView, SafeAreaView, Pressable, Image, Modal, StyleSheet, TouchableOpacity, useWindowDimensions, ActivityIndicator, FlatList } from "react-native";
+import { View, StatusBar, Text, ScrollView, SafeAreaView, Pressable, Image, Modal, StyleSheet, TouchableOpacity, useWindowDimensions, ActivityIndicator, FlatList, Dimensions } from "react-native";
 import { Styles } from "../Common Component/Styles";
 
 import { useEffect, useState } from "react";
@@ -15,6 +15,7 @@ export default function Cancelled({ Bookings }) {
 
 
     const navigation = useNavigation()
+    const screenWidth = Dimensions.get('window').width;
 
     const [loading, setLoading] = useState(false);
 
@@ -32,7 +33,7 @@ export default function Cancelled({ Bookings }) {
 
     const renderBookingCard = ({ item }) => {
         return (
-            <View style={styles.card}>
+            <View style={[styles.card,{width:screenWidth*0.95}]}>
                 <View style={styles.content}>
                     <View style={styles.header}>
                         <Text style={styles.heading}>Customer Name:</Text>

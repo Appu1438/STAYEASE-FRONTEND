@@ -11,6 +11,7 @@ import formatDate from "../Service/DetailviewService/FormatDate";
 import formateTime from "../Service/DetailviewService/FormateTime";
 import OpenDial from "../Service/Map and Dial/Dial";
 import { useSelector } from "react-redux";
+import { Dimensions } from "react-native";
 
 export default function AllCancelled({Bookings}){
 
@@ -18,6 +19,7 @@ export default function AllCancelled({Bookings}){
     const navigation = useNavigation()
     const alluser=useSelector(state=>state.user.AllUsersData)
     console.log(alluser)
+    const screenWidth = Dimensions.get('window').width;
 
     const [loading, setLoading] = useState(false);
 
@@ -38,7 +40,7 @@ export default function AllCancelled({Bookings}){
         console.log(specificUser)
 
         return (
-            <View style={styles.card}>
+            <View style={[styles.card,{width:screenWidth*0.95}]}>
                 <View style={styles.content}>
                 <View style={styles.header}>
                         <Text style={styles.heading}>Hotel Name:</Text>
