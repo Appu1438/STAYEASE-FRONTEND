@@ -20,50 +20,61 @@ import EditBussiness from "../HotelScreens/EditBusiness";
 import NeedHelp from "../Custom Components/Needhelp";
 import AllHotels from "../Admin Screens/AllHotels";
 import AllBookings from "../Admin Screens/AllBookings";
+import AddNewUser from "../Admin Screens/AddUser";
+import { useSelector } from "react-redux";
+import EditUser from "../Admin Screens/EditUser";
 
 
 
-export default function AdminNav  ()  {
-    const Stack = createNativeStackNavigator();
-    return (
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Home" component={DrawerScreens} />
-        <Stack.Screen name="Detailview" component={Detailview} options={{animation:'slide_from_right'}} />
-        <Stack.Screen name="Confirmation" component={Confirmation} />
-        <Stack.Screen name="Payment" component={PaymentPage} options={{animation:'slide_from_right'}}  />
-        <Stack.Screen name="Bookings" component={Bookings} options={{animation:'slide_from_right'}} />
-        <Stack.Screen name="UserLogout" component={LoginNav} />
-        <Stack.Screen name="UpdateProfile" component={UpdateProfile} options={{animation:'slide_from_right'}} />
-        <Stack.Screen name="Search" component={Search} options={{animation:'slide_from_right'}} />
-        <Stack.Screen name="Fav" component={Fav } options={{animation:'slide_from_right'}}  />      
-        <Stack.Screen name="Needhelp" component={NeedHelp } options={{animation:'slide_from_right'}}  />      
+export default function AdminNav() {
 
-        <Stack.Screen name="PendingsDetails" component={PendingDetailview} />
-        <Stack.Screen name="EditBusiness" component={EditBussiness} options={{animation:'slide_from_right'}} />
-      </Stack.Navigator>
+  const Stack = createNativeStackNavigator();
+
+  return (
+    
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Home" component={DrawerScreens} />
+      <Stack.Screen name="Detailview" component={Detailview} options={{ animation: 'slide_from_right' }} />
+      <Stack.Screen name="Confirmation" component={Confirmation} />
+      <Stack.Screen name="Payment" component={PaymentPage} options={{ animation: 'slide_from_right' }} />
+      <Stack.Screen name="Bookings" component={Bookings} options={{ animation: 'slide_from_right' }} />
+      <Stack.Screen name="UserLogout" component={LoginNav} />
+      <Stack.Screen name="UpdateProfile" component={UpdateProfile} options={{ animation: 'slide_from_right' }} />
+      <Stack.Screen name="Search" component={Search} options={{ animation: 'slide_from_right' }} />
+      <Stack.Screen name="Fav" component={Fav} options={{ animation: 'slide_from_right' }} />
+      <Stack.Screen name="Needhelp" component={NeedHelp} options={{ animation: 'slide_from_right' }} />
+
+      <Stack.Screen name="PendingsDetails" component={PendingDetailview} />
+      <Stack.Screen name="EditBusiness" component={EditBussiness} options={{ animation: 'slide_from_right' }} />
+      <Stack.Screen name="EditUser" component={EditUser} options={{ animation: 'slide_from_right' }} />
+    </Stack.Navigator>
 
 
-    )
-  
-  }
+  )
 
-  const DrawerScreens = () => {
-    const Drawer = createDrawerNavigator();
-  
-    return (
-      <Drawer.Navigator   screenOptions={{
-        headerShown: false, // Hide header
-      }}
-     > 
-        <Drawer.Screen name="Homepage" component={Home} />
-        <Drawer.Screen name="Admin Profile" component={Profile} />
-        <Drawer.Screen name="All Users" component={ShowUsers} />
-        <Drawer.Screen name="All Hotels" component={AllHotels} />
-        <Drawer.Screen name="All Bookings" component={AllBookings} />
-        <Drawer.Screen name="All Pendings" component={PendingRequests} />
-        <Drawer.Screen name="Add Your Business" component={AdminBusiness} />
-        <Drawer.Screen name="Manage Your Business" component={Viewbussiness} />
-        <Drawer.Screen name="Your Business Bookings" component={BusinessBookings} />     
-         </Drawer.Navigator>
-    )
-  };
+}
+
+const DrawerScreens = () => {
+  const userData = useSelector(state => state.user.userData)
+  const Drawer = createDrawerNavigator();
+
+  return (
+    <Drawer.Navigator screenOptions={{
+      headerShown: false, // Hide header
+    }}
+    >
+      <Drawer.Screen name="Homepage" component={Home} />
+      <Drawer.Screen name="Profile" component={Profile} />
+      <Drawer.Screen name="All Users" component={ShowUsers} />
+      <Drawer.Screen name="All Hotels" component={AllHotels} />
+      <Drawer.Screen name="All Bookings" component={AllBookings} />
+      <Drawer.Screen name="All Pendings" component={PendingRequests} />
+      <Drawer.Screen name="Add Your Business" component={AdminBusiness} />
+      <Drawer.Screen name="Manage Your Business" component={Viewbussiness} />
+      <Drawer.Screen name="Your Business Bookings" component={BusinessBookings} />
+      {userData.userType === 'SuperAdmin' && (
+          <Drawer.Screen name="Add New User" component={AddNewUser} />
+        )}
+    </Drawer.Navigator>
+  )
+};

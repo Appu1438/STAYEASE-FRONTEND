@@ -210,7 +210,7 @@ export default function Login() {
                         AsyncStorage.setItem("token", res.data.data);
                         AsyncStorage.setItem('isLoggedIn', JSON.stringify(true));
                         AsyncStorage.setItem('userType', res.data.userType);
-                        if (res.data.userType === 'Admin') {
+                        if (res.data.userType == 'Admin' || res.data.userType=='SuperAdmin') {
                             navigation.navigate("AdminLoggedin");
                         } else if (res.data.userType === 'Business') {
                             navigation.navigate("HotelLoggedin");
@@ -380,7 +380,7 @@ const styles = {
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 15,
-        shadowColor: '#f73939',
+        shadowColor: 'blue',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 2,

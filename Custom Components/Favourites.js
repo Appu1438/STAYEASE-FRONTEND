@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         overflow: 'hidden',
         marginBottom: 20,
-        shadowColor: "#000",
+        shadowColor: "blue",
         shadowOffset: {
             width: 0,
             height: 2,
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
         padding: 15,
     },
     hotelName: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
     },
     hotelLocation: {

@@ -437,7 +437,7 @@ export default function Detailview() {
                         <DateTimePickerModal
                             isVisible={isToDatePickerVisible}
                             mode="date"
-                            minimumDate={new Date()} // Disable past dates
+                            minimumDate={new Date(new Date(unformatedselectedFromDate).getTime() + (24 * 60 * 60 * 1000))} // Disable past dates and ensure "To" date is from tomorrow onward
                             onConfirm={handleToConfirm}
                             onCancel={hideToDatePicker}
                         />

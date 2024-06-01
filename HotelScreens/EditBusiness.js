@@ -226,7 +226,7 @@ export default function EditBussiness() {
                         Loading ? null :
                             handleSubmit()
                     }} >
-                        <Text style={styles.btnText}>{Loading ? <ActivityIndicator color='white' /> : 'Edit'}</Text>
+                        <Text style={styles.btnText}>{Loading ? <ActivityIndicator color='white' /> : 'Update'}</Text>
                     </Pressable>
                 </View>
             </ScrollView>
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
     },
     message: {
-        fontSize: 20,
+        fontSize: 16,
         fontWeight: 'bold',
         marginBottom: 5,
     },
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#333',
         marginBottom: 15,
-        shadowColor: '#000',
+        shadowColor: 'blue',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 2,
@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 15,
-        shadowColor: '#000',
+        shadowColor: 'blue',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 2,

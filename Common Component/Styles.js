@@ -6,7 +6,7 @@ export let Styles = StyleSheet.create({
 
 
     container: {
-        backgroundColor: 'white',
+        backgroundColor: '#f8f8f8',
         flex: 1,
         justifyContent: 'center',
         marginTop: 0,
@@ -36,20 +36,20 @@ export let Styles = StyleSheet.create({
         marginTop: 0
     },
     input: {
-        width: 300,
-        height: 45,
-        borderWidth: 1,
-        marginTop: 10,
-        textAlign: 'center',
-        fontSize: 12,
-        fontWeight: 'bold',
-        borderRadius: 5,
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        // elevation:5
-
-
+        width: '100%',
+        height: 50,
+        backgroundColor: '#fff',
+        borderRadius: 8,
+        paddingHorizontal: 15,
+        fontSize: 16,
+        color: '#333',
+        marginBottom: 15,
+        shadowColor: 'blue',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 5,
+        top: 10
     },
     btn: {
         width: 300,
@@ -73,7 +73,7 @@ export let Styles = StyleSheet.create({
         marginTop: 0,
         width: '100%',
         height: 135,
-        // backgroundColor:'yellow',
+        backgroundColor:'#f8f8f8',
         justifyContent: 'flex-start',
         alignItems: 'center'
     },
@@ -87,7 +87,6 @@ export let Styles = StyleSheet.create({
         // paddingLeft:70
     },
     search: {
-        backgroundColor: '#dedede',
         width: '90%',
         height: 45,
         marginTop: 10,
@@ -95,7 +94,19 @@ export let Styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 25,
         // flexDirection: 'row',
-        paddingLeft: 0
+        // paddingLeft: 0,
+        // elevation:5,
+        // shadowColor:'blue',
+        // height: 50,
+        backgroundColor: '#dededede',
+        paddingHorizontal: 15,
+        fontSize: 16,
+        color: '#333',
+        shadowColor: '#39a8db',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 10,
 
     },
     searchinput: {
@@ -103,6 +114,7 @@ export let Styles = StyleSheet.create({
         borderWidth: 0,
         textAlign: 'center',
         fontSize: 15,
+        
     },
     locationContainer: {
         flexDirection: 'row',
@@ -440,7 +452,7 @@ export let Styles = StyleSheet.create({
     confirmtext: {
         color: 'white',
         fontSize: 13,
-        fontWeight: 'bold'
+        // fontWeight: 'bold'
 
     }, confirmboxtwo: {
         width: '100%',

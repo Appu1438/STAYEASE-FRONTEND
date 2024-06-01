@@ -10,7 +10,7 @@ import Toast from "react-native-toast-message";
 
 
 
-export default function Signup() {
+export default function AddNewUser() {
     const navigation = useNavigation()
     const [image, setImage] = useState('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQMAAADCCAMAAAB6zFdcAAAAM1BMVEXFzeD////Byt7L0uPByd7Q1+b7/P3j5/Dv8fbe4+3r7vTFzuDL0+P19/rn6/LZ3urW2+lU+LHUAAAFLklEQVR4nO2dC3arMAxEQXwCcfjsf7XPkLw2tEka5AEziu8CeuKpJVmyLLIskUgkEkdFbsT+HXEQKbNqOPWN59y72D9nd/z/vWqbOv/mozSY9n116vIl1acYg1++G9v+5/rzvMs+QwL/7x/O9a/lT5zL2D9uF7wAzcP1e+pP2AQi4/mZAJ6TfQ3EtY9N4D+jdQ2k6F8K4OltayDFKyP4cghmI6PzVvDnHrDuEqR9UwFPY1IEufw+C72yh8LeIUFOaxSY6K0dFt2qTXDDVJCUi0IBT2vHHmTUSWAnPjgZtBJ4p2BjJ4RIYCSHlCpEAi+CAXMowiSwIIJoguKSE7k5rD8aPWDg3gnKg8EPLrGXEUL5tGC2ijr2OkIIjAlfEJdVBLMNcmprQEnAW09YUzT5C9aNADgbfMGaPQlOgrwj1cAlDZIGGVYD2ktIpAasiRNQgzxpkOektoCMjUkDT+zFaEFqwNqohtSgiL0YHcHlVAMaoCooM6SJo/qK7RGk+yBpkGVBl2w2NAi7aEwamNEAWE5MGiQNkgZJg6RB0sCEBoj+C3YN0j5IGkyks3LKnSegdaSkQdIgaUCtwcf7RJHy02OjVG3/+knvSlxJd+uK7Emb6eqOrQVBoJvgCtu16xYasF23QXsPWDVI+yArN9CALTyW6LhAqAE8NuaEcQH2fOMbtkNS+e7IC8MaYIuJM3TnRGwxcYbvPQ+0eDBD95TFIRv3rwyx17Qa/EGRbmqSAz1xvSP2ktaDvW3MOV9xoJ0i43tftEPgc4n4U1Ls9ajAbgTOkSCh02AW1GxJ4w2gCKwSIAspF0pLmIB5BNaXvhnwnMSXMn6DqrBzBoUrqKoiXdp8B6qqWMVeSADyzijhNyDeBiinyOwSUc95uAemYZ66sl0wLYGcFPmK6gsgCTRzZJxAlJe5TQFyQiA3hQxRVuSOChPBXrEW2trBf/RDts1sg+C8iXZA1oKwc9IY++dDCDojUKcKd5T67JF6ou4C9SHBhjO4os2hiWupv1Hm0JY00LpFKx5xQmsLpjRQdisy19R/om3MsaSB9rxsSgOdBKY00E5SZOxBeoa2kGJJA+01gyEN1JmjJQ20jxnYq+p3qPNGQxqo66qtHQ3UfUlJA0MalKJ+8NnyPfh/hFzOnbpFr6vP7JeNGaALw0BJMfzemT4+IhqSYq8hFESDInNj3ky4BPSXroieLPZDAuI7nuROsUS84iAvqKmT5gWxVxEIQgJuY8BsA+6NgPmyMXVkQHXuM+cMuBEIjO98Z4K78r5pOFtVpWiRn7Qd+aop5QU9AqJuMyYVRKoNJkT58OD/cuy1vYUX4LTBvLgrzVAcXwYpthPgSjcc2ybkgjoRvKQvjqrCVl7gEU11RJMQGTeYFvicbjyaCnsrMFG3R1JBsnZjR/hEhf4gJiHi0NOg1nCOL8OejvAJ3RBTBScy7O4GHlCfXCwV4hrBkvMlQmYpZXQjWLJ7sJTyEEawZNfMsowUC/+m38kxiNtgbDCMZgfHIMUuaVEA3cYnBnx5aAu8e9xMASkYFJjoNpo/K+7oVnBPg68xuKw8zoHoPXp0pCzHg0bDV0CTa3EsjmBJjUunsB9u35Ua08wkGecmuIEIEVIReoIFwTf38JHhEQgcxuqOlx4qCBFBCnY7uKH/uhV0SHRU9CNFUO1EB0A9TMKIIczoggP+QxpRUQ0cM+MMrmiezG7x0bmoKDYCZhLqgVjf8WvhfLhkfaPnFt/di8zq6XNbfIczMqsHDW3xTdrYPFvrP7kiUsVMV4ODAAAAAElFTkSuQmCC')
     const [name, setName] = useState("")
@@ -37,86 +37,86 @@ export default function Signup() {
 
 
 
-    async function generateOTP() {
-        setLoading(true)
+    // async function generateOTP() {
+    //     setLoading(true)
 
-        if (nameVerify && numberVerify && emailVerify && passwordVerify) {
-            setOTPAttempt(0)
+    //     if (nameVerify && numberVerify && emailVerify && passwordVerify) {
+    //         setOTPAttempt(0)
 
-            // Call your backend endpoint to generate OTP
-            await axios.post(`${API_BASE_URL}/generateOTP`, { email })
-                .then(response => {
-                    if (response.data.status === 'success') {
-                        console.log("OTPF", response.data.otp)
-                        setGeneratedOTP(response.data.otp);
-                        setShowOTPField(true);
-                        Toast.show({
-                            type: 'success',
-                            text1: 'OTP Genrated Successfully',
-                            visibilityTime: 3000,
-                            position: 'bottom'
-                        });
-                    } else {
-                        Toast.show({
-                            type: 'error',
-                            text1: 'Failed to generate OTP',
-                            visibilityTime: 3000,
-                            position: 'bottom'
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error generating OTP:', error);
-                    Toast.show({
-                        type: 'error',
-                        text1: 'Failed to generate OTP',
-                        visibilityTime: 3000,
-                        position: 'bottom'
-                    });
-                })
-                .finally(() => setLoading(false));
-        } else {
-            Toast.show({
-                type: 'error',
-                text1: 'Fill Mandatory Details Correctly',
-                visibilityTime: 3000,
-                position: 'bottom'
-            });
-        }
-        setLoading(false)
+    //         // Call your backend endpoint to generate OTP
+    //         await axios.post(`${API_BASE_URL}/generateOTP`, { email })
+    //             .then(response => {
+    //                 if (response.data.status === 'success') {
+    //                     console.log("OTPF", response.data.otp)
+    //                     setGeneratedOTP(response.data.otp);
+    //                     setShowOTPField(true);
+    //                     Toast.show({
+    //                         type: 'success',
+    //                         text1: 'OTP Genrated Successfully',
+    //                         visibilityTime: 3000,
+    //                         position: 'bottom'
+    //                     });
+    //                 } else {
+    //                     Toast.show({
+    //                         type: 'error',
+    //                         text1: 'Failed to generate OTP',
+    //                         visibilityTime: 3000,
+    //                         position: 'bottom'
+    //                     });
+    //                 }
+    //             })
+    //             .catch(error => {
+    //                 console.error('Error generating OTP:', error);
+    //                 Toast.show({
+    //                     type: 'error',
+    //                     text1: 'Failed to generate OTP',
+    //                     visibilityTime: 3000,
+    //                     position: 'bottom'
+    //                 });
+    //             })
+    //             .finally(() => setLoading(false));
+    //     } else {
+    //         Toast.show({
+    //             type: 'error',
+    //             text1: 'Fill Mandatory Details Correctly',
+    //             visibilityTime: 3000,
+    //             position: 'bottom'
+    //         });
+    //     }
+    //     setLoading(false)
 
-    }
+    // }
 
-    function handleOTPVerification() {
-        setLoading(true)
-        console.log('Generated OTP:', generatedOTP);
-        console.log('Entered OTP:', OTP);
-        if (OTP == generatedOTP) {
-            Toast.show({
-                type: 'success',
-                text1: 'OTP Verified Successfully',
-                visibilityTime: 3000,
-                position: 'bottom'
-            });
-            setGeneratedOTP('')
-            handlesubmit();
-        } else {
-            setOTPAttempt((OTPAttempt) => OTPAttempt + 1)
-            Toast.show({
-                type: 'error',
-                text1: 'Invalid OTP',
-                visibilityTime: 3000,
-                position: 'bottom'
-            });
-        }
-        setLoading(false)
-    }
+    // function handleOTPVerification() {
+    //     setLoading(true)
+    //     console.log('Generated OTP:', generatedOTP);
+    //     console.log('Entered OTP:', OTP);
+    //     if (OTP == generatedOTP) {
+    //         Toast.show({
+    //             type: 'success',
+    //             text1: 'OTP Verified Successfully',
+    //             visibilityTime: 3000,
+    //             position: 'bottom'
+    //         });
+    //         setGeneratedOTP('')
+    //         handlesubmit();
+    //     } else {
+    //         setOTPAttempt((OTPAttempt) => OTPAttempt + 1)
+    //         Toast.show({
+    //             type: 'error',
+    //             text1: 'Invalid OTP',
+    //             visibilityTime: 3000,
+    //             position: 'bottom'
+    //         });
+    //     }
+    //     setLoading(false)
+    // }
 
 
     function handlesubmit() {
         setLoading(true)
         const Userdata = {
-            name: name,
+            name,
             number,
             email,
             password,
@@ -136,7 +136,7 @@ export default function Signup() {
                         visibilityTime: 3000,
                         position: 'bottom'
                     })
-                    navigation.navigate('Login')
+                    navigation.navigate('Homepage')
                 } else {
                     // Alert.alert(JSON.stringify(res.data.data))
                     Toast.show({
@@ -201,11 +201,10 @@ export default function Signup() {
 
 
                     <Image style={styles.loginImg} source={require("../assets/signupimg.png")}></Image>
-                    <Text style={styles.title}>Sign Up with STAYEASE </Text>
-                    <Text style={styles.subtitle}>Book Hotels, Starting 599 only</Text>
+                    <Text style={styles.title}>Add a New User </Text>
 
                     <View style={styles.userTypeContainer}>
-                        <Text style={styles.registerAsText}>Register as:</Text>
+                        {/* <Text style={styles.registerAsText}>Register as:</Text> */}
                         <View style={styles.userTypeButtons}>
                             <Pressable
                                 style={[
@@ -233,6 +232,32 @@ export default function Signup() {
                                 />
                                 <Text style={styles.userTypeButtonText}>Business</Text>
                             </Pressable>
+                            <Pressable
+                                style={[
+                                    styles.userTypeButton,
+                                    userType === 'Admin' && styles.selectedUserType,
+                                ]}
+                                onPress={() => handleUserTypeChange('Admin')}>
+                                <FontAwesome
+                                    name={userType === 'Admin' ? 'dot-circle-o' : 'circle-o'}
+                                    size={20}
+                                    color={'black'}
+                                />
+                                <Text style={styles.userTypeButtonText}>Admin</Text>
+                            </Pressable>
+                            <Pressable
+                                style={[
+                                    styles.userTypeButton,
+                                    userType === 'SuperAdmin' && styles.selectedUserType,
+                                ]}
+                                onPress={() => handleUserTypeChange('SuperAdmin')}>
+                                <FontAwesome
+                                    name={userType === 'SuperAdmin' ? 'dot-circle-o' : 'circle-o'}
+                                    size={20}
+                                    color={'black'}
+                                />
+                                <Text style={styles.userTypeButtonText}>SuperAdmin</Text>
+                            </Pressable>
                         </View>
                     </View>
 
@@ -241,7 +266,7 @@ export default function Signup() {
 
                     <TextInput
                         style={[styles.input, { shadowColor: nameVerify ? '#006400' : '#f73939' }]}
-                        placeholder="Enter Your Name"
+                        placeholder="Enter User Name"
                         onChange={name => handlename(name)}>
                     </TextInput>
                     {name.length < 1 ? null : nameVerify ? (null) : (<Text style={styles.errorText}>Username Must Contains Atleast 4 Characters</Text>)}
@@ -249,14 +274,14 @@ export default function Signup() {
                     <TextInput
                         style={[styles.input, { shadowColor: numberVerify ? '#006400' : '#f73939' }]}
                         maxLength={10}
-                        placeholder="Enter Your Mobile Number"
+                        placeholder="Enter User Mobile Number"
                         onChange={e => handlenumber(e)}>
                     </TextInput>
                     {number.length < 1 ? null : numberVerify ? (null) : (<Text style={styles.errorText}>Please Enter a vaild Phone Number</Text>)}
 
                     <TextInput
                         style={[styles.input, { shadowColor: emailVerify ? '#006400' : '#f73939' }]}
-                        placeholder="Enter Your Email"
+                        placeholder="Enter User Email"
                         onChange={e => handleemail(e)}></TextInput>
                     {email.length < 1 ? null : emailVerify ? (null) : (<Text style={styles.errorText}>Please Enter a vaild Email Address</Text>)}
 
@@ -266,7 +291,7 @@ export default function Signup() {
 
                         <TextInput
                             style={styles.passwordInput}
-                            placeholder="Enter Your Password"
+                            placeholder="Enter User Password"
                             onChange={e => handlepassword(e)}
                             secureTextEntry={showpassword}>
                         </TextInput>
@@ -279,32 +304,18 @@ export default function Signup() {
                     </View>
                     {password.length < 1 ? null : passwordVerify ? (null) : (<Text style={styles.errorText}>Password Must Contains Atleast 8 Characters , 1 Uppercase, 3 Lowercase, 1 Special Character and 2 Numbers </Text>)}
 
-                    {showOTPField
-                        ? (<TextInput
-                            style={[styles.input, { top: 15, shadowColor: 'black' }]}
-                            placeholder="Enter OTP Sent to Your Email"
-                            onChange={e => setOTP(e.nativeEvent.text)}></TextInput>)
-                        : (null)}
-
-                    {showOTPField  ?
-                        (<TouchableOpacity style={styles.forgotPassword} onPress={() => generateOTP()}>
-                            <Text style={styles.forgotPasswordText}>Resend OTP</Text>
-                        </TouchableOpacity>
-                        )
-                        : (null)}
+                  
 
                     <Pressable
                         style={styles.btn}
-                        onPress={() => { loading ? (null) : (showOTPField && OTPAttempt <= 2 ? handleOTPVerification() : generateOTP()) }}
+                        onPress={() => { loading ? (null) :handlesubmit()}}
                     >
-                        {loading ? (<ActivityIndicator color='white' />) : (
-                            <Text style={Styles.btntext} >{showOTPField && OTPAttempt <= 2 ? 'Register' : OTPAttempt > 2 ? 'Resend OTP' : 'Get OTP'}</Text>
+                        {loading ? 
+                        ( <ActivityIndicator color='white' /> ) : (
+                            <Text style={Styles.btntext} >Register</Text>
                         )}
                     </Pressable>
-                    <Pressable onPress={() => navigation.navigate("Login")}>
-                        <Text style={[{ marginTop: 10, fontSize: 15 }]}>Already have an account? Login</Text>
-
-                    </Pressable>
+                   
 
                     {/* </View> */}
 
@@ -356,16 +367,17 @@ const styles = {
     },
     registerAsText: {
         fontSize: 15,
-        marginRight: 20,
     },
     userTypeButtons: {
         flexDirection: 'row',
         alignItems: 'center',
+        // paddingHorizontal:10
+
     },
     userTypeButton: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginRight: 20,
+        marginRight: 15,
     },
     selectedUserType: {
         opacity: 0.8
@@ -383,7 +395,7 @@ const styles = {
         fontSize: 16,
         color: '#333',
         marginBottom: 15,
-        shadowColor: '#f73939',
+        shadowColor: 'blue',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 2,
@@ -397,7 +409,7 @@ const styles = {
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 15,
-        shadowColor: '#f73939',
+        shadowColor: 'blue',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 2,

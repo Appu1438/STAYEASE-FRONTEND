@@ -64,7 +64,7 @@ export default function AllHotels({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor="white" barStyle="dark-content" />
+            <StatusBar backgroundColor="#f8f8f8" barStyle="dark-content" />
             <Text style={styles.heading}>All Hotels</Text>
             <Pressable style={styles.searchContainer}>
                 <FontAwesomeIcon size={15} icon={faSearch} style={styles.searchIcon} />
@@ -98,20 +98,25 @@ const styles = StyleSheet.create({
         marginVertical: 20,
     },
     searchContainer: {
-        flexDirection: 'row',
+        backgroundColor: '#dedede',
+        width: '90%',
+        height: 45,
+        marginTop: 10,
+        justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#fff',
         borderRadius: 25,
+        alignSelf:'center',
+        backgroundColor: '#dededede',
         paddingHorizontal: 15,
-        marginVertical: 10,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
+        marginVertical:10,
+        fontSize: 16,
+        color: '#333',
+        shadowColor: '#39a8db',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 10,
+        flexDirection:'row'
     },
     searchIcon: {
         marginRight: 10,
@@ -120,6 +125,7 @@ const styles = StyleSheet.create({
     searchInput: {
         flex: 1,
         height: 40,
+        textAlign:'center'
     },
     listContent: {
         paddingBottom: 20,
@@ -129,7 +135,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         overflow: 'hidden',
         marginBottom: 20,
-        shadowColor: "#000",
+        shadowColor: "blue",
         shadowOffset: {
             width: 0,
             height: 2,
@@ -146,7 +152,7 @@ const styles = StyleSheet.create({
         padding: 15,
     },
     hotelName: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
     },
     hotelLocation: {
@@ -156,7 +162,7 @@ const styles = StyleSheet.create({
     },
     hotelOwner: {
         fontSize: 14,
-        marginBottom: 5,
+        marginBottom: 0,
     },
     hotelNumber: {
         fontSize: 14,

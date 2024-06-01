@@ -2,7 +2,7 @@ import { SafeAreaView, TextInput } from "react-native";
 import { Text, View, Image, Pressable, Modal, FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { Styles } from "../Common Component/Styles";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faLocationDot, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faLocationDot, faSearch } from "@fortawesome/free-solid-svg-icons";
 import Feather from 'react-native-vector-icons/Feather';
 import { useNavigation } from "@react-navigation/native";
 // import Payment from "./payment";
@@ -22,8 +22,9 @@ import OpenDial from "../Service/Map and Dial/Dial";
 
 export default function ShowUsers({ }) {
     const navigation = useNavigation()
-    const allUsers=useSelector(state=>state.user.AllUsersData)
+    const allUsers = useSelector(state => state.user.AllUsersData)
     console.log(allUsers)
+    const userData = useSelector(state => state.user.userData)
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedUserImage, setSelectedUserImage] = useState('');
     const [searchedUser, setsearchedUser] = useState('');
@@ -31,15 +32,15 @@ export default function ShowUsers({ }) {
 
     useEffect(() => {
         setFilteredUsers(
-            allUsers.filter(user => 
+            allUsers.filter(user =>
                 user.email.toLowerCase().includes(searchedUser.toLowerCase()) ||
                 user.name.toLowerCase().includes(searchedUser.toLowerCase()) ||
-                user.number.toLowerCase().includes(searchedUser.toLowerCase())        
-                )
+                user.number.toLowerCase().includes(searchedUser.toLowerCase())
+            )
         );
     }, [searchedUser, allUsers]);
 
-    
+
     const Usercard = ({ userdata }) => (
         <View style={Styles.cardBox}>
             <Pressable>
@@ -53,12 +54,12 @@ export default function ShowUsers({ }) {
                             <Avatar.Image
                                 size={98}
                                 source={{
-                                    uri:userdata.image
+                                    uri: userdata.image
                                 }} />
                         </TouchableOpacity>
                         <Text style={Styles.CardText}>Name: {userdata.name}</Text>
-                        <TouchableOpacity onPress={()=>OpenDial(userdata.number)}>
-                        <Text style={Styles.CardText}>Number: {userdata.number}</Text>
+                        <TouchableOpacity onPress={() => OpenDial(userdata.number)}>
+                            <Text style={Styles.CardText}>Number: {userdata.number}</Text>
 
                         </TouchableOpacity>
                         <Text style={Styles.CardText}>Email: {userdata.email}</Text>
@@ -66,29 +67,36 @@ export default function ShowUsers({ }) {
                     </View>
                 </View>
             </Pressable>
+            {userData.userType == 'SuperAdmin' ? (
+            <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('EditUser', { data: userdata })}>
+                <FontAwesomeIcon icon={faEdit} size={20} color="#0a84ff" />
+            </TouchableOpacity>
+            ) : (null)}
+
         </View>
     )
 
     return (
         <View style={Styles.Userscontainer}>
             <Text style={Styles.Usersheading}>All Users</Text>
-            <Pressable style={[Styles.search, { marginTop: 0,alignSelf:'center' }]}>
-                    <Pressable style={{ position: 'absolute', alignSelf: 'flex-end', left: '5%', color: 'black' }}>
-                        <FontAwesomeIcon size={15} icon={faSearch} />
-                    </Pressable>
-                    <TextInput
-                        style={Styles.searchinput}
-                        textAlign="center"
-                        defaultValue={searchedUser}
-                        placeholder="Search User by Name or Email"
-                        onChange={(e) => setsearchedUser(e.nativeEvent.text)}
-                    />
+            <Pressable style={[Styles.search, { marginBottom: 10, alignSelf: 'center' }]}>
+                <Pressable style={{ position: 'absolute', alignSelf: 'flex-end', left: '5%', color: 'black' }}>
+                    <FontAwesomeIcon size={15} icon={faSearch} />
                 </Pressable>
+                <TextInput
+                    style={Styles.searchinput}
+                    textAlign="center"
+                    defaultValue={searchedUser}
+                    placeholder="Search User by Name or Email"
+                    onChange={(e) => setsearchedUser(e.nativeEvent.text)}
+                />
+            </Pressable>
             <FlatList
-            showsVerticalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
                 data={filteredUsers}
                 keyExtractor={(item) => item._id}
-                renderItem={({ item }) => <Usercard userdata={item} />} />
+                renderItem={({ item }) => <Usercard userdata={item} />}
+            />
 
             <Modal
                 animationType="fade"
@@ -130,5 +138,10 @@ const styles = StyleSheet.create({
         width: 300,
         height: 300,
         resizeMode: "contain"
-    }
+    },
+    editButton: {
+        position: 'absolute',
+        top: 20,
+        right: 20,
+    },
 })

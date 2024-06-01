@@ -93,23 +93,57 @@ const NeedHelp = () => {
             </View>
           ))}
         </ScrollView>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 0, paddingBottom: 10 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 0, paddingBottom: 10,justifyContent:'center' }}>
           <TextInput
-            style={{ flex: 1, borderWidth: 1, borderColor: '#ccc', borderRadius: 5, padding: 10 }}
+            style={style.input}
             placeholder="Type your message..."
             value={message}
             onChangeText={setMessage}
           />
           <Pressable
-            style={{ width: 60, height: 40, left: 5, backgroundColor: '#39a8db', borderRadius: 5, alignItems: 'center', justifyContent: 'center' }}
+            style={style.btn}
             onPress={handleSendMessage}
           >
-            <Text>Send</Text>
+            <Text style={style.btnText}>Send</Text>
           </Pressable>
         </View>
       </View>
     </KeyboardAvoidingView>
   );
 };
+const style={
+  input: {
+    width: '85%',
+    height: 50,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 15,
+    shadowColor: '#39a8db',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 5,
+    top: 10
+},
+btn: {
+  width: '15%',
+  height: 40,
+  backgroundColor: '#39a8db',
+  borderRadius: 5,
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginBottom: 20,
+  top: 13,
+  left:5
+},
+btnText: {
+  color: '#fff',
+  fontSize: 15,
+  // fontWeight: 'bold',
+},
+}
 
 export default NeedHelp;

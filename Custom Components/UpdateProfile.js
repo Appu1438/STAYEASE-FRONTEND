@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, Pressable, Alert, StyleSheet, Image, TouchableOpacity, TextInput, ScrollView ,ActivityIndicator} from "react-native"
+import { View, Text, SafeAreaView, Pressable, Alert, StyleSheet, Image, TouchableOpacity, TextInput, ScrollView ,ActivityIndicator, KeyboardAvoidingView} from "react-native"
 import { Styles } from "../Common Component/Styles"
 import { useEffect, useState } from "react"
 import Loading from "../Common Component/loading"
@@ -35,6 +35,7 @@ export default function UpdateProfile() {
     const [number, setNumber] = useState("")
     const [numberVerify, setNumberVerify] = useState(true)
     const [email, setEmail] = useState("")
+    const [userType, setuserType] = useState("")
     const [image, setImage] = useState("")
     const route = useRoute()
 
@@ -52,6 +53,7 @@ export default function UpdateProfile() {
         setName(userData.name)
         setNumber(userData.number)
         setEmail(userData.email)
+        setuserType(userData.userType)
         setImage(userData.image)
     }, [])
 
@@ -154,6 +156,7 @@ export default function UpdateProfile() {
             name: name,
             number: number,
             email: email,
+            userType: userType,
             image: image
         }
         axios.post(`${API_BASE_URL}/update-user`, formdata).then(res => {
@@ -189,12 +192,13 @@ export default function UpdateProfile() {
 
 
     return (
-        <SafeAreaView style={[Styles.profilecontainer,]}>
+        <KeyboardAvoidingView style={[styles.container,]}>
 
-            <ScrollView contentContainerStyle={{ flex: 1 }} keyboardShouldPersistTaps={'always'}>
-                <View style={[Styles.container, { alignItems: "center", justifyContent: 'flex-start', top: '0%' }]}>
+            <ScrollView contentContainerStyle={styles.scrollViewContent} >
+                <View style={[styles.innerContainer]}>
 
                     <TouchableOpacity style={styles.imgbox} onPress={() => Selectphoto()}>
+                    
                     {loading && <ActivityIndicator color='black' style={{position:'absolute',zIndex:2}} size={"large"} />}
                         <Avatar.Image
                             size={179}
@@ -235,7 +239,7 @@ export default function UpdateProfile() {
 
 
 
-        </SafeAreaView>
+        </KeyboardAvoidingView>
     )
 
 }
@@ -248,12 +252,25 @@ const styles = StyleSheet.create({
         height: 180,
         borderRadius: 100,
         marginLeft: 0,
-        marginTop: 100,
+        // marginTop: 100,
         justifyContent: 'center',
         alignItems: 'center',
         // overflow: 'hidden',
         borderWidth: 1,
         borderColor: 'grey'
+    },
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+    scrollViewContent: {
+        flexGrow: 1,
+        justifyContent: 'center',
+
+    },
+    innerContainer: {
+        alignItems: 'center',
+        paddingHorizontal: 20,
     },
     editButton: {
         position: 'absolute',

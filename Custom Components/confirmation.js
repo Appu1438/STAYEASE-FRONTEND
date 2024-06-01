@@ -298,7 +298,7 @@ export default function Confirmation() {
                                                 calculaterefund(BookingDetails,setRefundedAmount)
                                             }} >
                                             <Text
-                                                style={[Styles.navtextone, { alignSelf: 'flex-start', left: 19, top: 30 }]}
+                                                style={[Styles.navtextone, { alignSelf: 'flex-start', left: 16, top: 25,marginBottom:0 }]}
                                             >
                                                 View Cancellation Charges!!</Text>
                                         </TouchableOpacity>
@@ -311,7 +311,7 @@ export default function Confirmation() {
                                     <View>
                                         <Text
 
-                                            style={[Styles.navtextone, { top: '0%' }]}>For any queries related to your bookings, feel free to contact us. We're here to assist you!</Text>
+                                            style={[Styles.navtextone, { top: '0%',marginBottom:10 }]}>For any queries related to your bookings, feel free to contact us. We're here to assist you!</Text>
                                     </View>
 
 
@@ -449,7 +449,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         padding: 20,
         borderRadius: 10,
-        width: '85%',
+        width: '95%',
     },
     modalTitle: {
         fontSize: 18,

@@ -7,6 +7,7 @@ import axios from "axios";
 import API_BASE_URL from "../Api";
 import { RadioButton } from "react-native-paper";
 import Toast from "react-native-toast-message";
+import { TouchableOpacity } from "react-native";
 
 export default function ForgotPassword() {
 
@@ -46,12 +47,12 @@ export default function ForgotPassword() {
         }
     }
 
-    function generateOTP() {
+    async function generateOTP() {
         if (emailVerify && passwordVerify) {
             setOTPAttempt(0)
             setLoading(true)
             // Call your backend endpoint to generate OTP
-            axios.post(`${API_BASE_URL}/generateOTP`, { email })
+            await axios.post(`${API_BASE_URL}/generateOTP`, { email })
                 .then(response => {
                     if (response.data.status === 'success') {
                         console.log("OTPF", response.data.otp)
@@ -80,10 +81,9 @@ export default function ForgotPassword() {
                         visibilityTime: 3000,
                         position: 'bottom'
                     });
-                });
-            setLoading(false)
-        } else {
-
+                })
+                .finally(() => setLoading(false));
+        }  else {
             Toast.show({
                 type: 'error',
                 text1: 'Fill Mandatory Details Correctly',
@@ -159,62 +159,110 @@ export default function ForgotPassword() {
 
 
     return (
+        <KeyboardAvoidingView style={styles.container}>
 
-        <ScrollView contentContainerStyle={{ flex: 1 }} keyboardShouldPersistTaps={'always'}>
-            <View style={[Styles.container, { alignItems: "center", justifyContent: 'center' }]}>
+            <ScrollView contentContainerStyle={styles.scrollViewContent} keyboardShouldPersistTaps={'always'}>
+                <View style={[styles.innerContainer]}>
 
-                <Image style={Styles.signinimg} source={require("../assets/ForgotPassword.png")}></Image>
-                <Text style={[Styles.text, { fontSize: 18, marginTop: -10 }]}>Forgot Password </Text>
+                    <Image style={Styles.signinimg} source={require("../assets/ForgotPassword.png")}></Image>
 
-
-
-
-
-
-                <TextInput
-                    style={Styles.input}
-                    placeholder="Enter Your Email"
-                    onChange={e => handleemail(e)}></TextInput>
-                {email.length < 1 ? null : emailVerify ? (null) : (<Text style={Styles.ralert}>Please Enter a vaild Email Address</Text>)}
-
-                <View style={[Styles.input,]}>
+                    <Text style={[Styles.text, { fontSize: 18, marginTop: -10 }]}>Forgot Password </Text>
 
                     <TextInput
-                        style={{ fontSize: 12, fontWeight: 'bold', textAlign: 'center' }}
-                        placeholder="Enter New Password"
-                        onChange={e => handlepassword(e)}
-                        secureTextEntry={showpassword}>
-                    </TextInput>
+                        style={Styles.input}
+                        placeholder="Enter Your Email"
+                        onChange={e => handleemail(e)}></TextInput>
+                    {email.length < 1 ? null : emailVerify ? (null) : (<Text style={Styles.ralert}>Please Enter a vaild Email Address</Text>)}
 
-                    <Pressable style={{ position: 'absolute', alignSelf: 'flex-end', right: '5%' }}
-                        onPress={() => setShowpassword(!showpassword)}>
-                        <Feather name={showpassword ? 'eye' : 'eye-off'} size={20} color={'black'} />
+                    <View style={[styles.passwordContainer,]}>
+
+                        <TextInput
+                            style={styles.passwordInput}
+                            placeholder="Enter New Password"
+                            onChange={e => handlepassword(e)}
+                            secureTextEntry={showpassword}>
+                        </TextInput>
+
+                        <Pressable style={styles.eyeIcon}
+                            onPress={() => setShowpassword(!showpassword)}>
+                            <Feather name={showpassword ? 'eye' : 'eye-off'} size={20} color={'grey'} />
+                        </Pressable>
+
+                    </View>
+                    {password.length < 1 ? null : passwordVerify ? (null) : (<Text style={Styles.ralert}>Password Must Contains Atleast 8 Characters , 1 Uppercase, 3 Lowercase, 1 Special Character and 2 Numbers </Text>)}
+
+                    {showOTPField
+                        ? (<TextInput
+                            style={Styles.input}
+                            placeholder="Enter OTP Sent to Your Email"
+                            onChange={e => setOTP(e.nativeEvent.text)}></TextInput>)
+                        : (null)}
+                    {showOTPField ?
+                        (<TouchableOpacity style={styles.forgotPassword} onPress={() => generateOTP()}>
+                            <Text style={styles.forgotPasswordText}>Resend OTP</Text>
+                        </TouchableOpacity>
+                        )
+                        : (null)}
+
+                    <Pressable style={Styles.btn} onPress={() => { showOTPField && OTPAttempt <= 2 ? handleOTPVerification() : generateOTP() }}>
+                        {loading ? (<ActivityIndicator color='white' />) : (
+                            <Text style={Styles.btntext} >{showOTPField && OTPAttempt <= 2 ? 'Update Password' : OTPAttempt > 2 ? 'Resend OTP' : 'Get OTP'}</Text>
+                        )}
                     </Pressable>
 
+
                 </View>
-                {password.length < 1 ? null : passwordVerify ? (null) : (<Text style={Styles.ralert}>Password Must Contains Atleast 8 Characters , 1 Uppercase, 3 Lowercase, 1 Special Character and 2 Numbers </Text>)}
+            </ScrollView>
+        </KeyboardAvoidingView>
 
-                {showOTPField
-                    ? (<TextInput
-                        style={Styles.input}
-                        placeholder="Enter OTP Sent to Your Email"
-                        onChange={e => setOTP(e.nativeEvent.text)}></TextInput>)
-                    : (null)}
-                {/* {OTPAttempt>2?
-                ( <Pressable style={{alignSelf:'flex-start',right:10}} onPress={()=>generateOTP()}>
-                    <Text style={[{ marginTop: 10, fontSize: 15 }]}>Resend OTP</Text>
-                </Pressable>)
-                :(null)} */}
-
-                <Pressable style={Styles.btn} onPress={() => { showOTPField && OTPAttempt <= 2 ? handleOTPVerification() : generateOTP() }}>
-                    {loading ? (<ActivityIndicator color='white' />) : (
-                        <Text style={Styles.btntext} >{showOTPField && OTPAttempt <= 2 ? 'Update Password' : OTPAttempt > 2 ? 'Resend OTP' : 'Get OTP'}</Text>
-                    )}
-                </Pressable>
-
-
-            </View>
-        </ScrollView>
     )
 
+}
+
+const styles = {
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+    scrollViewContent: {
+        flexGrow: 1,
+        justifyContent: 'center',
+
+    },
+    innerContainer: {
+        alignItems: 'center',
+        paddingHorizontal: 20,
+    },
+    passwordContainer: {
+        width: '100%',
+        height: 50,
+        backgroundColor: '#fff',
+        borderRadius: 8,
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 15,
+        shadowColor: 'blue',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 5,
+    },
+    passwordInput: {
+        flex: 1,
+        fontSize: 16,
+        color: '#333',
+    },
+    eyeIcon: {
+        marginLeft: 10,
+    },
+    forgotPassword: {
+        alignSelf: 'flex-end',
+        marginTop: 10,
+        marginBottom: 10,
+    },
+    forgotPasswordText: {
+        fontSize: 15,
+        color: 'black',
+        right: 10
+    },
 }

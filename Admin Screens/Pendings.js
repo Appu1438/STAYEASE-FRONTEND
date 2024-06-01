@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         overflow: 'hidden',
         marginBottom: 20,
-        shadowColor: "#000",
+        shadowColor: "blue",
         shadowOffset: {
             width: 0,
             height: 2,
