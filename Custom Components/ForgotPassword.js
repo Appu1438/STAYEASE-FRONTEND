@@ -52,7 +52,7 @@ export default function ForgotPassword() {
             setOTPAttempt(0)
             setLoading(true)
             // Call your backend endpoint to generate OTP
-            await axios.post(`${API_BASE_URL}/generateOTP`, { email })
+            await axios.post(`${API_BASE_URL}/user/generateOTP`, { email })
                 .then(response => {
                     if (response.data.status === 'success') {
                         console.log("OTPF", response.data.otp)
@@ -125,7 +125,7 @@ export default function ForgotPassword() {
             password
         }
 
-        axios.post(`${API_BASE_URL}/update-password`, Userdata)
+        axios.post(`${API_BASE_URL}/user/update-password`, Userdata)
             .then(res => {
                 console.log(res.data);
 

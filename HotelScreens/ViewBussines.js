@@ -14,6 +14,7 @@ import getdata from "../Service/UserServices.js/Getdata";
 import getAllBusiness from "../Service/BusinessService/getBusiness";
 import handleDelete from "../Service/BusinessService/DeleteBusiness";
 import { useSelector } from "react-redux";
+import getUserBusiness from "../Service/BusinessService/getBusiness";
 
 
 
@@ -31,7 +32,7 @@ export default function Viewbussiness() {
 
     useEffect(() => {
         if (Hoteluser && Hoteluser._id) {
-            getAllBusiness(Hoteluser._id, setAllHotels, setLoading)
+            getUserBusiness(Hoteluser._id, setAllHotels, setLoading)
         }
     }, [Hoteluser])
 

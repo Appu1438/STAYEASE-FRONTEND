@@ -8,7 +8,7 @@ import Toast from "react-native-toast-message";
 async function getBookingdetails(BookingID,setBookingDetails,setHotelData,setTotal,setNormalMessage,setOfferMessage,setBookingsts,setCheckin) {
     try {
         const _id = BookingID;
-        const response = await axios.get(`${API_BASE_URL}/get-booking-deatils/${_id}`);
+        const response = await axios.get(`${API_BASE_URL}/user/get-booking-deatils/${_id}`);
         if (response.data.status === 'ok') {
             setBookingDetails(response.data.data);
             setTotal(response.data.data.TotalAmount);

@@ -29,7 +29,7 @@ export default function Fav() {
 
     const getUserFavorites = async (userId) => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/get-favorites/${userId}`);
+            const response = await axios.get(`${API_BASE_URL}/user/get-favorites/${userId}`);
             if (response.data.status === 'ok') {
                 setFavorites(response.data.data);
                 response.data.data.forEach((favorite) => {
@@ -46,7 +46,7 @@ export default function Fav() {
     const getHotelDetails = async (hotelId) => {
         console.log(hotelId)
         try {
-            const response = await axios.get(`${API_BASE_URL}/get-hotel-byID?id=${hotelId}`);
+            const response = await axios.get(`${API_BASE_URL}/user/get-hotel-byID?id=${hotelId}`);
             if (response.data.status === 'ok') {
                 setHotelDetails((prevDetails) => ({
                     ...prevDetails,

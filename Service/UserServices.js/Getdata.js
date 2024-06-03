@@ -12,7 +12,7 @@ import { useDispatch } from "react-redux";
 async function getdata() {
     const token = await AsyncStorage.getItem('token');
     // console.log("Profile",token);
-    axios.post(`${API_BASE_URL}/user-data`, { token: token })
+    axios.post(`${API_BASE_URL}/user/user-data`, { token: token })
         .then(res => {
             // console.log(res.data);
             store.dispatch(setUser(res.data.data))

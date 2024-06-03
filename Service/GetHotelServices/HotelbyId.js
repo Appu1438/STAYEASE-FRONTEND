@@ -5,7 +5,7 @@ import Toast from "react-native-toast-message";
 
 async function gethotelDetails(hotelId,setHotelData,setBaseAmount,setTotal) {
     try {
-        await axios.get(`${API_BASE_URL}/get-hotel-byID?id=${hotelId}`).then(res => {
+        await axios.get(`${API_BASE_URL}/user/get-hotel-byID?id=${hotelId}`).then(res => {
             console.log(res.data.data)
             if (res.data.status == 'ok') {
                 setHotelData(res.data.data)

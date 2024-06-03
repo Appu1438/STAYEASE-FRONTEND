@@ -11,7 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default async function HotelBooking  (bookingData,navigation,token,setloading)  {
         console.log('book')
 
-        const response = await axios.post(`${API_BASE_URL}/submit-booking`, bookingData);
+        const response = await axios.post(`${API_BASE_URL}/user/submit-booking`, bookingData);
             setloading(false)
             if (response.data.status == 'ok') {
                 // Handle success, e.g., show a success message to the user

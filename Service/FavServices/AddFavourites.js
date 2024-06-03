@@ -9,7 +9,7 @@ const addToFavorites = async (hotelId,userId) => {
     console.log('Services Add')
     try {
         // Make a POST request to your backend API to add the hotel to favorites
-        const response = await axios.post(`${API_BASE_URL}/add-to-favorites`, { userId, hotelId });
+        const response = await axios.post(`${API_BASE_URL}/user/add-to-favorites`, { userId, hotelId });
         if (response.data.status == 'ok') {
             // If the hotel is successfully added to favorites, update the state
             Toast.show({

@@ -6,7 +6,7 @@ import { setAllUsers } from "../../Redux/User"
 
 
 async function getAllUsers() {
-    axios.get(`${API_BASE_URL}/get-all-users`).then(res => {
+    axios.get(`${API_BASE_URL}/admin/get-all-users`).then(res => {
         // console.log('Users:', res.data)
         if (res.data.status == 'ok') {
             store.dispatch(setAllUsers(res.data.data))

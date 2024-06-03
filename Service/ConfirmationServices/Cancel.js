@@ -7,7 +7,7 @@ import initiateRefund from "./InitiateRefund";
 
 async function CancelBooking(BookingDetails,UserData,setLoading,navigation,RefundedAmount) {
     try {
-        const response = await axios.post(`${API_BASE_URL}/cancel-booking`, { id: BookingDetails._id });
+        const response = await axios.post(`${API_BASE_URL}/user/cancel-booking`, { id: BookingDetails._id });
         // console.log(response);
 
         setLoading(false);

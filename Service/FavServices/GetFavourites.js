@@ -5,7 +5,7 @@ import Toast from "react-native-toast-message";
 const getUserFavorites = async (userId,Favourites) => {
     // console.log('Service get')
     try {
-        const response = await axios.get(`${API_BASE_URL}/get-favorites/${userId}`);
+        const response = await axios.get(`${API_BASE_URL}/user/get-favorites/${userId}`);
         if (response.data.status == 'ok') {
             // Return the list of favorites
             // console.log(response.data.data)

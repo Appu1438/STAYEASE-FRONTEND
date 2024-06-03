@@ -4,7 +4,7 @@ import Toast from "react-native-toast-message"
 
 const Updatebusiness=async(Hoteldata,navigation)=>{
 
-    await axios.post(`${API_BASE_URL}/update-business`, Hoteldata).then(res => {
+    await axios.post(`${API_BASE_URL}/hotel/update-business`, Hoteldata).then(res => {
         console.log(res.data)
         if (res.data.status == 'ok') {
             Toast.show({

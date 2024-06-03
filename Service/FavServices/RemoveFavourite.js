@@ -6,7 +6,7 @@ const removeFromFavorites = async (userId,hotelId,fav,setFav) => {
     console.log('Services Rem')
 
     try {
-        const response = await axios.post(`${API_BASE_URL}/remove-from-favorites`, { userId, hotelId });
+        const response = await axios.post(`${API_BASE_URL}/user/remove-from-favorites`, { userId, hotelId });
         if (response.data.status === 'ok') {
             Toast.show({
                 type: 'success',

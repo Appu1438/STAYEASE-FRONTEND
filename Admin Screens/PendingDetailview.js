@@ -139,7 +139,7 @@ export default function PendingDetailview({ }) {
         console.log('remove')
         setloadingReject(true)
         try {
-            await axios.post(`${API_BASE_URL}/remove-pending-hotels`, { _id: Hoteldata._id }).then(res => {
+            await axios.post(`${API_BASE_URL}/admin/remove-pending-hotels`, { _id: Hoteldata._id }).then(res => {
                 console.log(res.data)
                 if (res.data.status == 'ok') {
                     navigation.navigate('Home')

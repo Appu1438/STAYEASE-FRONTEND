@@ -124,7 +124,7 @@ export default function AddNewUser() {
             image
         }
 
-        axios.post(`${API_BASE_URL}/register`, Userdata)
+        axios.post(`${API_BASE_URL}/user/register`, Userdata)
             .then(res => {
                 console.log(res.data);
 
@@ -201,7 +201,7 @@ export default function AddNewUser() {
 
 
                     <Image style={styles.loginImg} source={require("../assets/signupimg.png")}></Image>
-                    <Text style={styles.title}>Add a New User </Text>
+                    <Text style={styles.title}>Add New User </Text>
 
                     <View style={styles.userTypeContainer}>
                         {/* <Text style={styles.registerAsText}>Register as:</Text> */}

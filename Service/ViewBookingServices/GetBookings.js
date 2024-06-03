@@ -9,7 +9,7 @@ async function getBookings(UserData,setBookingDetails,setUpcomingBookings,setCan
     try {
         // console.log("getbookings")
         const userId = UserData._id;
-        const response = await axios.get(`${API_BASE_URL}/get-user-bookings/${userId}`);
+        const response = await axios.get(`${API_BASE_URL}/user/get-user-bookings/${userId}`);
         if (response.data.status == 'ok') {
             // console.log(response.data.data)
             setBookingDetails(response.data.data);

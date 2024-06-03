@@ -44,7 +44,7 @@ export default function Signup() {
             setOTPAttempt(0)
 
             // Call your backend endpoint to generate OTP
-            await axios.post(`${API_BASE_URL}/generateOTP`, { email })
+            await axios.post(`${API_BASE_URL}/user/generateOTP`, { email })
                 .then(response => {
                     if (response.data.status === 'success') {
                         console.log("OTPF", response.data.otp)
@@ -124,7 +124,7 @@ export default function Signup() {
             image
         }
 
-        axios.post(`${API_BASE_URL}/register`, Userdata)
+        axios.post(`${API_BASE_URL}/user/register`, Userdata)
             .then(res => {
                 console.log(res.data);
 

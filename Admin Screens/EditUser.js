@@ -140,7 +140,7 @@ export default function EditUser() {
             userType: userType,
             image: image
         }
-        axios.post(`${API_BASE_URL}/update-user`, formdata).then(res => {
+        axios.post(`${API_BASE_URL}/user/update-user`, formdata).then(res => {
             console.log(res.data)
             setloading(false)
             if (res.data.status == 'ok') {

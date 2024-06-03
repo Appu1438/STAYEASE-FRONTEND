@@ -9,7 +9,7 @@ import { setAllBookings } from "../../Redux/Bookings";
 async function getAllBookings() {
     try {
         // console.log("getbookings")
-        const response = await axios.get(`${API_BASE_URL}/get-all-bookings`);
+        const response = await axios.get(`${API_BASE_URL}/admin/get-all-bookings`);
         if (response.data.status == 'ok') {
             // console.log(response.data.data)
             store.dispatch(setAllBookings(response.data.data))

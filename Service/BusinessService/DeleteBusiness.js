@@ -6,7 +6,7 @@ import API_BASE_URL from "../../Api"
 
 async function handleDelete(_id,navigation) {
     console.log('Dlt')
-    axios.post(`${API_BASE_URL}/delete-business`, { _id:_id}).then(res => {
+    axios.post(`${API_BASE_URL}/hotel/delete-business`, { _id:_id}).then(res => {
         console.log(res.data.data)
         if (res.data.status == 'ok') {
             Toast.show({

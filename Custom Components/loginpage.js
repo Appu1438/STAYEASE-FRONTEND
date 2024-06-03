@@ -198,7 +198,7 @@ export default function Login() {
     function handlesubmit() {
         if (emailVerify && passwordVerify) {
             const userdata = { email, password };
-            axios.post(`${API_BASE_URL}/login-user`, userdata)
+            axios.post(`${API_BASE_URL}/user/login-user`, userdata)
                 .then(res => {
                     if (res.data.status === 'ok') {
                         Toast.show({

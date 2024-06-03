@@ -6,7 +6,7 @@ import Toast from "react-native-toast-message";
 
 const getallPendingHotels = async (setAllHotels) => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/get-pending-hotels`);
+        const response = await axios.get(`${API_BASE_URL}/admin/get-pending-hotels`);
         if (response.data.status === "ok") {
             setAllHotels(response.data.data);
         } else {

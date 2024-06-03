@@ -125,4 +125,8 @@ const styles = StyleSheet.create({
         color: 'gray',
         marginBottom: 10,
     },
+    noRequestsText:{
+        alignSelf:'center',
+        // fontSize:20
+    }
 });

@@ -8,7 +8,7 @@ async function getBusinessBookings(_id,setBookingDetails,setUpcomingBookings,set
     try {
         console.log("getbookings")
         const hoteluserId = _id;
-        const response = await axios.get(`${API_BASE_URL}/get-business-bookings/${hoteluserId}`);
+        const response = await axios.get(`${API_BASE_URL}/hotel/get-business-bookings/${hoteluserId}`);
         if (response.data.status == 'ok') {
             // console.log(response.data.data)
             setBookingDetails(response.data.data);

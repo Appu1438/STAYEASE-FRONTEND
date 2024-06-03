@@ -8,7 +8,7 @@ import { setAllHotels } from "../../Redux/Hotels";
 
 const getAllHotels = async () => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/get-all-hotels`);
+        const response = await axios.get(`${API_BASE_URL}/admin/get-all-hotels`);
         if (response.data.status === 'ok') {
             // setallHotels(response.data.data);
             store.dispatch(setAllHotels(response.data.data))

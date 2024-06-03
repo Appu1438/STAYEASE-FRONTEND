@@ -66,7 +66,7 @@ export default function Profile() {
         const userID = userData._id
         console.log(userID)
         console.log('Dlt')
-        axios.post(`${API_BASE_URL}/delete-user`, { email: UserEmail, userId: userID }).then(res => {
+        axios.post(`${API_BASE_URL}/user/delete-user`, { email: UserEmail, userId: userID }).then(res => {
             console.log(res.data.data)
             if (res.data.status == 'ok') {
                 SignOut()
