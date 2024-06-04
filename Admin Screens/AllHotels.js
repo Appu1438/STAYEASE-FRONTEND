@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Pressable, TouchableOpacity, Image, FlatList, StatusBar, Alert, TextInput, StyleSheet } from "react-native";
+import { View, Text, Pressable, TouchableOpacity, Image, FlatList, StatusBar, Alert, TextInput, StyleSheet, RefreshControl } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faTrash, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
 import handleDelete from "../Service/BusinessService/DeleteBusiness";
 import OpenDial from "../Service/Map and Dial/Dial";
+import getAllHotels from "../Service/GetHotelServices/GetHotels";
 
 export default function AllHotels({ navigation }) {
     const allHotels = useSelector(state => state.hotel.AllHotelsData.hotels);
@@ -12,6 +13,15 @@ export default function AllHotels({ navigation }) {
     const [searchedHotel, setSearchedHotel] = useState('');
     const [filteredHotel, setFilteredHotel] = useState(allHotels);
 
+    const [refreshing, setRefreshing] = useState(false);
+    const onRefresh = () => {
+        setRefreshing(true);
+        // Call your refresh function here, for example:
+        getAllHotels();
+        // After fetching new data, set refreshing to false to stop the spinner
+        setRefreshing(false);
+      };
+      
     useEffect(() => {
         setFilteredHotel(
             allHotels.filter(hotel => 
@@ -80,6 +90,12 @@ export default function AllHotels({ navigation }) {
                 keyExtractor={(item) => item._id}
                 renderItem={renderHotelCard}
                 contentContainerStyle={styles.listContent}
+                refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={onRefresh}
+                    />
+                  }
             />
         </View>
     );

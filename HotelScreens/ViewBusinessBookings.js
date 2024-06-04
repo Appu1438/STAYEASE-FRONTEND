@@ -21,10 +21,9 @@ export default function BusinessBookings() {
     const UserData = useSelector(state => state.user.userData)
 
 
-    const allBookings = useSelector(state => state.booking.Bookings.AllBookings)
-
-    const BookingDetails = allBookings.filter(booking => booking.hoteluserId == UserData._id)
-        // const [BookingDetails,setBookingDetails]=useState([])
+    // const allBookings = useSelector(state => state.booking.Bookings.AllBookings)
+    // const BookingDetails = allBookings.filter(booking => booking.hoteluserId == UserData._id)
+     const [BookingDetails,setBookingDetails]=useState([])
 
     const [UpcomingBookings, setUpcomingBookings] = useState([])
     const [CancelledBookings, setCancelledBookings] = useState([])
@@ -37,12 +36,12 @@ export default function BusinessBookings() {
 
 
     useEffect(() => {
+        
         getAllBookings()
-
         // Fetch bookings only when UserData._id is available
         if (UserData && UserData._id) {
 
-            // getBusinessBookings(UserData._id,setBookingDetails,setUpcomingBookings,setCancelledBookings,setExpiredBookings)
+            getBusinessBookings(UserData._id,setBookingDetails,setUpcomingBookings,setCancelledBookings,setExpiredBookings)
             separateBookings(BookingDetails, setUpcomingBookings, setCancelledBookings, setExpiredBookings)
         }
     }, [UserData]); // Run this effect whenever UserData changes

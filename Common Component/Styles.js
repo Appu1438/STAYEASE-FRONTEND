@@ -340,7 +340,7 @@ export let Styles = StyleSheet.create({
         height: 60,
         // backgroundColor:'plum',
         alignItems: 'center',
-        paddingLeft: '5%',
+        paddingLeft: '0%',
         paddingTop: '2%',
         flexDirection: 'row',
         justifyContent: 'space-evenly',

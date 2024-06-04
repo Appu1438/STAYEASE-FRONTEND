@@ -14,6 +14,7 @@ import Loading from "../Common Component/loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import removeFromFavorites from "../Service/FavServices/RemoveFavourite";
+import { useSelector } from "react-redux";
 
 export default function Fav() {
 
@@ -21,11 +22,18 @@ export default function Fav() {
     const route = useRoute();
     const [favorites, setFavorites] = useState([]);
     const [hotelDetails, setHotelDetails] = useState({});
-    const [user, setUser] = useState(route.params.data);
+    const user = useSelector(state => state.user.userData)
+
+    // useEffect(() => {
+    //     if (route.params?.data) {
+    //       setUser(route.params.data);
+    //     }
+    //   }, [route.params.data]);
+      
 
     useEffect(() => {
         getUserFavorites(user._id);
-    }, []);
+    }, [user,route.params.data]);
 
     const getUserFavorites = async (userId) => {
         try {

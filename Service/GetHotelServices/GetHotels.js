@@ -16,12 +16,12 @@ const getAllHotels = async () => {
             // const shuffledHotels = shuffleArray(response.data.data);
             // setRandomHotels(shuffledHotels.slice(0, 4));
         } else {
-            Toast.show({
-                type: 'error',
-                text1: JSON.stringify(response.data.data),
-                visibilityTime: 3000,
-                position: 'bottom'
-            });
+            // Toast.show({
+            //     type: 'error',
+            //     text1: JSON.stringify(response.data.data),
+            //     visibilityTime: 3000,
+            //     position: 'bottom'
+            // });
         }
     } catch (error) {
         console.error('Error fetching Hotels:', error);

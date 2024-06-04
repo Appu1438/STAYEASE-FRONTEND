@@ -1,4 +1,4 @@
-import { SafeAreaView, TextInput } from "react-native";
+import { SafeAreaView, TextInput,RefreshControl } from "react-native";
 import { Text, View, Image, Pressable, Modal, FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { Styles } from "../Common Component/Styles";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -29,6 +29,16 @@ export default function ShowUsers({ }) {
     const [selectedUserImage, setSelectedUserImage] = useState('');
     const [searchedUser, setsearchedUser] = useState('');
     const [filteredUsers, setFilteredUsers] = useState(allUsers);
+
+    const [refreshing, setRefreshing] = useState(false);
+    const onRefresh = () => {
+        setRefreshing(true);
+        // Call your refresh function here, for example:
+        getAllUsers();
+        // After fetching new data, set refreshing to false to stop the spinner
+        setRefreshing(false);
+      };
+      
 
     useEffect(() => {
         setFilteredUsers(
@@ -96,6 +106,12 @@ export default function ShowUsers({ }) {
                 data={filteredUsers}
                 keyExtractor={(item) => item._id}
                 renderItem={({ item }) => <Usercard userdata={item} />}
+                refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={onRefresh}
+                    />
+                  }
             />
 
             <Modal

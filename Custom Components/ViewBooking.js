@@ -32,28 +32,31 @@ export default function Bookings() {
     const navigation = useNavigation()
     const route = useRoute()
 
-    const [UserData, setUserData] = useState(route.params.data)
-    const allBookings = useSelector(state => state.booking.Bookings.AllBookings)
-
-    const BookingDetails = allBookings.filter(booking => booking.userId == UserData._id)
-    // const [BookingDetails,setBookingDetails]=useState([])
+    const userData = useSelector(state => state.user.userData)
+    // const allBookings = useSelector(state => state.booking.Bookings.AllBookings)
+    // let BookingDetails = allBookings.filter(booking => booking.userId == userData._id)
+    const [BookingDetails,setBookingDetails]=useState([])
     const [UpcomingBookings, setUpcomingBookings] = useState([])
     const [CancelledBookings, setCancelledBookings] = useState([])
     const [ExpiredBookings, setExpiredBookings] = useState([])
 
     const [selectedBooking, setSelectedBooking] = useState('Upcoming')
 
-
+    // useEffect(() => {
+    //     if (route.params?.data) {
+    //       setUserData(route.params.data);
+    //     }
+    //   }, [route.params.data]);
 
 
 
     useEffect(() => {
-        console.log(UserData)
+        console.log('book',userData)
         getAllBookings()
-      // getBookings(UserData,setBookingDetails,setUpcomingBookings,setCancelledBookings,setExpiredBookings)
+        getBookings(userData,setBookingDetails,setUpcomingBookings,setCancelledBookings,setExpiredBookings)
         separateBookings(BookingDetails, setUpcomingBookings, setCancelledBookings, setExpiredBookings)
 
-    }, [])
+    }, [userData])
 
     return (
 

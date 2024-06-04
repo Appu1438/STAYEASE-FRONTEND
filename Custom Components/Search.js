@@ -39,6 +39,13 @@ export default function Search() {
     const userId = userData._id;
 
     useEffect(() => {
+        if (route.params?.data) {
+          setSearchedLocation(route.params.data);
+        }
+      }, [route.params.data]);
+      
+    useEffect(() => {
+        
         getRandomHotels(setRandomHotels, allHotels.hotels, setShow, searchedLocation);
     }, []);
 
@@ -51,6 +58,8 @@ export default function Search() {
     }, [favorites]);
 
     useEffect(() => {
+        console.log(searchedLocation)
+
         handleSearch();
     }, [searchedLocation]);
 
@@ -144,7 +153,7 @@ export default function Search() {
 
                 </View>
 
-                <View style={{ flex: 1, marginTop: 10, paddingHorizontal: 10, paddingBottom: 20 }}>
+                <View style={{ flex: 1, marginTop: 10, paddingHorizontal: 10, paddingBottom: 0 }}>
                     {isLoading || !randomHotels ? <Loading /> : randomHotels.length == 0 ? (
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                             <Text style={{ fontSize: 20 }}>No hotels found</Text>
@@ -195,13 +204,13 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
     listContent: {
-        paddingBottom: 20,
+        paddingBottom:20,
     },
     cardContainer: {
         backgroundColor: '#fff',
         borderRadius: 10,
         overflow: 'hidden',
-        marginBottom: 20,
+        marginBottom: 30,
         shadowColor: "blue",
         shadowOffset: {
             width: 0,

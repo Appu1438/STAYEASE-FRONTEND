@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     },
     card: {
         backgroundColor: '#FFF',
-        borderRadius: 15, // Increase curvature for a more modern look
+        borderRadius: 10, // Increase curvature for a more modern look
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 3 }, // Adjust shadow position slightly
         shadowOpacity: 0.2,
@@ -219,25 +219,25 @@ const styles = StyleSheet.create({
         borderBottomColor: '#EEE',
     },
     heading: {
-        fontSize: 20,
-        fontWeight: '400',
+        fontSize: 18,
+        // fontWeight: '400',
         color: '#222', // Darker heading color for better contrast
     },
     subHeading: {
-        fontSize: 16,
+        fontSize: 14,
         color: '#666', // Muted color for subheading
     },
     content: {
         padding: 20,
     },
     paymentDetails: {
-        fontSize: 18,
+        fontSize: 15,
         marginBottom: 10,
         color: '#4CAF50', // Green for payment success indication
     },
     totalAmount: {
-        fontSize: 18, // Increase total amount font size for better emphasis
-        fontWeight: 'bold',
+        fontSize: 15, // Increase total amount font size for better emphasis
+        // fontWeight: 'bold',
         marginBottom: 20,
     },
     cardField: {

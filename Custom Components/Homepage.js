@@ -1,4 +1,4 @@
-import { SafeAreaView, ScrollView, KeyboardAvoidingView, View, StatusBar, BackHandler, Alert } from "react-native";
+import { SafeAreaView, ScrollView, KeyboardAvoidingView, View, StatusBar, BackHandler, Alert, RefreshControl } from "react-native";
 import Homeheader from "../HomeComponents/header";
 import RecommendationsText from "../HomeComponents/recommendationText";
 import RecommendationsOne from "../HomeComponents/recommendationsOne";
@@ -31,6 +31,18 @@ export default function Home() {
     const [isLoading, setloading] = useState(true)
     const [userLocation, setUserLocation] = useState();
     const [nearbycities, setnearbyCities] = useState();
+    const [refreshing, setRefreshing] = useState(false);
+    const onRefresh = () => {
+        setRefreshing(true);
+        // Call your refresh function here, for example:
+        getdata()
+        getAllUsers()
+        getAllHotels()
+        getAllBookings()
+        getUserLocation(setUserLocation,setnearbyCities)
+        // After fetching new data, set refreshing to false to stop the spinner
+        setRefreshing(false);
+    };
 
    
     useEffect(() => {
@@ -92,7 +104,13 @@ export default function Home() {
                     <Homeheader />
                     {/* <Navbar  /> */}
 
-                    <ScrollView>
+                    <ScrollView 
+                    refreshControl={
+                        <RefreshControl
+                          refreshing={refreshing}
+                          onRefresh={onRefresh}
+                        />
+                      }>
 
                         <Locations userLocation={userLocation} User={userData} />
                         <RecommendationsText />
@@ -101,7 +119,7 @@ export default function Home() {
 
                     </ScrollView>
 
-                    <Footer />
+                    {/* <Footer /> */}
 
                 </View>
             </KeyboardAvoidingView>

@@ -150,7 +150,7 @@ export default function EditUser() {
                     visibilityTime: 3000,
                     position: 'bottom'
                 })
-                navigation.navigate('Homepage')
+                navigation.navigate('All Users')
             } else {
                 Toast.show({
                     type: 'error',

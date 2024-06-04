@@ -33,7 +33,7 @@ export default function App() {
       <StripeProvider publishableKey="pk_test_51NtRBkSEmsfUtDI2xbYoEzVmCHkf7UlwgqRxbpKJSSPWugQXbowVpDiMXHhgg7bibtqWxP2GzEjuZieYQ4ns2fIC00kIt633nm">
         <NavigationContainer>
 
-          {isLogedIn && userType == 'Admin'||'SuperAdmin' ? <AdminNav />
+          {isLogedIn && userType == 'Admin'||userType=='SuperAdmin' ? <AdminNav />
             : isLogedIn && userType == 'Business' ? <HotelNav />
               : isLogedIn ? <UserNav />
                 : <LoginNav />}

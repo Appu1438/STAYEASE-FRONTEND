@@ -1,26 +1,20 @@
 import { View, StatusBar, Text, ScrollView, SafeAreaView, Pressable, Image, Modal, Dimensions, TouchableOpacity, useWindowDimensions, ActivityIndicator, Linking, PanResponder, Alert } from "react-native";
 import { Styles } from "../Common Component/Styles";
-
 import { useEffect, useState, useRef } from "react";
 import Loading from "../Common Component/loading";
-
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import API_BASE_URL from "../Api";
 import Toast from "react-native-toast-message";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome"
-import { faHeart } from "@fortawesome/free-regular-svg-icons"
 import { faStar } from "@fortawesome/free-regular-svg-icons"
-import { faUserGroup, faSquareParking, } from "@fortawesome/free-solid-svg-icons"
-import { faCalendarDays, faUser, faBed } from "@fortawesome/free-solid-svg-icons"
-import { faIndianRupeeSign } from "@fortawesome/free-solid-svg-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { faCalendarDays, faBed, faUserGroup, faUser, faIndianRupeeSign, faTag, faPhone } from "@fortawesome/free-solid-svg-icons";
 import Entypo from 'react-native-vector-icons/Entypo';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { err } from "react-native-svg";
 import AddHotel from "../Service/AdminServices/addHotel";
+import { useSelector } from "react-redux";
+import OpenMaps from "../Service/Map and Dial/OpenMaps";
+import OpenDial from "../Service/Map and Dial/Dial";
 
 
 
@@ -37,6 +31,8 @@ export default function PendingDetailview({ }) {
     const navigation = useNavigation()
 
     const [Hoteldata, setHotelData] = useState('')
+    const allUser = useSelector(state => state.user.AllUsersData)
+    const reqUser = allUser.find(user => user._id == Hoteldata.hoteluserid)
 
 
 
@@ -53,13 +49,7 @@ export default function PendingDetailview({ }) {
     }, [])
 
 
-    const OpenMaps = () => {
-        console.log('Maps')
-        const Mapurl = Hoteldata.locationlink
 
-        Linking.openURL(Mapurl);
-
-    }
 
 
 
@@ -142,7 +132,7 @@ export default function PendingDetailview({ }) {
             await axios.post(`${API_BASE_URL}/admin/remove-pending-hotels`, { _id: Hoteldata._id }).then(res => {
                 console.log(res.data)
                 if (res.data.status == 'ok') {
-                    navigation.navigate('Home')
+                    navigation.navigate('All Pendings')
                 } else {
                     Toast.show({
                         type: 'error',
@@ -174,42 +164,41 @@ export default function PendingDetailview({ }) {
 
                 <ScrollView style={{}}>
 
-                    <ScrollView>
 
-                        <ScrollView
-                            ref={scrollViewRef}
-                            horizontal
-                            pagingEnabled
-                            showsHorizontalScrollIndicator={false}
-                            onMomentumScrollEnd={(event) => {
-                                const newIndex = Math.round(event.nativeEvent.contentOffset.x / windowWidth);
-                                setCurrentIndex(newIndex);
-                            }}
-                        >
-                            <View style={Styles.detailViewImgBox}>
-                                {Hoteldata.images.map((image, index) => (
-                                    <View key={index}>
-                                        <Image style={[Styles.detailimg, { width: windowwidth }]} source={{ uri: image }} />
-                                    </View>
-                                ))}
-                            </View>
-                        </ScrollView>
-
+                    <ScrollView
+                        ref={scrollViewRef}
+                        horizontal
+                        pagingEnabled
+                        showsHorizontalScrollIndicator={false}
+                        onMomentumScrollEnd={(event) => {
+                            const newIndex = Math.round(event.nativeEvent.contentOffset.x / windowWidth);
+                            setCurrentIndex(newIndex);
+                        }}
+                    >
+                        <View style={Styles.detailViewImgBox}>
+                            {Hoteldata.images.map((image, index) => (
+                                <View key={index}>
+                                    <Image style={[Styles.detailimg, { width: windowwidth }]} source={{ uri: image }} />
+                                </View>
+                            ))}
+                        </View>
                     </ScrollView>
 
+
                     <ScrollView>
+
                         <View style={{ height: 270 }}>
                             <Text style={[Styles.detailText]}>{Hoteldata.hotelname}</Text>
 
                             <View style={{ flexDirection: 'row', left: '5%' }}>
                                 <FontAwesomeIcon style={{ paddingTop: 40 }} color="red" icon={faStar} size={19} />
                                 <Text style={[Styles.detailText]}>{Hoteldata.rating} ({Hoteldata.reviewcount})</Text>
-                                <Text style={[Styles.detailText, { color: '#016DD0', fontSize: 12, padding: 5 }]}> See Reviews</Text>
+                                {/* <Text style={[Styles.detailText, { color: '#016DD0', fontSize: 12, padding: 5 }]}> See Reviews</Text> */}
                             </View>
 
                             <Text style={[Styles.detailText, { color: 'grey', fontSize: 15, marginTop: 0 }]}>{Hoteldata.location}</Text>
 
-                            <TouchableOpacity onPress={() => OpenMaps()}>
+                            <TouchableOpacity onPress={() => OpenMaps(Hoteldata.locationlink)}>
                                 <Text style={[Styles.detailText, { color: '#016DD0', fontSize: 13 }]}>View on Map</Text>
                             </TouchableOpacity>
 
@@ -221,6 +210,54 @@ export default function PendingDetailview({ }) {
                                     <Text style={Styles.featurestext}>{facility}</Text>
                                 </View>
                             ))}
+
+                        </View>
+
+                        <Text style={[Styles.detailText, { marginTop: 0 }]}>Hotel Owner and Payment Details</Text>
+
+                        <View style={[Styles.bookingboxContainer, { height: 350 }]}>
+
+                            <View style={[Styles.bookingbox, { height: 330 }]}>
+
+                                <View style={[Styles.bookingboxes, {}]}>
+
+                                    <FontAwesomeIcon size={15} icon={faIndianRupeeSign} />
+                                    <FontAwesomeIcon size={15} icon={faTag} />
+                                    <FontAwesomeIcon size={15} icon={faUser} />
+                                    <FontAwesomeIcon size={15} icon={faBed} />
+                                    <FontAwesomeIcon size={15} icon={faCalendarDays} />
+                                    <FontAwesomeIcon size={15} icon={faUserGroup} />
+                                    <FontAwesomeIcon size={15} icon={faUser} />
+                                    <FontAwesomeIcon size={15} icon={faPhone} />
+                                </View>
+
+                                <View style={[Styles.bookingboxes, { width: '50%' }]}>
+                                    <Text style={Styles.bookingtext}>Actual Rate</Text>
+                                    <Text style={Styles.bookingtext}>Discounted Rate</Text>
+                                    <Text style={Styles.bookingtext}>Extra Rate Per Head</Text>
+                                    <Text style={Styles.bookingtext}>Extra Rate Per Room </Text>
+                                    <Text style={Styles.bookingtext}>Extra Rate Per Day </Text>
+                                    <Text style={Styles.bookingtext}>No: of Persons in a  Room </Text>
+                                    <Text style={Styles.bookingtext}>Owner Name</Text>
+                                    <Text style={Styles.bookingtext}>Owner Number</Text>
+                                </View>
+
+                                <View style={[Styles.bookingboxes, { width: '40%', backgroundColor: 're' }]}>
+
+
+                                    <Text style={[Styles.bookingtext, { alignSelf: 'center' }]}>{Hoteldata.actualrate}</Text>
+                                    <Text style={[Styles.bookingtext, { alignSelf: 'center' }]}>{Hoteldata.discountedrate}</Text>
+                                    <Text style={[Styles.bookingtext, { alignSelf: 'center' }]}>{Hoteldata.extraperhead}</Text>
+                                    <Text style={[Styles.bookingtext, { alignSelf: 'center' }]}>{Hoteldata.extraperroom}</Text>
+                                    <Text style={[Styles.bookingtext, { alignSelf: 'center' }]}>{Hoteldata.extraperday}</Text>
+                                    <Text style={[Styles.bookingtext, { alignSelf: 'center' }]}>{Hoteldata.personsperroom}</Text>
+                                    <Text style={[Styles.bookingtext, { alignSelf: 'center' }]}>{reqUser.name}</Text>
+                                    <TouchableOpacity onPress={() => OpenDial(reqUser.number)} style={{alignSelf:'center'}}>
+                                        <Text style={[Styles.bookingLasttext, { alignSelf: 'center' }]}>{reqUser.number}</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                            </View>
                         </View>
                     </ScrollView>
 

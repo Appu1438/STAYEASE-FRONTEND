@@ -1,11 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Pressable, Image, FlatList, StatusBar, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, Pressable, Image, FlatList, StatusBar, StyleSheet, TouchableOpacity, RefreshControl } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faIndianRupeeSign, faTrash } from "@fortawesome/free-solid-svg-icons";
 import getallPendingHotels from "../Service/AdminServices/getAllPendingReq";
+import { Styles } from "../Common Component/Styles";
 
 export default function PendingRequests({ navigation }) {
     const [allHotels, setAllHotels] = useState([]);
+
+    const [refreshing, setRefreshing] = useState(false);
+    const onRefresh = () => {
+        setRefreshing(true);
+        // Call your refresh function here, for example:
+        getallPendingHotels(setAllHotels);
+        // After fetching new data, set refreshing to false to stop the spinner
+        setRefreshing(false);
+      };
+      
 
     useEffect(() => {
         getallPendingHotels(setAllHotels);
@@ -38,7 +49,9 @@ export default function PendingRequests({ navigation }) {
     return (
         <View style={[styles.container]}>
             <StatusBar backgroundColor="white" barStyle="dark-content" />
-            <Text style={styles.heading}>All Pending Requests</Text>
+            <View style={{ left: '0%', top: '2%', alignSelf: 'center' }}>
+            <Text style={Styles.profile}>All Pending Requests</Text>
+            </View>
 
             {allHotels.length > 0 ? (
                 <FlatList
@@ -46,11 +59,18 @@ export default function PendingRequests({ navigation }) {
                     keyExtractor={(item) => item._id}
                     renderItem={renderHotelCard}
                     contentContainerStyle={styles.listContent}
+                    refreshControl={
+                        <RefreshControl
+                          refreshing={refreshing}
+                          onRefresh={onRefresh}
+                        />
+                      }
 
                 />
             ) : (
-                <Text style={styles.noRequestsText}>No Pending Requests Found</Text>
-            )}
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ fontSize: 20 }}>No Requests found</Text>
+            </View>            )}
         </View>
     );
 }
@@ -66,6 +86,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         marginVertical: 20,
+        // alignSelf:'flex-start'
     },
     priceContainer: {
         flexDirection: 'row',
@@ -94,6 +115,7 @@ const styles = StyleSheet.create({
     },
     listContent: {
         paddingBottom: 20,
+        top:30
     },
     cardContainer: {
         backgroundColor: '#fff',
@@ -125,8 +147,8 @@ const styles = StyleSheet.create({
         color: 'gray',
         marginBottom: 10,
     },
-    noRequestsText:{
-        alignSelf:'center',
-        // fontSize:20
+    noRequestsText: {
+        alignSelf: 'center',
+        fontSize: 20
     }
 });
