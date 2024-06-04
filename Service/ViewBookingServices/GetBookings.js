@@ -16,12 +16,12 @@ async function getBookings(UserData,setBookingDetails,setUpcomingBookings,setCan
             separateBookings(response.data.data,setUpcomingBookings,setCancelledBookings,setExpiredBookings)
            
         } else {
-            Toast.show({
-                type: 'error',
-                text1: JSON.stringify(response.data.data),
-                visibilityTime: 3000,
-                position: 'bottom'
-            });
+            // Toast.show({
+            //     type: 'error',
+            //     text1: JSON.stringify(response.data.data),
+            //     visibilityTime: 3000,
+            //     position: 'bottom'
+            // });
         }
     } catch (error) {
         console.error('Error fetching booking details:', error);

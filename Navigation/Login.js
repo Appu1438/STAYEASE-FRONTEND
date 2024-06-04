@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Login from "../Custom Components/loginpage";
-import Signup from "../Custom Components/SignupPage";
-import ForgotPassword from "../Custom Components/ForgotPassword";
+import Login from "../screens/User Screens/loginpage";
+import Signup from "../screens/User Screens/SignupPage";
+import ForgotPassword from "../screens/User Screens/ForgotPassword";
 import UserNav from "./User";
 import HotelNav from "./Hotel";
 import AdminNav from "./Admin";

@@ -1,21 +1,22 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Home from "../Custom Components/Homepage";
-import Detailview from "../Custom Components/Detailview";
-import Confirmation from "../Custom Components/confirmation";
-import PaymentPage from "../Custom Components/PaymentPage";
-import Bookings from "../Custom Components/ViewBooking";
-import LoginNav from "./Login";
-import UpdateProfile from "../Custom Components/UpdateProfile";
-import Search from "../Custom Components/Search";
-import Fav from "../Custom Components/Favourites";
-import Profile from "../Custom Components/Profile";
-import NeedHelp from "../Custom Components/Needhelp";
+import Home from "../screens/User Screens/Homepage";
+import Detailview from "../screens/User Screens/Detailview";
+import Confirmation from "../screens/User Screens/confirmation";
+import PaymentPage from "../screens/User Screens/PaymentPage";
+import Bookings from "../screens/User Screens/ViewBooking";
+import LoginNav from "../Navigation/Login";
+import UpdateProfile from "../screens/User Screens/UpdateProfile";
+import Search from "../screens/User Screens/Search";
+import Fav from "../screens/User Screens/Favourites";
+import Profile from "../screens/User Screens/Profile";
+import NeedHelp from "../screens/User Screens/Needhelp";
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Fontisto from 'react-native-vector-icons/Fontisto';
 import { useSelector } from "react-redux";
 
 
@@ -80,8 +81,8 @@ const BottomTabs = () => {
             iconName = 'heart';
             return <Feather name={iconName} size={size} color={color} />;
           } else if (route.name === 'NeedHelp') {
-            iconName = 'headset-outline';
-            return <Ionicons name={iconName} size={size} color={color} />;
+            iconName = 'hipchat';
+            return <Fontisto name={iconName} size={size} color={color} />;
           }
         },
         headerShown: false, 

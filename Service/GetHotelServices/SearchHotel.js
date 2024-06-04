@@ -8,7 +8,8 @@ const getRandomHotels = async (setRandomHotels, allHotelsData, setShow, searched
     try {
         let shuffledHotels;
         if (searchedLocation) {
-            const filteredHotels = allHotelsData.filter(hotel => hotel.location.toLowerCase().includes(searchedLocation.toLowerCase()));
+            const filteredHotels = allHotelsData.filter(hotel => hotel.location.toLowerCase().includes(searchedLocation.toLowerCase()) ||
+                                                                  hotel.hotelname.toLowerCase().includes(searchedLocation.toLowerCase()));
             shuffledHotels = filteredHotels;
             setRandomHotels(shuffledHotels);
         } else {

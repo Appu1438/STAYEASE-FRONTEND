@@ -1,33 +1,37 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import ShowUsers from "../Admin Screens/Users";
 import LoginNav from "./Login";
-import PendingRequests from "../Admin Screens/Pendings";
-import PendingDetailview from "../Admin Screens/PendingDetailview";
+
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import Profile from "../Custom Components/Profile";
-import Home from "../Custom Components/Homepage";
-import Detailview from "../Custom Components/Detailview";
-import Confirmation from "../Custom Components/confirmation";
-import PaymentPage from "../Custom Components/PaymentPage";
-import Bookings from "../Custom Components/ViewBooking";
-import UpdateProfile from "../Custom Components/UpdateProfile";
-import Search from "../Custom Components/Search";
-import Fav from "../Custom Components/Favourites";
-import Viewbussiness from "../HotelScreens/ViewBussines";
-import BusinessBookings from "../HotelScreens/ViewBusinessBookings";
-import AdminBusiness from "../Admin Screens/AddHotel";
-import EditBussiness from "../HotelScreens/EditBusiness";
-import NeedHelp from "../Custom Components/Needhelp";
-import AllHotels from "../Admin Screens/AllHotels";
-import AllBookings from "../Admin Screens/AllBookings";
-import AddNewUser from "../Admin Screens/AddUser";
+import Home from "../screens/User Screens/Homepage";
+import Detailview from "../screens/User Screens/Detailview";
+import Confirmation from "../screens/User Screens/confirmation";
+import PaymentPage from "../screens/User Screens/PaymentPage";
+import Bookings from "../screens/User Screens/ViewBooking";
+import UpdateProfile from "../screens/User Screens/UpdateProfile";
+import Search from "../screens/User Screens/Search";
+import Fav from "../screens/User Screens/Favourites";
+import Profile from "../screens/User Screens/Profile";
+import Viewbussiness from "../screens/HotelScreens/ViewBussines";
+import BusinessBookings from "../screens/HotelScreens/ViewBusinessBookings";
+import EditBussiness from "../screens/HotelScreens/EditBusiness";
+import NeedHelp from "../screens/User Screens/Needhelp";
+
+import AdminBusiness from "../screens/Admin Screens/AddHotel";
+import AllHotels from "../screens/Admin Screens/AllHotels";
+import AllBookings from "../screens/Admin Screens/AllBookings";
+import AddNewUser from "../screens/Admin Screens/AddUser";
+import PendingRequests from "../screens/Admin Screens/Pendings";
+import PendingDetailview from "../screens/Admin Screens/PendingDetailview";
+import EditUser from "../screens/Admin Screens/EditUser";
+import ShowUsers from "../screens/Admin Screens/Users";
 import { useSelector } from "react-redux";
-import EditUser from "../Admin Screens/EditUser";
+
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Fontisto from 'react-native-vector-icons/Fontisto';
 
 
 export default function AdminNav() {
@@ -108,8 +112,8 @@ const BottomTabs = () => {
             iconName = 'heart';
             return <Feather name={iconName} size={size} color={color} />;
           } else if (route.name === 'NeedHelp') {
-            iconName = 'headset-outline';
-            return <Ionicons name={iconName} size={size} color={color} />;
+            iconName = 'hipchat';
+            return <Fontisto name={iconName} size={size} color={color} />;
           }
         },
         headerShown: false, 
