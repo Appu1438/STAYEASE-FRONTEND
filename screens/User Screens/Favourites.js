@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, Pressable, KeyboardAvoidingView, FlatList, Image, StyleSheet } from "react-native";
+import { View, Text, TextInput, Pressable, KeyboardAvoidingView, FlatList, Image, StyleSheet, RefreshControl } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faSearch, faLocationDot, faL } from "@fortawesome/free-solid-svg-icons";
 import { Styles } from "../../components/Common Component/Styles";
@@ -29,6 +29,14 @@ export default function Fav() {
     //       setUser(route.params.data);
     //     }
     //   }, [route.params.data]);
+    const [refreshing, setRefreshing] = useState(false);
+    const onRefresh = () => {
+        setRefreshing(true);
+        // Call your refresh function here, for example:
+        getUserFavorites(user._id);
+        // After fetching new data, set refreshing to false to stop the spinner
+        setRefreshing(false);
+    };
       
 
     useEffect(() => {
@@ -37,6 +45,7 @@ export default function Fav() {
 
     const getUserFavorites = async (userId) => {
         try {
+            setHotelDetails('')
             const response = await axios.get(`${API_BASE_URL}/user/get-favorites/${userId}`);
             if (response.data.status === 'ok') {
                 setFavorites(response.data.data);
@@ -70,36 +79,53 @@ export default function Fav() {
 
     const renderHotelCard = ({ item }) => {
         const hotel = hotelDetails[item];
-        if (hotel) {
-            return (
-                <Pressable onPress={() => navigation.navigate('Detailview', { data: hotel._id })}>
-                    <View style={styles.cardContainer}>
-                        <Pressable style={styles.favourite} onPress={() => removeFromFavorites(user._id, hotel._id, favorites, setFavorites)}>
-                            <FontAwesome size={25} name='heart' color='red' />
-                        </Pressable>
-                        <Image style={styles.hotelImage} source={{ uri: hotel.images[0] }} />
-                        <View style={styles.cardContent}>
-                            <Text style={styles.hotelName}>{hotel.hotelname}</Text>
-                            <Text style={styles.hotelLocation}>{hotel.location}</Text>
-                            <View style={styles.ratingContainer}>
-                                <FontAwesomeIcon icon={faStar} size={15} color="red" />
-                                <Text style={styles.ratingText}>{hotel.rating} ({hotel.reviewcount})</Text>
-                            </View>
-                            <View style={styles.priceContainer}>
-                                <FontAwesomeIcon size={15} icon={faIndianRupeeSign} />
-                                <Text style={styles.discountedRate}>{hotel.discountedrate}</Text>
-                                <Text style={styles.actualRate}>{hotel.actualrate}</Text>
-                                <Text style={styles.discountPercentage}>{hotel.discountpercentage}% Off</Text>
-                            </View>
-                            <Text style={styles.taxesAndFees}>+{hotel.taxandfee} taxes and fees</Text>
+        if (!hotel) return null;
+    
+        const handlePress = () => {
+            if (hotel.available) {
+                navigation.navigate('Detailview', { data: hotel._id });
+            } else {
+                Toast.show({
+                    type: 'error',
+                    text1: 'Hotel Unavailable at this moment',
+                    position: 'bottom',
+                    visibilityTime: 3000
+                });
+            }
+        };
+    
+        return (
+            <Pressable onPress={handlePress}>
+                <View style={styles.cardContainer}>
+                    {!hotel.available && (
+                        <View style={styles.unavailableBanner}>
+                            <Text style={styles.unavailableText}>Unavailable</Text>
                         </View>
+                    )}
+                    <Pressable style={styles.favourite} onPress={() => removeFromFavorites(user._id, hotel._id, favorites, setFavorites)}>
+                        <FontAwesome size={25} name='heart' color='red' />
+                    </Pressable>
+                    <Image style={styles.hotelImage} source={{ uri: hotel.images[0] }} />
+                    <View style={styles.cardContent}>
+                        <Text style={styles.hotelName}>{hotel.hotelname}</Text>
+                        <Text style={styles.hotelLocation}>{hotel.location}</Text>
+                        <View style={styles.ratingContainer}>
+                            <FontAwesomeIcon icon={faStar} size={15} color="red" />
+                            <Text style={styles.ratingText}>{hotel.rating} ({hotel.reviewcount})</Text>
+                        </View>
+                        <View style={styles.priceContainer}>
+                            <FontAwesomeIcon size={15} icon={faIndianRupeeSign} />
+                            <Text style={styles.discountedRate}>{hotel.discountedrate}</Text>
+                            <Text style={styles.actualRate}>{hotel.actualrate}</Text>
+                            <Text style={styles.discountPercentage}>{hotel.discountpercentage}% Off</Text>
+                        </View>
+                        <Text style={styles.taxesAndFees}>+{hotel.taxandfee} taxes and fees</Text>
                     </View>
-                </Pressable>
-            );
-        } else {
-            return null;
-        }
+                </View>
+            </Pressable>
+        );
     };
+    
 
     return (
         <View style={styles.container}>
@@ -118,6 +144,12 @@ export default function Fav() {
                         data={favorites}
                         keyExtractor={(item) => item}
                         renderItem={renderHotelCard}
+                        refreshControl={
+                            <RefreshControl
+                              refreshing={refreshing}
+                              onRefresh={onRefresh}
+                            />
+                        }
                     />
                 )}
                             {Object.keys(hotelDetails).length === 0 && favorites.length != 0 && <View style={{ marginTop: 0, zIndex: 1,alignSelf:'center' }}><Loading /></View>}
@@ -210,5 +242,25 @@ const styles = StyleSheet.create({
         right: 10,
         top: 10,
         zIndex: 1,
+    }, unavailableBanner: {
+        backgroundColor: '#a2a4a8',
+        alignItems: 'center',
+        alignSelf:'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        top: '50%',
+        left: 0,
+        right: 0,
+        height: 30, // Adjust height as needed,
+        zIndex:10,
+        borderBottomWidth:1,
+        borderBottomColor:'grey',
+        borderTopWidth:1,
+        borderTopColor:'grey'
+    },
+    unavailableText: {
+        color: 'white',
+        // fontWeight: 'bold',
+        zIndex:10,
     },
 });

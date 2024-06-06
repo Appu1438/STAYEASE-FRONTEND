@@ -93,6 +93,35 @@ export default function Locations({ userLocation, User }) {
 }
 
 export const styles = StyleSheet.create({
+    input: {
+        width: '100%',
+        height: 50,
+        backgroundColor: '#fff',
+        borderRadius: 8,
+        paddingHorizontal: 15,
+        fontSize: 16,
+        color: '#333',
+        marginBottom: 15,
+        shadowColor: 'blue',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 5,
+    },
+    btn: {
+        width: '100%',
+        height: 50,
+        backgroundColor: '#f73939',
+        borderRadius: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    btnText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
     scrollContainer: {
         paddingVertical: 10,
     },

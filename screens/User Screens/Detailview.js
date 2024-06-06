@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, StatusBar, Text, ScrollView, SafeAreaView, Pressable, Image, Dimensions, TouchableOpacity, ActivityIndicator, Alert, useWindowDimensions } from "react-native";
+import { View, StatusBar, Text, ScrollView, SafeAreaView, Pressable, Image, Dimensions, TouchableOpacity, ActivityIndicator, Alert, useWindowDimensions, TextInput, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { decrementGuest } from "../../Redux/Guests";
 import getUserFavorites from "../../Service/FavServices/GetFavourites";
@@ -28,6 +28,10 @@ import handleIncGuests from "../../Service/DetailviewService/IncreaseGuests";
 import handleDecGuests from "../../Service/DetailviewService/DecreaseGuests";
 import OpenMaps from "../../Service/Map and Dial/OpenMaps";
 import HotelBooking from "../../Service/DetailviewService/Booking";
+import fetchReviews from '../../Service/GetHotelServices/Review';
+import submitReview from '../../Service/GetHotelServices/AddReview';
+import { Avatar } from 'react-native-paper';
+
 
 export default function Detailview() {
     const windowwidth = useWindowDimensions().width;
@@ -46,6 +50,8 @@ export default function Detailview() {
     // const [Hoteldata, setHotelData] = useState('');
     const allHotels = useSelector(state => state.hotel.AllHotelsData.hotels)
     const Hoteldata = allHotels.find(hotel => hotel._id == route.params.data)
+    const allUsers = useSelector(state => state.user.AllUsersData)
+
 
     const [favorites, setFavorites] = useState([]);
     const [favchanged, setfavchanged] = useState(false);
@@ -63,7 +69,17 @@ export default function Detailview() {
     const [ExtraAmount, setExtraAmount] = useState(0);
     const [Total, setTotal] = useState(0);
 
+    const [review, setReview] = useState('');
+    const [oldReviews, setoldReviews] = useState([]);
+    const [showAllReviews, setShowAllReviews] = useState(false);
+
+
+
     const [loading, setloading] = useState(false);
+
+    useEffect(() => {
+        fetchReviews(setoldReviews, Hoteldata._id)
+    }, [])
 
     useEffect(() => {
         // gethotelDetails(route.params.data, setHotelData, setBaseAmount, setTotal);
@@ -256,6 +272,29 @@ export default function Detailview() {
         scrollViewRef.current.scrollTo({ x: windowWidth * index, y: 0, animated: true });
     };
 
+    const renderReviewItem = (rev, index) => {
+        const user = allUsers.find(user => user._id === rev.userId);
+        return (
+            <View key={index} style={styles.reviewContainer}>
+                <Avatar.Image
+                    size={50}
+                    source={{
+                        uri: user ? user.image : null
+                    }}
+                    style={styles.avatar}
+                />
+                <View style={styles.reviewContent}>
+                    <View style={styles.userNameContainer}>
+                        <Text style={styles.userName}>{user ? user.name : rev.userName}</Text>
+                    </View>
+                    {/* <Text style={styles.userEmail}>{user?.email}</Text> */}
+                    <Text style={styles.reviewText}>{rev.review}</Text>
+                    <Text style={styles.createdAt}>Created: {formatDate(rev.createdAt)}</Text>
+                </View>
+            </View>
+        );
+    };
+
 
 
     if (!Hoteldata) {
@@ -441,6 +480,60 @@ export default function Detailview() {
                         />
                     </ScrollView>
 
+                    {/* form for add review */}
+
+                    <ScrollView>
+                        <Text style={[Styles.detailText, { marginTop: 20 }]}>Add a Review</Text>
+                        <View style={{ paddingHorizontal: 20, paddingTop: 10 }}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Write your review here"
+                                value={review}
+                                onChangeText={setReview}
+                            />
+                            <TouchableOpacity
+                                style={styles.btn}
+                                onPress={() => {
+                                    submitReview(Hoteldata, userData, review, setReview, oldReviews, setoldReviews)
+                                }}
+                            >
+                                <Text style={{ color: 'white', fontWeight: 'bold' }}>Submit Review</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </ScrollView>
+
+                    {/* Showing reviews */}
+
+                    <ScrollView>
+                        <Text style={[Styles.recomendationText, { marginTop: 10, paddingHorizontal: 0 }]}>All Reviews</Text>
+                        <View style={{ paddingHorizontal: 0, paddingTop: 10 }}>
+                          
+                            {!showAllReviews ? (
+                                oldReviews.slice(0, 3).map((rev, index) => renderReviewItem(rev, index))
+                            ) : (
+                                oldReviews.map((rev, index) => renderReviewItem(rev, index))
+                            )}
+
+                            {/* condtion for show all reviews */}
+                            {oldReviews.length > 3 && (
+                                <TouchableOpacity onPress={() => setShowAllReviews(!showAllReviews)}>
+                                    <Text style={{ color: '#016DD0', marginTop: 10, alignSelf: 'center' }}>
+                                        {showAllReviews ? 'Show Less Reviews' : 'Show All Reviews'}
+                                    </Text>
+                                </TouchableOpacity>
+                            )}
+
+                            {/* when it there is no review found */}
+                            {oldReviews.length === 0 && (
+                                <Text style={Styles.detailText}>No reviews yet. Be the first to review!</Text>
+                            )}
+                        </View>
+                    </ScrollView>
+
+
+
+
+
                     <RecommendationsText />
                     <RecommendationsOne user={userData._id} />
                     <RecommendationsOne user={userData._id} />
@@ -480,3 +573,72 @@ export default function Detailview() {
 
     }
 }
+
+
+const styles = StyleSheet.create({
+    input: {
+        width: '100%',
+        height: 50,
+        backgroundColor: '#fff',
+        borderRadius: 8,
+        paddingHorizontal: 15,
+        fontSize: 16,
+        color: '#333',
+        marginBottom: 15,
+        shadowColor: 'blue',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 5,
+    },
+    btn: {
+        width: '100%',
+        height: 50,
+        backgroundColor: '#f73939',
+        borderRadius: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    btnText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    reviewContainer: {
+        marginBottom: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    avatar: {
+        marginRight: 20,
+        left: 10
+    },
+    reviewContent: {
+        flex: 1,
+    },
+    userNameContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    userName: {
+        fontWeight: '',
+        fontSize: 16,
+    },
+    userEmail: {
+        fontWeight: '',
+        fontSize: 14,
+        color: '#333',
+    },
+    reviewText: {
+        fontSize: 15,
+        top: 5,
+        marginBottom: 10,
+        color: '#333',
+        fontWeight: 'bold'
+    },
+    createdAt: {
+        fontSize: 12,
+        color: '#888',
+    },
+});
