@@ -111,7 +111,7 @@ export default function Fav() {
                         <Text style={styles.hotelLocation}>{hotel.location}</Text>
                         <View style={styles.ratingContainer}>
                             <FontAwesomeIcon icon={faStar} size={15} color="red" />
-                            <Text style={styles.ratingText}>{hotel.rating} ({hotel.reviewcount})</Text>
+                            <Text style={styles.ratingText}>{hotel.averageRating} ({hotel.reviewcount})</Text>
                         </View>
                         <View style={styles.priceContainer}>
                             <FontAwesomeIcon size={15} icon={faIndianRupeeSign} />

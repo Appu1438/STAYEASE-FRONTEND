@@ -105,7 +105,7 @@ export default function Search() {
                         <Text style={styles.hotelLocation}>{item.location}</Text>
                         <View style={styles.ratingContainer}>
                             <FontAwesomeIcon icon={faStar} size={15} color="red" />
-                            <Text style={styles.ratingText}>{item.rating} ({item.reviewcount})</Text>
+                            <Text style={styles.ratingText}>{item.averageRating} ({item.reviewcount})</Text>
                         </View>
                         <View style={styles.priceContainer}>
                             <FontAwesomeIcon size={15} icon={faIndianRupeeSign} />

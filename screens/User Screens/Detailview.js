@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, StatusBar, Text, ScrollView, SafeAreaView, Pressable, Image, Dimensions, TouchableOpacity, ActivityIndicator, Alert, useWindowDimensions, TextInput, StyleSheet } from "react-native";
+import { View, StatusBar, Text, ScrollView, SafeAreaView, Pressable, Image, Dimensions, TouchableOpacity, ActivityIndicator, Alert, useWindowDimensions, TextInput, StyleSheet, RefreshControl } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { decrementGuest } from "../../Redux/Guests";
 import getUserFavorites from "../../Service/FavServices/GetFavourites";
@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome"
 import { faHeart, faStar, faUserGroup, faSquareParking, faCalendarDays, faUser, faBed, faIndianRupeeSign } from "@fortawesome/free-solid-svg-icons"
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Loading from "../../components/Common Component/loading";
@@ -31,7 +32,9 @@ import HotelBooking from "../../Service/DetailviewService/Booking";
 import fetchReviews from '../../Service/GetHotelServices/Review';
 import submitReview from '../../Service/GetHotelServices/AddReview';
 import { Avatar } from 'react-native-paper';
-
+import removeReview from '../../Service/GetHotelServices/Removereview';
+import { AirbnbRating } from 'react-native-ratings';
+import getAllHotels from '../../Service/GetHotelServices/GetHotels';
 
 export default function Detailview() {
     const windowwidth = useWindowDimensions().width;
@@ -71,15 +74,34 @@ export default function Detailview() {
 
     const [review, setReview] = useState('');
     const [oldReviews, setoldReviews] = useState([]);
+
+    const [oldReviewsCount, setoldReviewsCount] = useState([]);
+
     const [showAllReviews, setShowAllReviews] = useState(false);
+
+    const [reviewChanged, setreviewChanged] = useState(false);
+
+    const [rating, setRating] = useState(0);
+    const [showrating, setshowRating] = useState(false);
+    const [averageRating, setaverageRating] = useState(0);
+
+    const [refreshing, setRefreshing] = useState(false);
+    const onRefresh = () => {
+        setRefreshing(true);
+        // Call your refresh function here, for example:
+        getAllHotels()
+        // After fetching new data, set refreshing to false to stop the spinner
+        setRefreshing(false);
+    };
 
 
 
     const [loading, setloading] = useState(false);
 
     useEffect(() => {
-        fetchReviews(setoldReviews, Hoteldata._id)
-    }, [])
+        fetchReviews(setoldReviews, Hoteldata._id, setoldReviewsCount)
+        onRefresh()
+    }, [review, reviewChanged])
 
     useEffect(() => {
         // gethotelDetails(route.params.data, setHotelData, setBaseAmount, setTotal);
@@ -207,7 +229,26 @@ export default function Detailview() {
         }
         ])
     }
+    const onDeletereview = (id) => {
+        Alert.alert('Delete Review', 'Do you want to delete this Review', [{
+            text: 'cancel',
+            onPress: () => {
+                null
 
+            },
+            style: 'cancel'
+        }, {
+            text: 'Delete',
+            onPress: () => removeReview(id, oldReviews, setoldReviews, reviewChanged, setreviewChanged),
+            style: 'cancel'
+        }
+        ])
+    }
+
+    const handleRatingCompleted = (rating) => {
+        setRating(rating);
+        setshowRating(true)
+    };
 
     const submitBooking = async () => {
         if (roomCount <= guestCount) {
@@ -288,8 +329,23 @@ export default function Detailview() {
                         <Text style={styles.userName}>{user ? user.name : rev.userName}</Text>
                     </View>
                     {/* <Text style={styles.userEmail}>{user?.email}</Text> */}
-                    <Text style={styles.reviewText}>{rev.review}</Text>
+                    <View style={styles.ratingContainer}>
+                        <AirbnbRating
+                            isDisabled={true}
+                            count={5}
+                            defaultRating={rev.rating ? rev.rating : 0}
+                            size={15}
+                            starContainerStyle={{ alignSelf: 'flex-start',position:'' }}
+                            showRating={false}
+                        />
+                        <Text style={styles.reviewText}>{rev.review}</Text>
+                    </View>
                     <Text style={styles.createdAt}>Created: {formatDate(rev.createdAt)}</Text>
+                    {(user._id == userData._id || userData.userType == 'SuperAdmin'|| userData._id == Hoteldata.hoteluserid) && (
+                        <TouchableOpacity style={styles.deleteIcon} onPress={() => onDeletereview(rev._id)}>
+                            <MaterialIcons name="delete" size={24} color="grey" />
+                        </TouchableOpacity>
+                    )}
                 </View>
             </View>
         );
@@ -309,7 +365,13 @@ export default function Detailview() {
             <SafeAreaView style={[Styles.container, { alignItems: 'flex-start' }]}>
                 <StatusBar translucent={true} backgroundColor="transparent" barStyle="light-content" />
 
-                <ScrollView style={{}}>
+                <ScrollView style={{}}
+                 refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={onRefresh}
+                    />
+                  }>
 
                     <ScrollView>
                         <View>
@@ -362,8 +424,7 @@ export default function Detailview() {
 
                             <View style={{ flexDirection: 'row', left: '5%' }}>
                                 <FontAwesomeIcon style={{ paddingTop: 40 }} color="red" icon={faStar} size={19} />
-                                <Text style={[Styles.detailText]}>{Hoteldata.rating} ({Hoteldata.reviewcount})</Text>
-                                {/* <Text style={[Styles.detailText, { color: '#016DD0', fontSize: 12, padding: 5 }]}> See Reviews</Text> */}
+                                <Text style={[Styles.detailText]}>{Hoteldata.averageRating} ({oldReviewsCount})</Text>
                             </View>
 
                             <Text style={[Styles.detailText, { color: 'grey', fontSize: 15, marginTop: 0 }]}>{Hoteldata.location}</Text>
@@ -484,17 +545,27 @@ export default function Detailview() {
 
                     <ScrollView>
                         <Text style={[Styles.detailText, { marginTop: 20 }]}>Add a Review</Text>
-                        <View style={{ paddingHorizontal: 20, paddingTop: 10 }}>
+                        <View style={{ paddingHorizontal: 20, paddingTop: 0 }}>
+                            <AirbnbRating
+                                count={5}
+                                reviews={["Terrible", "Bad", "Okay", "Good", "Great"]}
+                                defaultRating={0}
+                                size={20}
+                                onFinishRating={handleRatingCompleted}
+                                starContainerStyle={{ alignSelf: 'center',position:'' }}
+                                showRating={showrating}
+                            />
                             <TextInput
                                 style={styles.input}
                                 placeholder="Write your review here"
                                 value={review}
                                 onChangeText={setReview}
                             />
+
                             <TouchableOpacity
                                 style={styles.btn}
                                 onPress={() => {
-                                    submitReview(Hoteldata, userData, review, setReview, oldReviews, setoldReviews)
+                                    submitReview(Hoteldata, userData, review, setReview, oldReviews, setoldReviews, reviewChanged, setreviewChanged, rating)
                                 }}
                             >
                                 <Text style={{ color: 'white', fontWeight: 'bold' }}>Submit Review</Text>
@@ -507,7 +578,7 @@ export default function Detailview() {
                     <ScrollView>
                         <Text style={[Styles.recomendationText, { marginTop: 10, paddingHorizontal: 0 }]}>All Reviews</Text>
                         <View style={{ paddingHorizontal: 0, paddingTop: 10 }}>
-                          
+
                             {!showAllReviews ? (
                                 oldReviews.slice(0, 3).map((rev, index) => renderReviewItem(rev, index))
                             ) : (
@@ -584,7 +655,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         fontSize: 16,
         color: '#333',
-        marginBottom: 15,
+        marginBottom: 5,
         shadowColor: 'blue',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
@@ -598,7 +669,8 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 20,
+        marginBottom: 10,
+        // top:10
     },
     btnText: {
         color: '#fff',
@@ -606,9 +678,15 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     reviewContainer: {
-        marginBottom: 10,
+        marginBottom: 20,
         flexDirection: 'row',
         alignItems: 'center',
+    },
+    ratingContainer: {
+        // flexDirection: 'row',
+        // alignItems: 'flex-start',
+        // justifyContent: 'space-between',
+        top:10
     },
     avatar: {
         marginRight: 20,
@@ -633,12 +711,28 @@ const styles = StyleSheet.create({
     reviewText: {
         fontSize: 15,
         top: 5,
-        marginBottom: 10,
+        marginBottom: 20,
         color: '#333',
         fontWeight: 'bold'
     },
     createdAt: {
         fontSize: 12,
         color: '#888',
+    },
+    deleteButton: {
+        marginTop: 10,
+        padding: 5,
+        backgroundColor: 'red',
+        borderRadius: 5,
+    },
+    deleteButtonText: {
+        color: '#fff',
+        textAlign: 'center',
+    },
+    deleteIcon: {
+        marginLeft: 10,
+        position: 'absolute',
+        alignSelf: 'flex-end',
+        right: 20
     },
 });

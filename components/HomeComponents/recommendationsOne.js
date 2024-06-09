@@ -211,7 +211,7 @@ export default function RecommendationsOne({ userLocation, user }) {
                     <View style={styles.cardContent}>
                         <View style={styles.ratingContainer}>
                             <FontAwesomeIcon icon={faStar} size={15} color="red" />
-                            <Text style={styles.ratingText}>{item.rating} ({item.reviewcount})</Text>
+                            <Text style={styles.ratingText}>{item.averageRating} ({item.reviewcount})</Text>
                         </View>
                         <Text style={styles.hotelName}>{item.hotelname}</Text>
                         <Text style={styles.hotelLocation}>{item.location}</Text>
@@ -224,7 +224,7 @@ export default function RecommendationsOne({ userLocation, user }) {
                         <Text style={styles.taxesAndFees}>+{item.taxandfee} taxes and fees</Text>
                     </View>
                 </View>
-            </Pressable>
+           </Pressable>
         );
     };
     

@@ -94,7 +94,7 @@ export default function AdminBussiness() {
 
 
     async function handleSubmit() {
-        if (!Hotelname || !Hotelnumber || !Location || !LocationLink || !ActualRate || !DiscountRate || !DiscountPercentage || !TaxandFee || !Rating || !FacilityOne || !AvailableRooms || !PersonsPerRoom || !ExtraRateperhead || !ExtraRateperRoom || !ExtraRateperDay || !imageone || !imagetwo || !imageThree || !imagefour) {
+        if (!Hotelname || !Hotelnumber || !Location || !LocationLink || !ActualRate || !DiscountRate || !DiscountPercentage || !TaxandFee  || !FacilityOne || !AvailableRooms || !PersonsPerRoom || !ExtraRateperhead || !ExtraRateperRoom || !ExtraRateperDay || !imageone || !imagetwo || !imageThree || !imagefour) {
             Toast.show({
                 type: 'error',
                 text1: 'Please fill in all the required fields',
@@ -122,7 +122,7 @@ export default function AdminBussiness() {
                 extraperhead: ExtraRateperhead,
                 extraperroom: ExtraRateperRoom,
                 extraperday: ExtraRateperDay,
-                rating: Rating,
+                // rating: Rating,
                 facilities: [FacilityOne, FacilityTwo, FacilityThree],
                 images: [imageone, imagetwo, imageThree, imagefour],
                 available:true
@@ -171,7 +171,7 @@ export default function AdminBussiness() {
                     <TextInput style={styles.input} placeholder="Tax and Fee in Rs" onChange={(e) => setTaxandFee(e.nativeEvent.text)} />
 
 
-                    <TextInput style={styles.input} placeholder="Rating" onChange={(e) => setRating(e.nativeEvent.text)} />
+                    {/* <TextInput style={styles.input} placeholder="Rating" onChange={(e) => setRating(e.nativeEvent.text)} /> */}
                    
                     <TextInput style={styles.input} placeholder="Facility One" onChange={(e) => setFacilityOne(e.nativeEvent.text)} />
 
