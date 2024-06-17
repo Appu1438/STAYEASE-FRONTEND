@@ -334,7 +334,7 @@ const styles = {
     },
     loginImg: {
         width: 200,
-        height: 200,
+        height: 180,
         marginBottom: 20,
     },
     title: {

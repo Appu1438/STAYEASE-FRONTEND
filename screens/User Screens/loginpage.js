@@ -69,7 +69,7 @@ export default function Login() {
     const handleBackPress = () => {
         Alert.alert('Exit App', 'Are you sure want to exit?',
             [
-                { text: "Cancel", onPress: () => null, style: 'cancel' },
+                { text: "Return Home", onPress: () => navigation.navigate('Unauthenticated'), style: 'cancel' },
                 { text: "Exit", onPress: () => BackHandler.exitApp(), style: 'cancel' }
             ]
         );

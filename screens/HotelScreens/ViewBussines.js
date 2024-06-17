@@ -26,14 +26,12 @@ export default function Viewbussiness() {
     // const [Hoteluser, setHotelUser] = useState('')
     const [allHotels, setAllHotels] = useState([]);
     const [Loading, setLoading] = useState(true)
-    const [availability, setavailabilty] = useState(true)
 
     const [refreshing, setRefreshing] = useState(false);
     const onRefresh = () => {
         setRefreshing(true);
         // Call your refresh function here, for example:
-        getUserBusiness(Hoteluser._id, setAllHotels, setLoading)
-        // After fetching new data, set refreshing to false to stop the spinner
+        getUserBusiness(Hoteluser._id,setAllHotels,setLoading)
         setRefreshing(false);
     };
 
@@ -43,8 +41,9 @@ export default function Viewbussiness() {
 
     useEffect(() => {
         if (Hoteluser && Hoteluser._id) {
-            getUserBusiness(Hoteluser._id, setAllHotels, setLoading)
+            getUserBusiness(Hoteluser._id,setAllHotels,setLoading)
         }
+
     }, [Hoteluser])
 
     async function onDelete(_id) {
@@ -67,14 +66,15 @@ export default function Viewbussiness() {
 
     const renderHotelCard = ({ item }) => {
 
-        // const [available, setAvailable] = useState(item.available);
-        const available = item.available
-        let showavailable = item.available
+        const available = (item.available);
+        let showavailable = (item.available);
 
         const toggleAvailability = async () => {
-           
+            
+            showavailable=available?false:true
 
             try {
+                console.log(showavailable)
                 if (available) {
                     await DeactiveHotel(item._id);
                     onRefresh()
@@ -82,11 +82,8 @@ export default function Viewbussiness() {
                     await ActiveHotel(item._id);
                     onRefresh()
                 }
-                // Update the local state after successful operation
-                // setAvailable(!available);
             } catch (error) {
                 console.error('Error toggling availability:', error.message);
-                // Handle errors (e.g., display an error message to the user)
             }
         };
 
@@ -198,7 +195,7 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
     listContent: {
-        paddingBottom: 20,
+        paddingBottom: 50,
     },
     cardContainer: {
         backgroundColor: '#fff',

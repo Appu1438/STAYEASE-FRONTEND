@@ -45,6 +45,8 @@ export default function Detailview() {
     const { roomCount } = useSelector((state) => state.room);
     const { guestCount } = useSelector((state) => state.guest);
     const userData = useSelector(state => state.user.userData);
+    const [token, setToken] = useState();
+
 
     const scrollViewRef = useRef(null);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -80,12 +82,15 @@ export default function Detailview() {
     const [showAllReviews, setShowAllReviews] = useState(false);
 
     const [reviewChanged, setreviewChanged] = useState(false);
+    const [ratingLoading, setratingLoading] = useState(false);
 
     const [rating, setRating] = useState(0);
     const [showrating, setshowRating] = useState(false);
     const [averageRating, setaverageRating] = useState(0);
 
     const [refreshing, setRefreshing] = useState(false);
+
+
     const onRefresh = () => {
         setRefreshing(true);
         // Call your refresh function here, for example:
@@ -93,6 +98,15 @@ export default function Detailview() {
         // After fetching new data, set refreshing to false to stop the spinner
         setRefreshing(false);
     };
+
+    useEffect(() => {
+        const getToken = async () => {
+            const token = await AsyncStorage.getItem('token');
+            setToken(token)
+            console.log(token);
+        }
+        getToken()
+    },[])
 
 
 
@@ -215,19 +229,30 @@ export default function Detailview() {
     };
 
     const handleBook = () => {
-        Alert.alert('Book Hotel', 'Do you want to Book this Hotel', [{
-            text: 'cancel',
-            onPress: () => {
-                null
-                setloading(false)
-            },
-            style: 'cancel'
-        }, {
-            text: 'Book',
-            onPress: () => submitBooking(),
-            style: 'cancel'
+        if (token) {
+            setloading(true)
+            Alert.alert('Book Hotel', 'Do you want to Book this Hotel', [{
+                text: 'cancel',
+                onPress: () => {
+                    null
+                    setloading(false)
+                },
+                style: 'cancel'
+            }, {
+                text: 'Book',
+                onPress: () => submitBooking(),
+                style: 'cancel'
+            }
+            ])
+        } else {
+            Toast.show({
+                type: 'error',
+                text1: 'Please login to Book ',
+                visibilityTime: 3000,
+                position: 'bottom'
+            });
         }
-        ])
+
     }
     const onDeletereview = (id) => {
         Alert.alert('Delete Review', 'Do you want to delete this Review', [{
@@ -253,7 +278,6 @@ export default function Detailview() {
     const submitBooking = async () => {
         if (roomCount <= guestCount) {
             try {
-                const token = await AsyncStorage.getItem('token');
                 const bookingData = {
                     userId: userData._id,
                     username: userData.name,
@@ -335,13 +359,13 @@ export default function Detailview() {
                             count={5}
                             defaultRating={rev.rating ? rev.rating : 0}
                             size={15}
-                            starContainerStyle={{ alignSelf: 'flex-start',position:'' }}
+                            starContainerStyle={{ alignSelf: 'flex-start', position: '' }}
                             showRating={false}
                         />
                         <Text style={styles.reviewText}>{rev.review}</Text>
                     </View>
                     <Text style={styles.createdAt}>Created: {formatDate(rev.createdAt)}</Text>
-                    {(user._id == userData._id || userData.userType == 'SuperAdmin'|| userData._id == Hoteldata.hoteluserid) && (
+                    {(user._id == userData._id || userData.userType == 'SuperAdmin' || userData._id == Hoteldata.hoteluserid) && (
                         <TouchableOpacity style={styles.deleteIcon} onPress={() => onDeletereview(rev._id)}>
                             <MaterialIcons name="delete" size={24} color="grey" />
                         </TouchableOpacity>
@@ -366,12 +390,12 @@ export default function Detailview() {
                 <StatusBar translucent={true} backgroundColor="transparent" barStyle="light-content" />
 
                 <ScrollView style={{}}
-                 refreshControl={
-                    <RefreshControl
-                      refreshing={refreshing}
-                      onRefresh={onRefresh}
-                    />
-                  }>
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }>
 
                     <ScrollView>
                         <View>
@@ -424,7 +448,8 @@ export default function Detailview() {
 
                             <View style={{ flexDirection: 'row', left: '5%' }}>
                                 <FontAwesomeIcon style={{ paddingTop: 40 }} color="red" icon={faStar} size={19} />
-                                <Text style={[Styles.detailText]}>{Hoteldata.averageRating} ({oldReviewsCount})</Text>
+                                <Text style={[Styles.detailText]}>{Hoteldata.averageRating} </Text>
+                                <Text style={[Styles.detailText]}>({oldReviewsCount})</Text>
                             </View>
 
                             <Text style={[Styles.detailText, { color: 'grey', fontSize: 15, marginTop: 0 }]}>{Hoteldata.location}</Text>
@@ -518,7 +543,7 @@ export default function Detailview() {
 
                                     </TouchableOpacity>
 
-                                    <Text style={Styles.bookingLasttext}>{userData.name}</Text>
+                                    <Text style={Styles.bookingLasttext}>{token ? userData.name : 'Guest'}</Text>
                                 </View>
                             </View>
                         </View>
@@ -552,7 +577,7 @@ export default function Detailview() {
                                 defaultRating={0}
                                 size={20}
                                 onFinishRating={handleRatingCompleted}
-                                starContainerStyle={{ alignSelf: 'center',position:'' }}
+                                starContainerStyle={{ alignSelf: 'center', position: '' }}
                                 showRating={showrating}
                             />
                             <TextInput
@@ -565,10 +590,15 @@ export default function Detailview() {
                             <TouchableOpacity
                                 style={styles.btn}
                                 onPress={() => {
-                                    submitReview(Hoteldata, userData, review, setReview, oldReviews, setoldReviews, reviewChanged, setreviewChanged, rating)
+                                    ratingLoading ? null : (
+                                        submitReview(Hoteldata, userData, review, setReview, oldReviews, setoldReviews, reviewChanged, setreviewChanged, rating, setratingLoading)
+                                    )
                                 }}
                             >
-                                <Text style={{ color: 'white', fontWeight: 'bold' }}>Submit Review</Text>
+                                {ratingLoading ?
+                                    (<ActivityIndicator color='white' />) :
+                                    (<Text style={{ color: 'white', fontWeight: 'bold' }}>Submit Review</Text>)
+                                }
                             </TouchableOpacity>
                         </View>
                     </ScrollView>
@@ -576,7 +606,7 @@ export default function Detailview() {
                     {/* Showing reviews */}
 
                     <ScrollView>
-                        <Text style={[Styles.recomendationText, { marginTop: 10, paddingHorizontal: 0 }]}>All Reviews</Text>
+                        <Text style={[Styles.detailText, { marginTop: 10, paddingHorizontal: 0 }]}>All Reviews</Text>
                         <View style={{ paddingHorizontal: 0, paddingTop: 10 }}>
 
                             {!showAllReviews ? (
@@ -625,15 +655,16 @@ export default function Detailview() {
                     <View>
                         <TouchableOpacity style={Styles.bookingbtn} onPress={() => {
                             {
-                                loading ? null : setloading(true)
-                                handleBook()
+                                loading ? null :
+                                    handleBook()
                             }
                         }} >
-                            {loading ? <ActivityIndicator color='white' /> : (
-                                <Text style={Styles.bookingbtntext}>
-                                    Book Now & Pay At Hotel
-                                </Text>
-                            )}
+                            {loading ? <ActivityIndicator color='white' /> :
+                                (
+                                    <Text style={Styles.bookingbtntext}>
+                                        Book Now & Pay At Hotel
+                                    </Text>
+                                )}
 
                         </TouchableOpacity>
                     </View>
@@ -686,7 +717,7 @@ const styles = StyleSheet.create({
         // flexDirection: 'row',
         // alignItems: 'flex-start',
         // justifyContent: 'space-between',
-        top:10
+        top: 10
     },
     avatar: {
         marginRight: 20,

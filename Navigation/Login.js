@@ -5,6 +5,7 @@ import ForgotPassword from "../screens/User Screens/ForgotPassword";
 import UserNav from "./User";
 import HotelNav from "./Hotel";
 import AdminNav from "./Admin";
+import Unauthenticated from "./Unauthenticated";
 
 
 const LoginNav = () => {
@@ -14,6 +15,7 @@ const LoginNav = () => {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="Forgot" component={ForgotPassword} />
+        <Stack.Screen name="Unauthenticated" component={Unauthenticated} />
         <Stack.Screen name="UserLoggedin" component={UserNav} />
         <Stack.Screen name="HotelLoggedin" component={HotelNav} />
         <Stack.Screen name="AdminLoggedin" component={AdminNav} />

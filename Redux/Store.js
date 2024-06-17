@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore } from '@reduxjs/toolkit'
 import roomReducer from './Rooms'
 import guestReducer from './Guests'
 import userReducer from './User'

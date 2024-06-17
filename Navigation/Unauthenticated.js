@@ -18,29 +18,30 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import { useSelector } from "react-redux";
+import PleaseLoginScreen from "../screens/Unauthenticated Screens/PleaaseLogin";
 
 
-const UserNav = () => {
+const Unauthenticated = () => {
     const Stack = createNativeStackNavigator();
     
     return (
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Home" component={UserDrawerScreens} />
+        <Stack.Screen name="Home" component={UnauthenticatedScreens} />
         <Stack.Screen name="Detailview" component={Detailview} options={{animation:'slide_from_right'}} />
         <Stack.Screen name="Confirmation" component={Confirmation} />
         <Stack.Screen name="Payment" component={PaymentPage} options={{animation:'slide_from_right'}}  />
-        <Stack.Screen name="Bookings" component={Bookings} options={{animation:'slide_from_right'}} />
+        <Stack.Screen name="Bookings" component={PleaseLoginScreen} options={{animation:'slide_from_right'}} />
         <Stack.Screen name="UserLogout" component={LoginNav} />
         <Stack.Screen name="UpdateProfile" component={UpdateProfile} options={{animation:'slide_from_right'}} />
         <Stack.Screen name="Search" component={Search} options={{animation:'slide_from_right'}} />
-        <Stack.Screen name="Fav" component={Fav } options={{animation:'slide_from_right'}}  />     
+        <Stack.Screen name="Fav" component={PleaseLoginScreen } options={{animation:'slide_from_right'}}  />     
         <Stack.Screen name="Needhelp" component={NeedHelp } options={{animation:'slide_from_right'}}  />      
  
       </Stack.Navigator>
     )
   
   }
-  const UserDrawerScreens = () => {
+  const UnauthenticatedScreens = () => {
     const Drawer = createDrawerNavigator();
   
     return (
@@ -51,7 +52,7 @@ const UserNav = () => {
     }}
      > 
         <Drawer.Screen name="Homepage" component={BottomTabs} />
-        <Drawer.Screen name="Profile" component={Profile}/>
+        <Drawer.Screen name="Profile" component={PleaseLoginScreen}/>
       </Drawer.Navigator>
     )
   
@@ -93,13 +94,13 @@ const BottomTabs = () => {
       }}
     >
       <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Bookings" component={Bookings} initialParams={{data:userData}} />
+      <Tab.Screen name="Bookings" component={PleaseLoginScreen} initialParams={{data:userData}} />
       <Tab.Screen name="Search" component={Search} initialParams={{data:null}}/>
-      <Tab.Screen name="Favourites" component={Fav} initialParams={{data:userData}} />
+      <Tab.Screen name="Favourites" component={PleaseLoginScreen} initialParams={{data:userData}} />
       <Tab.Screen name="NeedHelp" component={NeedHelp} />
     </Tab.Navigator>
   );
 };
 
-export default UserNav
+export default Unauthenticated
   

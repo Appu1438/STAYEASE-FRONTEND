@@ -29,6 +29,7 @@ export default function Home() {
     const [userLocation, setUserLocation] = useState();
     const [nearbycities, setnearbyCities] = useState();
     const [refreshing, setRefreshing] = useState(false);
+    
     const onRefresh = () => {
         setRefreshing(true);
         // Call your refresh function here, for example:

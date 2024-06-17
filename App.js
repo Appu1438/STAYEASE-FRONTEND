@@ -11,6 +11,8 @@ import LoginNav from "./Navigation/Login";
 import getUsertype from "./Service/UserServices.js/Usertype";
 import { Provider } from "react-redux";
 import { store } from "./Redux/Store";
+import Unauthenticated from "./Navigation/Unauthenticated";
+
 
 export default function App() {
 
@@ -35,8 +37,8 @@ export default function App() {
 
           {isLogedIn && userType == 'Admin'||userType=='SuperAdmin' ? <AdminNav />
             : isLogedIn && userType == 'Business' ? <HotelNav />
-              : isLogedIn ? <UserNav />
-                : <LoginNav />}
+              : isLogedIn && userType == 'User' ? <UserNav />
+                : <Unauthenticated />}
 
           <Toast />
 

@@ -7,6 +7,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import axios from "axios";
 import API_BASE_URL from "../../Api";
 import Toast from "react-native-toast-message";
+import { StyleSheet } from "react-native";
 
 
 
@@ -178,7 +179,7 @@ export default function AddNewUser() {
                                     size={20}
                                     color={'black'}
                                 />
-                                <Text style={styles.userTypeButtonText}>SuperAdmin</Text>
+                                <Text style={styles.userTypeButtonText}>Super</Text>
                             </Pressable>
                         </View>
                     </View>
@@ -251,7 +252,7 @@ export default function AddNewUser() {
 
 
 }
-const styles = {
+const styles =StyleSheet.create( {
     container: {
         flex: 1,
         backgroundColor: '#fff',
@@ -286,6 +287,7 @@ const styles = {
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 20,
+        justifyContent:'space-evenly'
     },
     registerAsText: {
         fontSize: 15,
@@ -294,6 +296,7 @@ const styles = {
         flexDirection: 'row',
         alignItems: 'center',
         // paddingHorizontal:10
+        justifyContent:'space-evenly'
 
     },
     userTypeButton: {
@@ -380,7 +383,7 @@ const styles = {
         fontSize: 15,
         color: '#666',
     },
-};
+});
 
 
 
