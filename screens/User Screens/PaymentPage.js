@@ -7,6 +7,8 @@ import API_BASE_URL from "../../Api";
 import Toast from "react-native-toast-message";
 import { CardField, useConfirmPayment, useStripe } from "@stripe/stripe-react-native";
 import getdata from "../../Service/UserServices.js/Getdata";
+import { useSelector } from "react-redux";
+import createInvoice from "../../Service/ConfirmationServices/DownloadInvoice";
 
 
 export default function PaymentPage() {
@@ -17,15 +19,13 @@ export default function PaymentPage() {
     const { total, bookingId } = route.params.data
 
     const [CardDetails, setCardDetails] = useState('');
-    const [UserData, setUserData] = useState('');
+    const UserData = useSelector(state => state.user.userData);
 
     const [Loading, setLoading] = useState(false);
 
     const { confirmPayment, loading } = useConfirmPayment()
 
-    useEffect(()=>{
-        getdata(setUserData)
-    },[])
+  
 
  
     const fetchPaymentIntent = async () => {
@@ -110,6 +110,7 @@ export default function PaymentPage() {
 
     async function UpdatePaymentStatus(Intent) {
         console.log(Intent)
+        const invoiceLink=await createInvoice(total,UserData)
         const data = {
             _id: bookingId,
             TotalAmount: total,
@@ -117,7 +118,8 @@ export default function PaymentPage() {
                 paymentMethodId:Intent.id,
                 amount:Intent.amount,
                 currency:Intent.currency,
-                clientSecret:Intent.clientSecret
+                clientSecret:Intent.clientSecret,
+                invoice:invoiceLink
 
         }]
 
@@ -126,7 +128,7 @@ export default function PaymentPage() {
             const response = await axios.post(`${API_BASE_URL}/update-payment-sts`, data)
             if (response.data.status == 'ok') {
                 setLoading(false)
-                navigation.navigate('Bookings', { data: UserData })
+                navigation.navigate('Bookings')
                 navigation.navigate('Confirmation', { data: bookingId })
             } else {
                 navigation.navigate("Bookings", { data: UserData })
@@ -168,7 +170,7 @@ export default function PaymentPage() {
                     />
                 </View>
 
-                <TouchableOpacity style={styles.payButton} onPress={handlePayment} disabled={loading}>
+                <TouchableOpacity style={styles.payButton} onPress={()=>{Loading?(null):(handlePayment())}} disabled={loading}>
                         {Loading ?
                          (
                             <ActivityIndicator size="small" color="white" />

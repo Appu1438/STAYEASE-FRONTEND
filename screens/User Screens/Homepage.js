@@ -22,7 +22,7 @@ import getAllBookings from "../../Service/ViewBookingServices/GetAllBookings";
 
 
 
-export default function Home() {
+export default function Home({navigation}) {
     const userData = useSelector(state => state.user.userData)
 
     const [isLoading, setloading] = useState(true)
@@ -33,7 +33,7 @@ export default function Home() {
     const onRefresh = () => {
         setRefreshing(true);
         // Call your refresh function here, for example:
-        getdata()
+        getdata(navigation)
         getAllUsers()
         getAllHotels()
         getAllBookings()

@@ -495,6 +495,7 @@ export let Styles = StyleSheet.create({
         justifyContent: 'flex-start', alignItems: 'center',
         flexDirection: 'row',
         paddingLeft: '2%',
+        position:'relative'
 
     },
     offertext: {

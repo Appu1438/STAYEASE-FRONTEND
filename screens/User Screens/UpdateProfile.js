@@ -84,7 +84,7 @@ export default function UpdateProfile() {
             if (permissionResult.granted === false) {
                 console.log("You've refused to allow this appp to access your photos!");
                 Toast.show({
-                    type: 'Error',
+                    type: 'error',
                     text1: `You've Refused to Access Your Photos`,
                     visibilityTime: 3000,
                     position: 'bottom'

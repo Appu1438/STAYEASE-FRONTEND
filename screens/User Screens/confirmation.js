@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, SafeAreaView, TouchableOpacity, Image, Pressable, StatusBar, ActivityIndicator, Linking, Alert, StyleSheet, Modal } from "react-native";
+import { View, Text, ScrollView, SafeAreaView, TouchableOpacity, Image, Pressable, StatusBar, ActivityIndicator, Linking, Alert, StyleSheet, Modal , RefreshControl } from "react-native";
 import { Styles } from "../../components/Common Component/Styles";
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -18,6 +18,7 @@ import calculaterefund from "../../Service/ConfirmationServices/CalculateRefund"
 import CancelBooking from "../../Service/ConfirmationServices/Cancel";
 import { useSelector } from "react-redux";
 import Loading from "../../components/Common Component/loading";
+import createInvoice from "../../Service/ConfirmationServices/DownloadInvoice";
 
 
 
@@ -48,12 +49,23 @@ export default function Confirmation() {
     const [RefundedAmount, setRefundedAmount] = useState(0);
     const [isModal, setIsModal] = useState(false);
 
+    const [refreshing, setRefreshing] = useState(false);
+    
+    const onRefresh = () => {
+        setRefreshing(true);
+        // Call your refresh function here, for example:
+        getBookingdetails(BookingID, setBookingDetails, setHotelData, setTotal, setNormalMessage, setOfferMessage, setBookingsts, setCheckin);
+        // After fetching new data, set refreshing to false to stop the spinner
+        setRefreshing(false);
+    };
+
+
 
     useEffect(() => {
         // getdata(setUserData);
         getBookingdetails(BookingID, setBookingDetails, setHotelData, setTotal, setNormalMessage, setOfferMessage, setBookingsts, setCheckin);
 
-    }, []);
+    }, [BookingID,UserData]);
 
 
 
@@ -97,7 +109,13 @@ export default function Confirmation() {
                     <StatusBar backgroundColor={Bookingsts == 'Confirmed' ? "#347442" : '#dbc607'} barStyle='light-content' />
 
 
-                    <ScrollView >
+                    <ScrollView 
+                     refreshControl={
+                        <RefreshControl
+                          refreshing={refreshing}
+                          onRefresh={onRefresh}
+                        />
+                      } >
                         <View style={Bookingsts == 'Confirmed' ? Styles.confirmboxg : Styles.confirmboxy}>
                             <TouchableOpacity style={{ top: '10%', zIndex: 1 }} onPress={() => navigation.goBack()}>
                                 <AntDesign name="closecircleo" size={20} color='white' />
@@ -124,13 +142,25 @@ export default function Confirmation() {
                             </Text>
 
                             {BookingDetails.PaymentStatus == 'paid' && Bookingsts != 'expired' && Bookingsts != 'Cancelled' ?
-                                (
+                                (<>
+                                  
                                     <View style={Styles.offerg}>
                                         <MaterialIcons size={20} name='celebration' color={'#ffff'} />
                                         <Text style={Styles.offertextg}>
                                             {OfferMeaasge}
                                         </Text>
+                                        
                                     </View>
+
+                                    <TouchableOpacity style={{alignSelf:'flex-end',position:'absolute',right:'5%'}}
+                                     onPress={()=>Linking.openURL(BookingDetails.PaymentDetails[0].invoice)}>
+                                      
+                                        <AntDesign size={20} name='download' color={'#111'} />
+                                        
+                                    </TouchableOpacity>
+
+                                  
+                                    </>
                                 ) :
 
                                 (
