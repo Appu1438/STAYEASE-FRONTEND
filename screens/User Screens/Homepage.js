@@ -34,9 +34,9 @@ export default function Home({navigation}) {
         setRefreshing(true);
         // Call your refresh function here, for example:
         getdata(navigation)
-        getAllUsers()
+        // getAllUsers(navigation)
         getAllHotels()
-        getAllBookings()
+        // getAllBookings(navigation)
         getUserLocation(setUserLocation,setnearbyCities)
         // After fetching new data, set refreshing to false to stop the spinner
         setRefreshing(false);
@@ -45,10 +45,10 @@ export default function Home({navigation}) {
    
     useEffect(() => {
         // setInterval(() => {
-            getdata()
-            getAllUsers()
+            getdata(navigation)
+            // getAllUsers(navigation)
             getAllHotels()
-            getAllBookings()
+            // getAllBookings(navigation)
             getUserLocation(setUserLocation,setnearbyCities)
         // }, 10000);
        

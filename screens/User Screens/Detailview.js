@@ -712,12 +712,14 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         flexDirection: 'row',
         alignItems: 'center',
+        
     },
     ratingContainer: {
         // flexDirection: 'row',
         // alignItems: 'flex-start',
         // justifyContent: 'space-between',
-        top: 10
+        top: 10,
+        // paddingHorizontal:5
     },
     avatar: {
         marginRight: 20,
@@ -725,6 +727,8 @@ const styles = StyleSheet.create({
     },
     reviewContent: {
         flex: 1,
+        paddingHorizontal:5
+
     },
     userNameContainer: {
         flexDirection: 'row',

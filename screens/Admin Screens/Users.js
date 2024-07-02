@@ -34,10 +34,15 @@ export default function ShowUsers({ }) {
     const onRefresh = () => {
         setRefreshing(true);
         // Call your refresh function here, for example:
-        getAllUsers();
+        getAllUsers(navigation);
         // After fetching new data, set refreshing to false to stop the spinner
         setRefreshing(false);
       };
+
+      useEffect(()=>{
+        getAllUsers(navigation);
+
+      },[])
       
 
     useEffect(() => {

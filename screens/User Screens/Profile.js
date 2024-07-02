@@ -39,11 +39,36 @@ export default function Profile() {
     )
 
 
-    function SignOut() {
-        AsyncStorage.setItem('isLoggedIn', '')
-        AsyncStorage.setItem('token', '')
-        AsyncStorage.setItem('userType', '')
-        navigation.navigate("UserLogout")
+    async function SignOut() {
+
+        const token = await AsyncStorage.getItem('token');
+        try {
+            const response = await axios.post(`${API_BASE_URL}/user/logout`, { token });
+
+            if (response.data.status == 'ok') {
+                AsyncStorage.setItem('isLoggedIn', '')
+                AsyncStorage.setItem('token', '')
+                AsyncStorage.setItem('userType', '')
+                navigation.navigate("UserLogout")
+            } else {
+                Toast.show({
+                    type: 'error',
+                    text1: JSON.stringify(response.data.data),
+                    position: 'bottom',
+                    visibilityTime: 2000
+                })
+            }
+        } catch (error) {
+            Toast.show({
+                type: 'error',
+                text1: 'Error in Logging Out',
+                position: 'bottom',
+                visibilityTime: 2000
+            })
+        }
+        
+      
+
     }
 
     function alertDlt() {
@@ -225,3 +250,4 @@ const styles = StyleSheet.create({
         resizeMode: "contain"
     }
 })
+
