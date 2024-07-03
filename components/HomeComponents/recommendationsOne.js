@@ -157,7 +157,7 @@ export default function RecommendationsOne({ userLocation, user }) {
     }, [allHotels]);
 
     useEffect(() => {
-        getUserFavorites(user, setFavorites);
+        getUserFavorites(user, setFavorites,navigation);
     }, [user,favorites]);
 
     const filterHotelsByLocation = () => {
@@ -203,7 +203,7 @@ export default function RecommendationsOne({ userLocation, user }) {
                         </View>
                     )}
                     <Pressable style={styles.favourite} onPress={() => {
-                        isFav ? removeFromFavorites(user, item._id, favorites, setFavorites) : addToFavorites(item._id, user);
+                        isFav ? removeFromFavorites(user, item._id, favorites, setFavorites,navigation) : addToFavorites(item._id, user,navigation);
                     }}>
                         <FontAwesome size={25} name={isFav ? 'heart' : 'heart-o'} color={isFav ? 'red' : 'white'} />
                     </Pressable>

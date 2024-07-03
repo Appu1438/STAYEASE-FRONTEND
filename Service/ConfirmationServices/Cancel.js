@@ -2,12 +2,19 @@ import axios from "axios";
 import API_BASE_URL from "../../Api";
 import Toast from "react-native-toast-message";
 import initiateRefund from "./InitiateRefund";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import TokenExpiry from "../TokenService/TokenExpiry";
 
 
+async function CancelBooking(BookingDetails, UserData, setLoading, navigation, RefundedAmount) {
+    const token = await AsyncStorage.getItem('token');
 
-async function CancelBooking(BookingDetails,UserData,setLoading,navigation,RefundedAmount) {
     try {
-        const response = await axios.post(`${API_BASE_URL}/user/cancel-booking`, { id: BookingDetails._id });
+        const response = await axios.post(`${API_BASE_URL}/user/cancel-booking`, { id: BookingDetails._id },{
+            headers:{
+                Authorization:`Bearer ${token}`
+            }
+        });
         // console.log(response);
 
         setLoading(false);
@@ -20,7 +27,9 @@ async function CancelBooking(BookingDetails,UserData,setLoading,navigation,Refun
                     visibilityTime: 3000,
                     position: 'bottom'
                 });
-                await initiateRefund(BookingDetails,UserData,RefundedAmount,navigation)
+                await initiateRefund(BookingDetails, UserData, RefundedAmount, navigation)
+            } else if (response.data.status == 'NotOk') {
+                TokenExpiry(navigation, response)
             } else {
                 Toast.show({
                     type: 'success',

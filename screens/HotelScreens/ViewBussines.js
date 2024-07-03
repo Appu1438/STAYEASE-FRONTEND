@@ -31,7 +31,7 @@ export default function Viewbussiness() {
     const onRefresh = () => {
         setRefreshing(true);
         // Call your refresh function here, for example:
-        getUserBusiness(Hoteluser._id,setAllHotels,setLoading)
+        getUserBusiness(Hoteluser._id,setAllHotels,setLoading,navigation)
         setRefreshing(false);
     };
 
@@ -41,7 +41,7 @@ export default function Viewbussiness() {
 
     useEffect(() => {
         if (Hoteluser && Hoteluser._id) {
-            getUserBusiness(Hoteluser._id,setAllHotels,setLoading)
+            getUserBusiness(Hoteluser._id,setAllHotels,setLoading,navigation)
         }
 
     }, [Hoteluser])
@@ -76,10 +76,10 @@ export default function Viewbussiness() {
             try {
                 console.log(showavailable)
                 if (available) {
-                    await DeactiveHotel(item._id);
+                    await DeactiveHotel(item._id,navigation);
                     onRefresh()
                 } else {
-                    await ActiveHotel(item._id);
+                    await ActiveHotel(item._id,navigation);
                     onRefresh()
                 }
             } catch (error) {

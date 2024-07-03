@@ -8,7 +8,11 @@ const getUserFavorites = async (userId, Favourites) => {
     if (token) {
         // console.log('Service get')
         try {
-            const response = await axios.get(`${API_BASE_URL}/user/get-favorites/${userId}`);
+            const response = await axios.get(`${API_BASE_URL}/user/get-favorites/${userId}`,{
+                headers:{
+                    Authorization:`Bearer ${token}`
+                }
+            });
             if (response.data.status == 'ok') {
                 // Return the list of favorites
                 // console.log(response.data.data)

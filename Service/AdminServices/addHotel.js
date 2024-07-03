@@ -1,9 +1,17 @@
 import axios from "axios";
 import API_BASE_URL from "../../Api";
 import Toast from "react-native-toast-message";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import TokenExpiry from "../TokenService/TokenExpiry";
+AsyncStorage
 const AddHotel = async (Hoteldata, navigation) => {
-    await axios.post(`${API_BASE_URL}/admin/add-hotel`, Hoteldata).then(res => {
+  
+    const token = await AsyncStorage.getItem('token');
+    await axios.post(`${API_BASE_URL}/admin/add-hotel`, Hoteldata, {
+        headers: { 
+            Authorization: `Bearer ${token}`
+         }
+    }).then(res => {
         console.log(res.data)
         if (res.data.status == 'ok') {
             Toast.show({
@@ -13,6 +21,8 @@ const AddHotel = async (Hoteldata, navigation) => {
                 position: 'bottom'
             })
             navigation.navigate('Home')
+        } else if (res.data.status == 'NotOk') {
+            TokenExpiry(navigation, res)
         } else {
             Toast.show({
                 type: 'error',

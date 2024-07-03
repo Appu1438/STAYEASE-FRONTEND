@@ -12,14 +12,14 @@ export default function PendingRequests({ navigation }) {
     const onRefresh = () => {
         setRefreshing(true);
         // Call your refresh function here, for example:
-        getallPendingHotels(setAllHotels);
+        getallPendingHotels(setAllHotels,navigation);
         // After fetching new data, set refreshing to false to stop the spinner
         setRefreshing(false);
       };
       
 
     useEffect(() => {
-        getallPendingHotels(setAllHotels);
+        getallPendingHotels(setAllHotels,navigation);
     }, []);
 
     const renderHotelCard = ({ item }) => (

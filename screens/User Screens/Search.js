@@ -54,7 +54,7 @@ export default function Search() {
     }, []);
 
     useEffect(() => {
-        getUserFavorites(userId, setFavorites);
+        getUserFavorites(userId, setFavorites,navigation);
     }, [favorites]);
 
     useEffect(() => {
@@ -96,7 +96,7 @@ export default function Search() {
                             <Text style={styles.unavailableText}>Unavailable</Text>
                         </View>
                     )}
-                    <Pressable style={styles.favourite} onPress={() => { isFav ? removeFromFavorites(userData._id, item._id, favorites, setFavorites) : addToFavorites(item._id, userData._id) }}>
+                    <Pressable style={styles.favourite} onPress={() => { isFav ? removeFromFavorites(userData._id, item._id, favorites, setFavorites,navigation) : addToFavorites(item._id, userData._id,navigation) }}>
                         <FontAwesome size={25} name={isFav ? 'heart' : 'heart-o'} color={isFav ? 'red' : 'white'} />
                     </Pressable>
                     <Image style={styles.hotelImage} source={{ uri: item.images[0] }} />

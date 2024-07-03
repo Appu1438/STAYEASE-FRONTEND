@@ -36,7 +36,7 @@ export default function Bookings() {
 
     useEffect(() => {
         console.log('book',userData)
-        getBookings(userData,setBookingDetails,setUpcomingBookings,setCancelledBookings,setExpiredBookings)
+        getBookings(userData,setBookingDetails,setUpcomingBookings,setCancelledBookings,setExpiredBookings,navigation)
         // separateBookings(BookingDetails, setUpcomingBookings, setCancelledBookings, setExpiredBookings)
 
     },[])

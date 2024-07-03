@@ -41,7 +41,7 @@ export default function BusinessBookings() {
         // Fetch bookings only when UserData._id is available
         if (UserData && UserData._id) {
 
-            getBusinessBookings(UserData._id,setBookingDetails,setUpcomingBookings,setCancelledBookings,setExpiredBookings)
+            getBusinessBookings(UserData._id,setBookingDetails,setUpcomingBookings,setCancelledBookings,setExpiredBookings,navigation)
             separateBookings(BookingDetails, setUpcomingBookings, setCancelledBookings, setExpiredBookings)
         }
     }, [UserData]); // Run this effect whenever UserData changes

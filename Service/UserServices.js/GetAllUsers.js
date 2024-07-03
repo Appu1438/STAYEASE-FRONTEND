@@ -8,21 +8,12 @@ import TokenExpiry from "../TokenService/TokenExpiry"
 
 
 async function getAllUsers(navigation) {
-    const token = await AsyncStorage.getItem('token');
 
-    axios.get(`${API_BASE_URL}/admin/get-all-users`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    }).then(res => {
+    axios.get(`${API_BASE_URL}/admin/get-all-users`).then(res => {
         // console.log('Users:', res.data)
         if (res.data.status == 'ok') {
             store.dispatch(setAllUsers(res.data.data))
             console.log("State", allUsers)
-        } else if (res.data.status == 'NotOk') {
-            TokenExpiry(navigation,res)
-            // navigation.navigate('UserLogout')
-
         }else{
 
         }

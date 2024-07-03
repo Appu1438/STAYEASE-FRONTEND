@@ -15,7 +15,8 @@ import OpenMaps from "../../Service/Map and Dial/OpenMaps";
 import OpenDial from "../../Service/Map and Dial/Dial";
 import Loading from "../../components/Common Component/loading";
 import { Styles } from "../../components/Common Component/Styles";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import TokenExpiry from "../../Service/TokenService/TokenExpiry";
 
 
 
@@ -38,6 +39,7 @@ export default function PendingDetailview({ }) {
 
     const [loadingReject, setloadingReject] = useState(false);
     const [loadingAccept, setloadingAccept] = useState(false);
+    const [token, setToken] = useState(false);
 
 
 
@@ -47,6 +49,16 @@ export default function PendingDetailview({ }) {
     useEffect(() => {
         setHotelData(route.params.data)
     }, [])
+
+    useEffect(() => {
+        const getToken = async () => {
+            const token = await AsyncStorage.getItem('token');
+            setToken(token)
+            console.log(token);
+        }
+        getToken()
+    }, [])
+
 
 
 
@@ -129,10 +141,16 @@ export default function PendingDetailview({ }) {
         console.log('remove')
         setloadingReject(true)
         try {
-            await axios.post(`${API_BASE_URL}/admin/remove-pending-hotels`, { _id: Hoteldata._id }).then(res => {
+            await axios.post(`${API_BASE_URL}/admin/remove-pending-hotels`, { _id: Hoteldata._id }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }).then(res => {
                 console.log(res.data)
                 if (res.data.status == 'ok') {
                     navigation.navigate('All Pendings')
+                } else if (res.data.status == 'NotOk') {
+                    TokenExpiry(navigation, res)
                 } else {
                     Toast.show({
                         type: 'error',
@@ -252,7 +270,7 @@ export default function PendingDetailview({ }) {
                                     <Text style={[Styles.bookingtext, { alignSelf: 'center' }]}>{Hoteldata.extraperday}</Text>
                                     <Text style={[Styles.bookingtext, { alignSelf: 'center' }]}>{Hoteldata.personsperroom}</Text>
                                     <Text style={[Styles.bookingtext, { alignSelf: 'center' }]}>{reqUser.name}</Text>
-                                    <TouchableOpacity onPress={() => OpenDial(reqUser.number)} style={{alignSelf:'center'}}>
+                                    <TouchableOpacity onPress={() => OpenDial(reqUser.number)} style={{ alignSelf: 'center' }}>
                                         <Text style={[Styles.bookingLasttext, { alignSelf: 'center' }]}>{reqUser.number}</Text>
                                     </TouchableOpacity>
                                 </View>

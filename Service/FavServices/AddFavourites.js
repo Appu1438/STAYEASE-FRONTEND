@@ -4,10 +4,11 @@ import API_BASE_URL from "../../Api";
 import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import TokenExpiry from "../TokenService/TokenExpiry";
 
 
 
-const addToFavorites = async (hotelId, userId) => {
+const addToFavorites = async (hotelId, userId,navigation) => {
     const token = await AsyncStorage.getItem('token');
     const data = await AsyncStorage.getItem('isLoggedIn')
 
@@ -20,12 +21,14 @@ const addToFavorites = async (hotelId, userId) => {
             position: 'bottom'
         });
     } else {
-
-
         console.log('Services Add')
         try {
             // Make a POST request to your backend API to add the hotel to favorites
-            const response = await axios.post(`${API_BASE_URL}/user/add-to-favorites`, { userId, hotelId });
+            const response = await axios.post(`${API_BASE_URL}/user/add-to-favorites`, { userId, hotelId },{
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            });
             if (response.data.status == 'ok') {
                 // If the hotel is successfully added to favorites, update the state
                 Toast.show({
@@ -35,6 +38,8 @@ const addToFavorites = async (hotelId, userId) => {
                     position: 'bottom'
                 });
                 setfav(fav)
+            }else if(response.data.status=='NotOk'){
+                  TokenExpiry(navigation,response)
             } else {
                 Toast.show({
                     type: 'error',

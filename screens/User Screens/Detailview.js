@@ -126,7 +126,7 @@ export default function Detailview() {
 
     useEffect(() => {
         if (userData._id) {
-            getUserFavorites(userData._id, setFavorites);
+            getUserFavorites(userData._id, setFavorites,navigation);
         }
     }, [userData]);
 
@@ -264,7 +264,7 @@ export default function Detailview() {
             style: 'cancel'
         }, {
             text: 'Delete',
-            onPress: () => removeReview(id, oldReviews, setoldReviews, reviewChanged, setreviewChanged),
+            onPress: () => removeReview(id, oldReviews, setoldReviews, reviewChanged, setreviewChanged,navigation),
             style: 'cancel'
         }
         ])
@@ -403,9 +403,9 @@ export default function Detailview() {
                                 style={[Styles.favourite, { top: 40 }]}
                                 onPress={async () => {
                                     if (isFav) {
-                                        removeFromFavorites(userData._id, Hoteldata._id, favorites, setFavorites);
+                                        removeFromFavorites(userData._id, Hoteldata._id, favorites, setFavorites,navigation);
                                     } else {
-                                        addToFavorites(Hoteldata._id, userData._id);
+                                        addToFavorites(Hoteldata._id, userData._id,navigation);
                                     }
                                     setFavorites(prevFavorites => {
                                         if (isFav) {
@@ -591,7 +591,7 @@ export default function Detailview() {
                                 style={styles.btn}
                                 onPress={() => {
                                     ratingLoading ? null : (
-                                        submitReview(Hoteldata, userData, review, setReview, oldReviews, setoldReviews, reviewChanged, setreviewChanged, rating, setratingLoading)
+                                        submitReview(Hoteldata, userData, review, setReview, oldReviews, setoldReviews, reviewChanged, setreviewChanged, rating, setratingLoading,navigation)
                                     )
                                 }}
                             >

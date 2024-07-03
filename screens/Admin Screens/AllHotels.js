@@ -17,7 +17,7 @@ export default function AllHotels({ navigation }) {
     const onRefresh = () => {
         setRefreshing(true);
         // Call your refresh function here, for example:
-        getAllHotels();
+        getAllHotels(navigation);
         // After fetching new data, set refreshing to false to stop the spinner
         setRefreshing(false);
       };

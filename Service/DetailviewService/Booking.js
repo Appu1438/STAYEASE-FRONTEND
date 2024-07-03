@@ -2,6 +2,7 @@ import axios from "axios";
 import API_BASE_URL from "../../Api";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import TokenExpiry from "../TokenService/TokenExpiry";
 
 
 
@@ -13,7 +14,11 @@ export default async function HotelBooking(bookingData, navigation, token, setlo
     if (token) {
         console.log('book')
 
-        const response = await axios.post(`${API_BASE_URL}/user/submit-booking`, bookingData);
+        const response = await axios.post(`${API_BASE_URL}/user/submit-booking`, bookingData, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         setloading(false)
         if (response.data.status == 'ok') {
             // Handle success, e.g., show a success message to the user
@@ -25,6 +30,8 @@ export default async function HotelBooking(bookingData, navigation, token, setlo
                 visibilityTime: 3000,
                 position: 'bottom'
             });
+        } else if (response.data.status == 'NotOk') {
+            TokenExpiry(navigation, response)
         } else {
             // Handle error from the backend, e.g., display an error message to the user
             Toast.show({

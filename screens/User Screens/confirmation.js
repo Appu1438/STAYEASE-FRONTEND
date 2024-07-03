@@ -54,7 +54,7 @@ export default function Confirmation() {
     const onRefresh = () => {
         setRefreshing(true);
         // Call your refresh function here, for example:
-        getBookingdetails(BookingID, setBookingDetails, setHotelData, setTotal, setNormalMessage, setOfferMessage, setBookingsts, setCheckin);
+        getBookingdetails(BookingID, setBookingDetails, setHotelData, setTotal, setNormalMessage, setOfferMessage, setBookingsts, setCheckin,navigation);
         // After fetching new data, set refreshing to false to stop the spinner
         setRefreshing(false);
     };
@@ -63,7 +63,7 @@ export default function Confirmation() {
 
     useEffect(() => {
         // getdata(setUserData);
-        getBookingdetails(BookingID, setBookingDetails, setHotelData, setTotal, setNormalMessage, setOfferMessage, setBookingsts, setCheckin);
+        getBookingdetails(BookingID, setBookingDetails, setHotelData, setTotal, setNormalMessage, setOfferMessage, setBookingsts, setCheckin,navigation);
 
     }, [BookingID,UserData]);
 

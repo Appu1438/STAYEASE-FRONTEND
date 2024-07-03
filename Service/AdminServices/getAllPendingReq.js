@@ -1,14 +1,22 @@
 import axios from "axios";
 import API_BASE_URL from "../../Api";
 import Toast from "react-native-toast-message";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
+const getallPendingHotels = async (setAllHotels,navigation) => {
+    const token = await AsyncStorage.getItem('token');
 
-const getallPendingHotels = async (setAllHotels) => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/admin/get-pending-hotels`);
+    const response = await axios.get(`${API_BASE_URL}/admin/get-pending-hotels`,{
+        headers:{
+            Authorization:`Bearer ${token}`
+        }
+    });
         if (response.data.status === "ok") {
             setAllHotels(response.data.data);
+        } else if (response.data.status == 'NotOk') {
+            TokenExpiry(navigation, response)
         } else {
             Toast.show({
                 type: "error",
