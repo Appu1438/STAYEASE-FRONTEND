@@ -15,6 +15,7 @@ import Toast from "react-native-toast-message";
 import { Avatar } from "react-native-paper";
 import { useSelector } from "react-redux";
 import getdata from "../../Service/UserServices.js/Getdata";
+import TokenExpiry from "../../Service/TokenService/TokenExpiry";
 
 
 
@@ -66,8 +67,8 @@ export default function Profile() {
                 visibilityTime: 2000
             })
         }
-        
-      
+
+
 
     }
 
@@ -91,7 +92,13 @@ export default function Profile() {
         const userID = userData._id
         console.log(userID)
         console.log('Dlt')
-        axios.post(`${API_BASE_URL}/user/delete-user`, { email: UserEmail, userId: userID }).then(res => {
+        const token = await AsyncStorage.getItem('token');
+
+        axios.post(`${API_BASE_URL}/user/delete-user`, { email: UserEmail, userId: userID }, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then(res => {
             console.log(res.data.data)
             if (res.data.status == 'ok') {
                 SignOut()
@@ -101,6 +108,8 @@ export default function Profile() {
                     visibilityTime: 3000,
                     position: 'bottom'
                 })
+            } else if (res.data.status == 'NotOk') {
+                TokenExpiry(navigation, res)
             } else {
                 Toast.show({
                     type: 'error',

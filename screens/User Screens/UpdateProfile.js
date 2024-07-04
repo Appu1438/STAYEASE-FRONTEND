@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, Pressable, Alert, StyleSheet, Image, TouchableOpacity, TextInput, ScrollView ,ActivityIndicator, KeyboardAvoidingView} from "react-native"
+import { View, Text, SafeAreaView, Pressable, Alert, StyleSheet, Image, TouchableOpacity, TextInput, ScrollView, ActivityIndicator, KeyboardAvoidingView } from "react-native"
 import { Styles } from "../../components/Common Component/Styles"
 import { useEffect, useState } from "react"
 
@@ -17,6 +17,7 @@ import * as FileSystem from 'expo-file-system';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { faL } from "@fortawesome/free-solid-svg-icons";
 import uploadImageToCloudinary from "../../Service/ImageServices/UploadCloudinary";
+import TokenExpiry from "../../Service/TokenService/TokenExpiry";
 
 
 
@@ -112,16 +113,16 @@ export default function UpdateProfile() {
                 setLoading(true)
 
                 const imageuri = result.assets[0].uri;
-                 
+
 
                 const base64Image = await FileSystem.readAsStringAsync(imageuri, {
                     encoding: FileSystem.EncodingType.Base64,
                 });
-                
+
                 const fileSizeBytes = base64Image.length;
                 console.log(fileSizeBytes / (1024 * 1024))
 
-                const Cloudinaryurl= await uploadImageToCloudinary(base64Image)
+                const Cloudinaryurl = await uploadImageToCloudinary(base64Image)
 
                 setImage(Cloudinaryurl);
                 // console.log(image)
@@ -135,7 +136,7 @@ export default function UpdateProfile() {
 
 
             }
-        
+
         } catch (error) {
             Toast.show({
                 type: 'error',
@@ -149,7 +150,7 @@ export default function UpdateProfile() {
 
 
 
-    const Updateprofile = () => {
+    const Updateprofile = async () => {
         const formdata = {
             name: name,
             number: number,
@@ -157,7 +158,13 @@ export default function UpdateProfile() {
             userType: userType,
             image: image
         }
-        axios.post(`${API_BASE_URL}/user/update-user`, formdata).then(res => {
+        const token = await AsyncStorage.getItem('token');
+
+        axios.post(`${API_BASE_URL}/user/update-user`, formdata, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then(res => {
             console.log(res.data)
             setloading(false)
             if (res.data.status == 'ok') {
@@ -168,6 +175,8 @@ export default function UpdateProfile() {
                     position: 'bottom'
                 })
                 navigation.navigate('Profile')
+            } else if (res.data.status == 'NotOk') {
+                TokenExpiry(navigation, res)
             } else {
                 Toast.show({
                     type: 'error',
@@ -196,11 +205,11 @@ export default function UpdateProfile() {
                 <View style={[styles.innerContainer]}>
 
                     <TouchableOpacity style={styles.imgbox} onPress={() => Selectphoto()}>
-                    
-                    {loading && <ActivityIndicator color='black' style={{position:'absolute',zIndex:2}} size={"large"} />}
+
+                        {loading && <ActivityIndicator color='black' style={{ position: 'absolute', zIndex: 2 }} size={"large"} />}
                         <Avatar.Image
                             size={179}
-                            source={{ uri: image?image:null}} />
+                            source={{ uri: image ? image : null }} />
                         <TouchableOpacity style={styles.editButton}>
                             <Feather name="camera" size={24} color="white" />
                         </TouchableOpacity>
@@ -223,10 +232,14 @@ export default function UpdateProfile() {
 
                     <TextInput editable={false} style={[Styles.input, { marginTop: 20 }]} defaultValue={email} placeholder="Enter Your Email" ></TextInput>
 
-                    <Pressable style={Styles.btn} onPress={() =>{ {isLoading?(null):setloading(true)
-                                                                                    Updateprofile()}  }}>
-                            {isLoading?<ActivityIndicator color='white'/>:(
-                        <Text style={Styles.btntext} >Update</Text>)}
+                    <Pressable style={Styles.btn} onPress={() => {
+                        {
+                            isLoading ? (null) : setloading(true)
+                            Updateprofile()
+                        }
+                    }}>
+                        {isLoading ? <ActivityIndicator color='white' /> : (
+                            <Text style={Styles.btntext} >Update</Text>)}
 
                     </Pressable>
 
