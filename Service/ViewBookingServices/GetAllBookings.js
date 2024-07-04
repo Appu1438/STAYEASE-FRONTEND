@@ -1,9 +1,9 @@
 import axios from "axios";
-import API_BASE_URL from "../../Api";
+import API_BASE_URL from "../../../Api";
 import Toast from "react-native-toast-message";
 import separateBookings from "./SeperateBooking";
-import { store } from "../../Redux/Store";
-import { setAllBookings } from "../../Redux/Bookings";
+import { store } from "../../../Redux/Store";
+import { setAllBookings } from "../../../Redux/Bookings";
 
 
 async function getAllBookings() {

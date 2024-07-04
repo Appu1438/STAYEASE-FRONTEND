@@ -1,6 +1,6 @@
 
 import { View,Text } from "react-native"
-import { Styles } from "../../components/Common Component/Styles"
+import { Styles } from "../Common Component/Styles"
 
 
 

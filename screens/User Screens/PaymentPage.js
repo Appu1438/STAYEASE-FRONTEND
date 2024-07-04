@@ -3,12 +3,12 @@ import { View, Text, ScrollView, SafeAreaView, TouchableOpacity, Image, Pressabl
 
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
-import API_BASE_URL from "../../Api";
+import API_BASE_URL from "../../../Api";
 import Toast from "react-native-toast-message";
 import { CardField, useConfirmPayment, useStripe } from "@stripe/stripe-react-native";
-import getdata from "../../Service/UserServices.js/Getdata";
+import getdata from "../../../Service/UserServices.js/Getdata";
 import { useSelector } from "react-redux";
-import createInvoice from "../../Service/ConfirmationServices/DownloadInvoice";
+import createInvoice from "../../../Service/ConfirmationServices/DownloadInvoice";
 
 
 export default function PaymentPage() {
