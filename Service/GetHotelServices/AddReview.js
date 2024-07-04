@@ -1,5 +1,5 @@
 import axios from "axios";
-import API_BASE_URL from "../../../Api";
+import API_BASE_URL from "../../Api";
 import Toast from "react-native-toast-message";
 import { Rating } from "react-native-ratings";
 import AsyncStorage from "@react-native-async-storage/async-storage";

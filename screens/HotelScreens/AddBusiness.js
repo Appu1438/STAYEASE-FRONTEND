@@ -11,9 +11,9 @@ import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as DocumentPicker from 'expo-document-picker';
-import uploadImageToCloudinary from "../../../Service/ImageServices/UploadCloudinary";
+import uploadImageToCloudinary from "../../Service/ImageServices/UploadCloudinary";
 import { useSelector } from "react-redux";
-import ReqHotel from '../../../Service/BusinessService/reqBusiness'
+import ReqHotel from '../../Service/BusinessService/reqBusiness'
 import { useState } from "react";
 
 

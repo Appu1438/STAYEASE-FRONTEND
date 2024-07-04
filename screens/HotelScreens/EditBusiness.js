@@ -16,8 +16,8 @@ import { Avatar } from "react-native-paper";
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import * as DocumentPicker from 'expo-document-picker';
-import uploadImageToCloudinary from "../../../Service/ImageServices/UploadCloudinary";
-import Updatebusiness from "../../../Service/BusinessService/UpdateBusines";
+import uploadImageToCloudinary from "../../Service/ImageServices/UploadCloudinary";
+import Updatebusiness from "../../Service/BusinessService/UpdateBusines";
 import { useSelector } from "react-redux";
 
 
