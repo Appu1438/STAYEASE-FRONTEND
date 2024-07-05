@@ -1,5 +1,5 @@
 
-import { View, Text, Image, TextInput, KeyboardAvoidingView, Pressable, Platform, Alert, BackHandler, StatusBar, ScrollView } from "react-native";
+import { View, Text, Image, TextInput, KeyboardAvoidingView, Pressable, Platform, Alert, BackHandler, StatusBar, ScrollView, ActivityIndicator } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import axios from "axios";
@@ -15,9 +15,11 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [passwordVerify, setPasswordVerify] = useState(false);
     const [showpassword, setShowpassword] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     function handlesubmit() {
         if (emailVerify && passwordVerify) {
+            setLoading(true)
             const userdata = { email, password };
             axios.post(`${API_BASE_URL}/user/login-user`, userdata)
                 .then(res => {
@@ -28,10 +30,11 @@ export default function Login() {
                             visibilityTime: 3000,
                             position: 'bottom'
                         });
+                        setLoading(false)
                         AsyncStorage.setItem("token", res.data.data);
                         AsyncStorage.setItem('isLoggedIn', JSON.stringify(true));
                         AsyncStorage.setItem('userType', res.data.userType);
-                        if (res.data.userType == 'Admin' || res.data.userType=='SuperAdmin') {
+                        if (res.data.userType == 'Admin' || res.data.userType == 'SuperAdmin') {
                             navigation.navigate("AdminLoggedin");
                         } else if (res.data.userType === 'Business') {
                             navigation.navigate("HotelLoggedin");
@@ -39,6 +42,7 @@ export default function Login() {
                             navigation.navigate("UserLoggedin");
                         }
                     } else {
+                        setLoading(false)
                         Toast.show({
                             type: 'error',
                             text1: JSON.stringify(res.data.data),
@@ -49,6 +53,7 @@ export default function Login() {
                 })
                 .catch(error => {
                     console.error("Error:", error);
+                    setLoading(false)
                     Toast.show({
                         type: 'error',
                         text1: "An error occurred while logging in",
@@ -105,41 +110,44 @@ export default function Login() {
             <StatusBar barStyle='dark-content' backgroundColor={'#fff'} />
             <ScrollView contentContainerStyle={styles.scrollViewContent} showsVerticalScrollIndicator={false}>
 
-            <View style={styles.innerContainer}>
-                <Image style={styles.loginImg} source={require("../../assets/images/loginimg.png")} />
-                <Text style={styles.title}>Sign In to View Your Profile</Text>
-                <Text style={styles.subtitle}>Your profile data is saved to your account</Text>
-                <TextInput
+                <View style={styles.innerContainer}>
+                    <Image style={styles.loginImg} source={require("../../assets/images/loginimg.png")} />
+                    <Text style={styles.title}>Sign In to View Your Profile</Text>
+                    <Text style={styles.subtitle}>Your profile data is saved to your account</Text>
+                    <TextInput
                         style={[styles.input, { shadowColor: emailVerify ? '#006400' : '#f73939' }]}
                         placeholder="Enter Your Email Address"
-                    onChange={handleemail}
-                    placeholderTextColor="#888"
-                />
-                {email.length < 1 ? null : emailVerify ? null : (
-                    <Text style={styles.errorText}>Please Enter a Valid Email Address</Text>
-                )}
-                <View style={[styles.passwordContainer,{shadowColor:'black'}]}>
-                    <TextInput
-                        style={styles.passwordInput}
-                        placeholder="Enter Your Password"
-                        onChange={handlepassword}
-                        secureTextEntry={showpassword}
+                        onChange={handleemail}
                         placeholderTextColor="#888"
                     />
-                    <Pressable style={styles.eyeIcon} onPress={() => setShowpassword(!showpassword)}>
-                        <Feather name={showpassword ? 'eye' : 'eye-off'} size={20} color={'#888'} />
+                    {email.length < 1 ? null : emailVerify ? null : (
+                        <Text style={styles.errorText}>Please Enter a Valid Email Address</Text>
+                    )}
+                    <View style={[styles.passwordContainer, { shadowColor: 'black' }]}>
+                        <TextInput
+                            style={styles.passwordInput}
+                            placeholder="Enter Your Password"
+                            onChange={handlepassword}
+                            secureTextEntry={showpassword}
+                            placeholderTextColor="#888"
+                        />
+                        <Pressable style={styles.eyeIcon} onPress={() => setShowpassword(!showpassword)}>
+                            <Feather name={showpassword ? 'eye' : 'eye-off'} size={20} color={'#888'} />
+                        </Pressable>
+                    </View>
+                    <Pressable style={styles.forgotPassword} onPress={() => navigation.navigate('Forgot')}>
+                        <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+                    </Pressable>
+                    <Pressable style={styles.btn} onPress={handlesubmit}>
+                        <Text style={styles.btnText}>
+                            {loading ?
+                             (<ActivityIndicator color='white' />) : 
+                             ("Log In")}</Text>
+                    </Pressable>
+                    <Pressable onPress={() => navigation.navigate('Signup')}>
+                        <Text style={styles.signupText}>Don't have an account? Create Account</Text>
                     </Pressable>
                 </View>
-                <Pressable style={styles.forgotPassword} onPress={() => navigation.navigate('Forgot')}>
-                    <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-                </Pressable>
-                <Pressable style={styles.btn} onPress={handlesubmit}>
-                    <Text style={styles.btnText}>Log In</Text>
-                </Pressable>
-                <Pressable onPress={() => navigation.navigate('Signup')}>
-                    <Text style={styles.signupText}>Don't have an account? Create Account</Text>
-                </Pressable>
-            </View>
             </ScrollView>
         </KeyboardAvoidingView>
     );

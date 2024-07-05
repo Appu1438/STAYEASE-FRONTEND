@@ -7,7 +7,6 @@ import { StyleSheet } from "react-native";
 import AdminNav from "./Navigation/Admin";
 import UserNav from "./Navigation/User";
 import HotelNav from "./Navigation/Hotel";
-import LoginNav from "./Navigation/Login";
 import getUsertype from "./Service/UserServices.js/Usertype";
 import { Provider } from "react-redux";
 import { store } from "./Redux/Store";

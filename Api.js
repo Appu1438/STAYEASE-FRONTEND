@@ -1,3 +1,3 @@
 
-const API_BASE_URL="http://192.168.1.3:1438"
+const API_BASE_URL="https://stayease-backend.onrender.com"
 export default API_BASE_URL
