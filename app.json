@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "NewProject",
-    "slug": "NewProject",
+    "name": "Stayease",
+    "slug": "Stayease",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -30,8 +30,9 @@
         "ACCESS_COARSE_LOCATION"
       ],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/images/logo1.png",
+        "backgroundColor": "#f73939",
+        "resizeMode": "contain"
       },
       "package": "com.adithyanskumar.NewProject"
     },
@@ -43,7 +44,6 @@
         "projectId": "c3250b01-6ab4-4185-a3fc-ecaa1f586525"
       }
     },
-    "plugins": [
-    ]
+    "plugins": []
   }
 }
