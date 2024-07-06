@@ -10,9 +10,15 @@
     "preview": {
       "distribution": "internal"
     },
-    "production": {}
+    "production": {
+      "env": {
+        "EXPO_USE_FORCE_NPM_INSTALL": "true",
+        "EXPO_USE_LEGACY_PEER_DEPS": "true"
+      }
+    }
   },
   "submit": {
-    "production": {}
+    "production": {
+    }
   }
 }

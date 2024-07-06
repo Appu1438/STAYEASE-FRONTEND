@@ -8,7 +8,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome"
 import { faStar } from "@fortawesome/free-regular-svg-icons"
 import { faCalendarDays, faBed, faUserGroup, faUser, faIndianRupeeSign, faTag, faPhone } from "@fortawesome/free-solid-svg-icons";
 import Entypo from 'react-native-vector-icons/Entypo';
-import { err } from "react-native-svg";
 import AddHotel from "../../Service/AdminServices/addHotel";
 import { useSelector } from "react-redux";
 import OpenMaps from "../../Service/Map and Dial/OpenMaps";
@@ -129,7 +128,7 @@ export default function PendingDetailview({ }) {
             await AddHotel(Hoteldata, navigation)
 
         } catch (error) {
-            console.log(err)
+            console.log(error)
         }
 
 

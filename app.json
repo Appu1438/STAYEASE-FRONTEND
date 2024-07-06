@@ -31,7 +31,7 @@
       ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "plum"
+        "backgroundColor": "#ffffff"
       },
       "package": "com.adithyanskumar.NewProject"
     },
